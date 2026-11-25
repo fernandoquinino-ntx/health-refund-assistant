@@ -23,8 +23,8 @@ from .reconciliation import (
 
 DEFAULT_PROMPT = PROMPTS_DIR / "reembolso_status" / "v1.0.txt"
 DEFAULT_PROPOSAL = CONFIG_DIR / "mapeamento_reembolsos.proposta.json"
-DEFAULT_BASE_URL = "http://localhost:1235/v1"
-DEFAULT_MODEL = "qwen/qwen3.8-27b"
+DEFAULT_BASE_URL = "https://api.openai.com/v1"
+DEFAULT_MODEL = "gpt-6-luna"
 REQUIRED_FIELDS = {
     "notes": (
         "provider",
@@ -175,7 +175,8 @@ def build_proposal(
     )
     response = client.chat.completions.create(
         model=model,
-        temperature=0,
+        temperature=0.0,
+        top_p=0.9,
         max_tokens=4096,
         messages=[
             {

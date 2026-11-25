@@ -229,6 +229,7 @@ class VLMExtractor:
                 {"role": "user", "content": conteudo},
             ],
             "temperature": temperature,
+            "top_p": 0.9,
             "max_completion_tokens": 512,
             "reasoning_effort": "none",
         }

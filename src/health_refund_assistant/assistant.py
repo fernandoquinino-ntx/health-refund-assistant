@@ -100,6 +100,8 @@ def create_assistant_answer(
             },
         ],
         max_completion_tokens=1200,
+        temperature=0.6,
+        top_p=0.9,
         reasoning_effort="none",
     )
     content = response.choices[0].message.content

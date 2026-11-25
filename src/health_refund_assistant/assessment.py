@@ -1,4 +1,43 @@
-"""Deterministic document completeness, reimbursement deadline and export assessment."""
+"""
+Auditor (Verificador de Completude e Prazos)
+
+OBJETIVO:
+  Auditoria pré-envio de notas NÃO encontradas na exportação.
+  Valida campos obrigatórios e prazos de submissão (365 dias).
+
+ENTRADA:
+  - Dados extraídos (JSON)
+  - Status de reconciliação ("não encontrado")
+
+SAÍDA:
+  - Resultado de auditoria:
+    * COMPLETO: Todos campos obrigatórios presentes
+    * INCOMPLETO: Faltam campos (nome, CRM/CRN, descrição, valor, data)
+    * PRAZO_VENCIDO: Nota com >365 dias (inelegível para submissão)
+    * ELEGIVEL: Pronto para submissão à concierge
+
+PROCESSO (ETAPA 3 DO FLUXO):
+  JSON extraído → Assessment → Auditoria pré-envio
+
+CAMPOS OBRIGATÓRIOS (Auditoria):
+  1. nome_profissional ou crm/crn
+  2. descricao_servico
+  3. cnpj_cpf_prestador
+  4. valor_total
+  5. data_emissao
+
+PRAZO:
+  - Limite de 365 dias (1 ano) desde emissão
+  - Reduz elegibilidade para planos com prazo curto
+
+DOCUMENTO:
+  Veja docs/caderno_projeto.md (R4 - Testes) para casos de teste
+  Veja docs/planilha_testes_5_casos.md para resultados (Caso 4-5)
+
+CONSTANTES:
+  DEADLINE_DAYS = 365 (prazo limite)
+  COMPLETENESS_FIELDS = campos validados
+"""
 
 from datetime import date
 from pathlib import Path

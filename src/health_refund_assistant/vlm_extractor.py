@@ -1,3 +1,37 @@
+"""
+Extrator VLM (Visão Multimodal)
+
+OBJETIVO:
+  Extrai dados estruturados de PDFs/imagens de notas fiscais usando GPT-4o-mini.
+  Converte imagem → JSON com campos obrigatórios definidos em schema.
+
+ENTRADA:
+  - PDF ou imagem de nota fiscal
+  - Schema JSON (contrato de saída)
+  - Prompt versionado (instrução + few-shot + regras)
+
+SAÍDA:
+  - JSON estruturado com campos:
+    * data_emissao, data_consulta
+    * cnpj_cpf_prestador, nome_prestador
+    * crm, crn (identificador do profissional)
+    * descricao_servico
+    * valor_total
+    * profissao
+
+PROCESSO (ETAPA 1 DO FLUXO):
+  Nota Fiscal (imagem) → VLM Extractor → JSON Schema
+
+VERSÕES:
+  v1.0 → v2.0 → v3.0 → v4.0 (consultar docs/caderno_projeto.md)
+
+DOCUMENTO:
+  Veja docs/caderno_projeto.md (R2 - Prompt Engineering) para evolução
+
+MODELO:
+  gpt-4o-mini (conforme configurado em DEFAULT_MODEL)
+"""
+
 # src/vlm_extractor.py
 import json
 import math

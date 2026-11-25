@@ -1,3 +1,30 @@
+"""
+Assistente Principal de Reembolso
+
+OBJETIVO:
+  Orquestra o fluxo completo de verificação de notas fiscais:
+  1. Extração VLM: Converte PDF/imagem → JSON com dados estruturados
+  2. Reconciliação: Busca na exportação do plano usando janela D-2
+  3. Auditoria: Valida campos obrigatórios e prazos (365 dias)
+  4. Resposta: Gera síntese fundamentada em fatos
+
+ENTRADA:
+  - Nota fiscal (PDF/imagem) do usuário
+  - Exportação do plano (JSON)
+  - Prompt de reembolso (templates)
+
+SAÍDA:
+  - Status de reembolso (pago, pago parcial, recusado, em análise, fora janela)
+  - Auditoria pré-envio (completude documental)
+  - Resposta fundamentada ao usuário
+
+PROCESSO:
+  User envia nota → VLMExtractor → Reconciliation → Assessment → Assistente → Resposta
+
+DOCUMENTO:
+  Veja docs/05_architecture/01_visao_geral.md para fluxo completo
+"""
+
 import json
 import os
 from dataclasses import dataclass

@@ -1,3 +1,43 @@
+"""
+Reconciliador — Verificação de Existência na Exportação
+
+OBJETIVO:
+  Busca correspondência da nota fiscal extraída na exportação do plano de saúde.
+  Aplica janela temporal D-2 e regras de elegibilidade.
+
+ENTRADA:
+  - Dados extraídos (JSON do VLMExtractor)
+  - Exportação do plano (JSON)
+  - Data de corte (D-1)
+
+SAÍDA:
+  - Status de reconciliação:
+    * ENCONTRADO_PAGO_INTEGRAL
+    * ENCONTRADO_PAGO_PARCIAL (com glosa/diferença)
+    * ENCONTRADO_RECUSADO
+    * ENCONTRADO_EM_ANALISE
+    * NAO_ENCONTRADO (motivo: fora janela D-2 ou nunca submetido)
+    * FORA_DA_JANELA_IMPORTACAO
+
+PROCESSO (ETAPA 2 DO FLUXO):
+  JSON extraído → Reconciliador → Status + motivo
+
+REGRA D-2 (Crítica):
+  - Exportação possui corte em D-1
+  - Notas emitidas APÓS D-2 são inelegíveis
+  - Reduz falsos negativos de "nunca foi submetido"
+
+DOCUMENTO:
+  Veja docs/caderno_projeto.md (R1 - Regra D-1/D-2) para detalhes
+
+LÓGICA:
+  1. Normaliza dados (remover acentos, case-insensitive)
+  2. Busca por CNPJ + valor no plano
+  3. Aplica similaridade fuzzy para descrição
+  4. Verifica janela D-2
+  5. Retorna status encontrado ou motivo da não-encontrabilidade
+"""
+
 import argparse
 import json
 import re

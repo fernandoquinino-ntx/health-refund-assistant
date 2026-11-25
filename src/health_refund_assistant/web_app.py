@@ -1,3 +1,52 @@
+"""
+UI Web (Streamlit) — Interface do Assistente
+
+OBJETIVO:
+  Interface interativa para usuários testarem o sistema:
+  1. Upload de nota fiscal (PDF/imagem)
+  2. Seleção de exportação do plano
+  3. Execução do fluxo completo (extração → reconciliação → auditoria)
+  4. Exibição de resultado
+
+FLUXO NA UI:
+  1. User faz upload do PDF
+  2. Seleciona exportação do plano disponível
+  3. Clica "Analisar"
+  4. Sistema executa:
+     - VLM Extractor
+     - Reconciliation
+     - Assessment
+  5. UI exibe:
+     - Dados extraídos
+     - Status de reconciliação
+     - Resultado de auditoria
+     - Resposta final do assistente
+
+ENTRADA:
+  - Arquivo PDF/imagem
+  - Exportação do plano (dropdown)
+
+SAÍDA:
+  - JSON extraído
+  - Status de reembolso
+  - Resultado de auditoria
+  - Resposta em linguagem natural
+
+USO:
+  streamlit run src/health_refund_assistant/web_app.py
+  Acesso: http://localhost:8501
+
+DOCUMENTO:
+  Veja docs/02_process/01_rastreamento_testes.md para usar UI
+  Veja docs/01_quickstart/01_comece_aqui.md para 3 passos
+
+TESTE NO CODESPACES:
+  1. Criar Codespaces
+  2. Executar: streamlit run src/health_refund_assistant/web_app.py
+  3. Acessar http://localhost:8501
+  4. Upload PDF + click "Analisar"
+"""
+
 from datetime import datetime
 from pathlib import Path
 from typing import List

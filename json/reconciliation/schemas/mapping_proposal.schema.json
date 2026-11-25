@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/mapping_proposal.schema.json",
+  "title": "Proposta de mapeamento entre campos",
+  "description": "Resposta JSON do prompt local de proposta de mapeamento.",
+  "type": "object",
+  "properties": {
+    "notes": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "$ref": "#/$defs/noteFields"
+        }
+      },
+      "required": ["fields"],
+      "additionalProperties": false
+    },
+    "portal": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "$ref": "#/$defs/portalFields"
+        }
+      },
+      "required": ["fields"],
+      "additionalProperties": false
+    },
+    "caveats": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "required": ["notes", "portal", "caveats"],
+  "additionalProperties": false,
+  "$defs": {
+    "pathValue": {
+      "anyOf": [
+        {"type": "string"},
+        {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        {"type": "null"}
+      ]
+    },
+    "noteFields": {
+      "type": "object",
+      "properties": {
+        "provider": {"$ref": "#/$defs/pathValue"},
+        "provider_tax_id": {"$ref": "#/$defs/pathValue"},
+        "invoice_number": {"$ref": "#/$defs/pathValue"},
+        "amount": {"$ref": "#/$defs/pathValue"},
+        "issue_date": {"$ref": "#/$defs/pathValue"},
+        "service_date": {"$ref": "#/$defs/pathValue"},
+        "service": {"$ref": "#/$defs/pathValue"}
+      },
+      "required": [
+        "provider",
+        "provider_tax_id",
+        "invoice_number",
+        "amount",
+        "issue_date",
+        "service_date",
+        "service"
+      ],
+      "additionalProperties": false
+    },
+    "portalFields": {
+      "type": "object",
+      "properties": {
+        "claim_id": {"$ref": "#/$defs/pathValue"},
+        "provider": {"$ref": "#/$defs/pathValue"},
+        "beneficiary": {"$ref": "#/$defs/pathValue"},
+        "status": {"$ref": "#/$defs/pathValue"},
+        "requested_amount": {"$ref": "#/$defs/pathValue"},
+        "paid_amount": {"$ref": "#/$defs/pathValue"},
+        "service_date": {"$ref": "#/$defs/pathValue"},
+        "request_date": {"$ref": "#/$defs/pathValue"},
+        "payment_date": {"$ref": "#/$defs/pathValue"},
+        "service": {"$ref": "#/$defs/pathValue"}
+      },
+      "required": [
+        "claim_id",
+        "provider",
+        "beneficiary",
+        "status",
+        "requested_amount",
+        "paid_amount",
+        "service_date",
+        "request_date",
+        "payment_date",
+        "service"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

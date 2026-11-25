@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/vlm_extraction_v4.schema.json",
+  "title": "Extração VLM de documento de saúde v4",
+  "description": "Contrato do prompt VLM v4.0, com data e profissional identificados.",
+  "type": "object",
+  "properties": {
+    "numero_documento": {"type": ["string", "null"]},
+    "prestador": {"type": ["string", "null"]},
+    "cnpj_cpf_prestador": {"type": ["string", "null"]},
+    "valor_total": {"type": ["number", "null"]},
+    "data_emissao": {"type": ["string", "null"]},
+    "data_atendimento": {"type": ["string", "null"]},
+    "nome_profissional": {"type": ["string", "null"]},
+    "descricao_servico": {"type": ["string", "null"]},
+    "registro_profissional": {"type": ["string", "null"]},
+    "imagem_legivel": {"type": "boolean"},
+    "observacao_visual": {"type": ["string", "null"]}
+  },
+  "required": [
+    "numero_documento",
+    "prestador",
+    "cnpj_cpf_prestador",
+    "valor_total",
+    "data_emissao",
+    "data_atendimento",
+    "nome_profissional",
+    "descricao_servico",
+    "registro_profissional",
+    "imagem_legivel",
+    "observacao_visual"
+  ],
+  "additionalProperties": false
+}

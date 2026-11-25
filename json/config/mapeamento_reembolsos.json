@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "version": "v1.0",
+  "mapping_method": {
+    "type": "manual_schema_review",
+    "prompt_reference": "prompts/reembolso_status/v1.0.txt",
+    "model_output_used": false,
+    "note": "Os campos foram mapeados a partir dos schemas. As tentativas locais de geração não produziram um mapa utilizável."
+  },
+  "notes": {
+    "records_path": "pdfs",
+    "result_path": "resultado",
+    "fields": {
+      "provider": "prestador",
+      "provider_tax_id": "cnpj_cpf_prestador",
+      "invoice_number": "numero_documento",
+      "amount": "valor_total",
+      "issue_date": "data_emissao",
+      "service_date": "data_atendimento",
+      "service": "descricao_servico"
+    }
+  },
+  "portal": {
+    "records_path": "reembolsos",
+    "fields": {
+      "claim_id": "numeroSinistro",
+      "provider": "prestador",
+      "beneficiary": "beneficiario",
+      "status": "status",
+      "requested_amount": "valorSolicitadoNum",
+      "paid_amount": "valorFinalReembolsadoNum",
+      "service_date": "dataRealizacao",
+      "request_date": "dataSolicitacao",
+      "payment_date": "dataPagamento",
+      "service": [
+        "procedimento",
+        "descricao"
+      ]
+    }
+  },
+  "matching": {
+    "amount_tolerance": 0.01,
+    "date_window_days": 45,
+    "provider_min_similarity": 0.78,
+    "provider_strong_similarity": 0.94,
+    "provider_weak_similarity": 0.45,
+    "service_min_similarity": 0.55,
+    "relative_amount_tolerance": 0.15
+  },
+  "semantic_notes": [
+    "data_atendimento e dataRealizacao representam realização do serviço; data_emissao é um fallback distinto e deve ser identificada como tal.",
+    "numero_documento não é equivalente a numeroSinistro.",
+    "Liberado Integral ou Liberado Parcial sem data e valor de pagamento não prova que o pagamento foi realizado.",
+    "Uma ausência de correspondência vale somente para a exportação analisada, não prova que o pedido nunca foi enviado."
+  ]
+}

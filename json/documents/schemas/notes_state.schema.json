@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/notes_state.schema.json",
+  "title": "Estado local de processamento de notas",
+  "description": "Índice local de PDFs processados, resultados de extração e duplicatas.",
+  "type": "object",
+  "required": ["schema_version", "pdfs", "duplicatas"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 3
+    },
+    "model": {
+      "type": ["string", "null"]
+    },
+    "prompt_version": {
+      "type": ["string", "null"]
+    },
+    "pdfs": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/record"
+      }
+    },
+    "duplicatas": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "record": {
+      "type": "object",
+      "properties": {
+        "document_id": {
+          "type": "string"
+        },
+        "nome_arquivo_original": {
+          "type": "string"
+        },
+        "nome_arquivo": {
+          "type": "string"
+        },
+        "caminho_origem": {
+          "type": "string"
+        },
+        "caminho": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "processado": {
+          "type": "boolean"
+        },
+        "sucesso": {
+          "type": "boolean"
+        },
+        "estado": {
+          "type": "string"
+        },
+        "processado_em": {
+          "type": "string"
+        },
+        "model": {
+          "type": ["string", "null"]
+        },
+        "prompt_version": {
+          "type": ["string", "null"]
+        },
+        "resultado": {
+          "type": ["object", "null"]
+        },
+        "duplicado_de": {
+          "type": "string"
+        },
+        "tipo_duplicidade": {
+          "type": "string"
+        },
+        "registrado_em": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

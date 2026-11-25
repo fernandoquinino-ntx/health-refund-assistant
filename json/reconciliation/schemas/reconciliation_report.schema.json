@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/reconciliation_report.schema.json",
+  "title": "Relatório de conciliação",
+  "description": "Candidatos de correspondência entre notas processadas e pedidos do dataset importado.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "mapping_version",
+    "sources",
+    "summary",
+    "notes",
+    "claims_without_note_match"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mapping_version": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "object",
+      "required": ["notes", "portal_export"],
+      "properties": {
+        "notes": {
+          "type": "string"
+        },
+        "portal_export": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "notes_total",
+        "claims_total",
+        "notes_without_correspondence_in_export",
+        "notes_requiring_review",
+        "claims_without_note_match",
+        "claims_paid",
+        "total_paid_amount",
+        "portal_statuses"
+      ],
+      "properties": {
+        "notes_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claims_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes_without_correspondence_in_export": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes_requiring_review": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claims_without_note_match": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claims_paid": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_paid_amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "portal_statuses": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "claims_without_note_match": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": false
+}

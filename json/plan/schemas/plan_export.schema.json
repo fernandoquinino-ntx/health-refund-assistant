@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/plan_export.schema.json",
+  "title": "Exportação de reembolsos do plano",
+  "description": "Dataset importado da extensão Care Plus ou criado para avaliação sintética.",
+  "type": "object",
+  "required": ["periodo", "reembolsos"],
+  "properties": {
+    "schema_version": {
+      "type": "integer"
+    },
+    "periodo": {
+      "type": "object",
+      "description": "Intervalo consultado, em DD/MM/AAAA ou AAAA-MM-DD.",
+      "properties": {
+        "de": {
+          "$ref": "#/$defs/data"
+        },
+        "ate": {
+          "$ref": "#/$defs/data"
+        },
+        "inicio": {
+          "$ref": "#/$defs/data"
+        },
+        "fim": {
+          "$ref": "#/$defs/data"
+        }
+      },
+      "anyOf": [
+        {
+          "required": ["de", "ate"]
+        },
+        {
+          "required": ["inicio", "fim"]
+        },
+        {
+          "required": ["de", "fim"]
+        },
+        {
+          "required": ["inicio", "ate"]
+        }
+      ],
+      "additionalProperties": true
+    },
+    "reembolsos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "beneficiarios": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "erros": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "data": {
+      "type": "string",
+      "pattern": "^(\\d{2}/\\d{2}/\\d{4}|\\d{4}-\\d{2}-\\d{2})$"
+    }
+  }
+}

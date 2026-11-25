@@ -1,0 +1,35 @@
+.venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+build/
+dist/
+*.egg-info/
+
+# Ignore local PDFs and outputs; only synthetic fixtures are versioned.
+data/*
+!data/README.md
+!data/sinteticos/
+data/sinteticos/*
+!data/sinteticos/README.md
+!data/sinteticos/documentos/
+data/sinteticos/documentos/*
+!data/sinteticos/documentos/*.pdf
+data/sinteticos/resultados/
+data/sinteticos/resultados/**
+
+# Imported datasets and runtime JSON outputs can contain personal/health data.
+json/plan/imports/*.json
+json/plan/imports/*.json.tmp
+json/documents/state/*.json
+json/documents/state/*.json.tmp
+json/evaluation/reports/*.json
+json/evaluation/reports/*.json.tmp
+json/reconciliation/reports/*.json
+json/reconciliation/reports/*.json.tmp
+json/config/*.proposta.json

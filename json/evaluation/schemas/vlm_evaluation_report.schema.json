@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/vlm_evaluation_report.schema.json",
+  "title": "Relatório do benchmark de extração VLM",
+  "description": "Métricas observadas de uma execução de versão de prompt.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "executado_em",
+    "model",
+    "prompt_version",
+    "tolerancia_valor",
+    "acuracia_minima_proposta",
+    "resumo",
+    "resultados"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "executado_em": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "model": {
+      "type": "string"
+    },
+    "prompt_version": {
+      "type": "string"
+    },
+    "tolerancia_valor": {
+      "type": "number",
+      "minimum": 0
+    },
+    "acuracia_minima_proposta": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "resumo": {
+      "type": "object",
+      "required": [
+        "casos_no_manifesto",
+        "casos_executados",
+        "casos_fora_do_escopo",
+        "campos_corretos",
+        "campos_comparados",
+        "acuracia_por_campo",
+        "respostas_com_status_ok",
+        "respostas_avaliadas",
+        "taxa_respostas_ok",
+        "casos_corretos",
+        "acuracia_por_caso",
+        "falhas_criticas",
+        "suite_completa",
+        "aprovado"
+      ],
+      "properties": {
+        "casos_no_manifesto": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "casos_executados": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "casos_fora_do_escopo": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "campos_corretos": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "campos_comparados": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "acuracia_por_campo": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "respostas_com_status_ok": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "respostas_avaliadas": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "taxa_respostas_ok": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "casos_corretos": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "acuracia_por_caso": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "falhas_criticas": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "suite_completa": {
+          "type": "boolean"
+        },
+        "aprovado": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "resultados": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["caso_id", "estado"],
+        "properties": {
+          "caso_id": {
+            "type": "string"
+          },
+          "estado": {
+            "enum": [
+              "passou",
+              "falhou",
+              "erro",
+              "fora_do_escopo_atual"
+            ]
+          },
+          "falha_critica": {
+            "type": "boolean"
+          },
+          "status_extracao": {
+            "type": ["string", "null"]
+          },
+          "campos": {
+            "type": "object"
+          },
+          "erro_tipo": {
+            "type": "string"
+          },
+          "motivo": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

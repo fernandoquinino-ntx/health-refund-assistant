@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/test_cases.schema.json",
+  "title": "Manifesto de casos sintéticos",
+  "description": "Entradas para o benchmark visual e a avaliação determinística do assistente.",
+  "type": "object",
+  "required": ["schema_version", "dataset", "casos"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 2
+    },
+    "dataset": {
+      "type": "string"
+    },
+    "casos": {
+      "type": "array",
+      "minItems": 15,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "cenario",
+          "categoria",
+          "arquivo",
+          "pergunta",
+          "data_referencia",
+          "executar_vlm",
+          "falha_critica",
+          "objetivo"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^C\\d{2}$"
+          },
+          "cenario": {
+            "type": "string"
+          },
+          "categoria": {
+            "enum": [
+              "pedido",
+              "pagamento",
+              "prazo",
+              "completude",
+              "data_ausente",
+              "seguranca"
+            ]
+          },
+          "arquivo": {
+            "type": "string",
+            "pattern": "\\.pdf$"
+          },
+          "pergunta": {
+            "type": "string",
+            "minLength": 1
+          },
+          "data_referencia": {
+            "type": "string",
+            "format": "date"
+          },
+          "executar_vlm": {
+            "type": "boolean"
+          },
+          "falha_critica": {
+            "type": "boolean"
+          },
+          "objetivo": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

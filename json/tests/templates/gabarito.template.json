@@ -1,0 +1,381 @@
+{
+  "schema_version": 2,
+  "dataset": "100% fictício; não contém dados pessoais reais",
+  "casos": {
+    "C01": {
+      "campos": {
+        "numero_documento": "NFS-e 1001",
+        "prestador": "Horizonte Saúde",
+        "cnpj_cpf_prestador": "00.000.000/0001-00",
+        "valor_total": 450.0,
+        "data_emissao": "11/03/2026",
+        "data_atendimento": "10/03/2026",
+        "nome_profissional": "Dra. Fictícia Ana",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100001/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-10",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 10,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "localizado",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": "em_analise"
+      }
+    },
+    "C02": {
+      "campos": {
+        "numero_documento": "Recibo 2002",
+        "prestador": "Aurora Consultório",
+        "cnpj_cpf_prestador": "000.000.000-00",
+        "valor_total": 300.0,
+        "data_emissao": "11/03/2026",
+        "data_atendimento": "11/03/2026",
+        "nome_profissional": "Dr. Fictício Bruno",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100002/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-11",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 9,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "localizado",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": "reembolsado_integral"
+      }
+    },
+    "C03": {
+      "campos": {
+        "numero_documento": "Recibo 2003",
+        "prestador": "Camila Atendimento",
+        "cnpj_cpf_prestador": "000.000.000-00",
+        "valor_total": 180.0,
+        "data_emissao": "12/03/2026",
+        "data_atendimento": "12/03/2026",
+        "nome_profissional": "Dra. Fictícia Camila",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100003/RS",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-12",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 9,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "localizado",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": "reembolsado_parcial"
+      }
+    },
+    "C04": {
+      "campos": {
+        "numero_documento": "NFS-e 2004",
+        "prestador": "Bem Viver Nutrição",
+        "cnpj_cpf_prestador": "00.000.000/0004-00",
+        "valor_total": 220.0,
+        "data_emissao": "13/03/2026",
+        "data_atendimento": "13/03/2026",
+        "nome_profissional": "Nutricionista Fictícia Daniela",
+        "descricao_servico": "Atendimento nutricional",
+        "registro_profissional": "CRN-3 100004",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-13",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 7,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "localizado",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": "nao_liberado"
+      }
+    },
+    "C05": {
+      "campos": {
+        "numero_documento": "NFS-e 2005",
+        "prestador": "Alfa Laboratório",
+        "cnpj_cpf_prestador": "00.000.000/0005-00",
+        "valor_total": 125.0,
+        "data_emissao": "14/03/2026",
+        "data_atendimento": "14/03/2026",
+        "nome_profissional": "Dr. Fictício Eduardo",
+        "descricao_servico": "Exame laboratorial: hemograma completo",
+        "registro_profissional": "CRM 100005/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-14",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 16,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "nao_localizado_nas_exportacoes",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": null
+      }
+    },
+    "C06": {
+      "campos": {
+        "numero_documento": "Recibo 2006",
+        "prestador": "Lótus Fisioterapia",
+        "cnpj_cpf_prestador": "000.000.000-00",
+        "valor_total": 250.0,
+        "data_emissao": "01/03/2026",
+        "data_atendimento": "01/03/2026",
+        "nome_profissional": "Fisioterapeuta Fictícia Fernanda",
+        "descricao_servico": "Sessão de fisioterapia",
+        "registro_profissional": "CREFITO-3 100006",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-01",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 31,
+        "situacao_prazo": "fora_do_prazo_simulado",
+        "situacao_pedido": "localizado",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": "em_analise"
+      }
+    },
+    "C07": {
+      "campos": {
+        "numero_documento": "Recibo 2007",
+        "prestador": "Pinheiros Clínica",
+        "cnpj_cpf_prestador": "00.000.000/0007-00",
+        "valor_total": 150.0,
+        "data_emissao": "15/02/2026",
+        "data_atendimento": "15/02/2026",
+        "nome_profissional": "Dr. Fictício Gabriel",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100007/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-02-15",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 32,
+        "situacao_prazo": "fora_do_prazo_simulado",
+        "situacao_pedido": "nao_localizado_nas_exportacoes",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": null
+      }
+    },
+    "C08": {
+      "campos": {
+        "numero_documento": "Recibo 2008",
+        "prestador": "Azul Consultório",
+        "cnpj_cpf_prestador": "000.000.000-00",
+        "valor_total": 120.0,
+        "data_emissao": "17/03/2026",
+        "data_atendimento": "17/03/2026",
+        "nome_profissional": null,
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100008/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-17",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 8,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "nao_localizado_nas_exportacoes",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": ["nome do profissional de saúde"],
+        "status_financeiro": null
+      }
+    },
+    "C09": {
+      "campos": {
+        "numero_documento": "Recibo 2009",
+        "prestador": "Estelar Cardiologia",
+        "cnpj_cpf_prestador": "000.000.000-00",
+        "valor_total": 780.0,
+        "data_emissao": "18/03/2026",
+        "data_atendimento": "18/03/2026",
+        "nome_profissional": "Dra. Especialista Fictícia",
+        "descricao_servico": "Consulta cardiológica",
+        "registro_profissional": null,
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-18",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 8,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "nao_localizado_nas_exportacoes",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": ["registro profissional"],
+        "status_financeiro": null
+      }
+    },
+    "C10": {
+      "campos": {
+        "numero_documento": "NFS-e 2010",
+        "prestador": "Íris Serviços Médicos",
+        "cnpj_cpf_prestador": "00.000.000/0010-00",
+        "valor_total": 320.0,
+        "data_emissao": "19/03/2026",
+        "data_atendimento": "19/03/2026",
+        "nome_profissional": "Dr. Fictício Igor",
+        "descricao_servico": null,
+        "registro_profissional": "CRM 100010/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-19",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 8,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "nao_localizado_nas_exportacoes",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": ["descrição do serviço"],
+        "status_financeiro": null
+      }
+    },
+    "C11": {
+      "campos": {
+        "numero_documento": "NFS-e 2011",
+        "prestador": "Ipê Atendimento Clínico",
+        "cnpj_cpf_prestador": "00.000.000/0011-00",
+        "valor_total": 320.0,
+        "data_emissao": "20/03/2026",
+        "data_atendimento": null,
+        "nome_profissional": "Dra. Fictícia Joana",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100011/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-20",
+        "origem_data_base_prazo": "data_emissao",
+        "dias_desde_atendimento_ou_emissao": 30,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "nao_localizado_nas_exportacoes",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": ["data do atendimento"],
+        "status_financeiro": null
+      }
+    },
+    "C12": {
+      "campos": {
+        "numero_documento": "NFS-e 2012",
+        "prestador": "Identificadores Medicina",
+        "cnpj_cpf_prestador": "00.000.000/0012-00",
+        "valor_total": 275.0,
+        "data_emissao": null,
+        "data_atendimento": "21/03/2026",
+        "nome_profissional": "Dr. Fictício Kai",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100012/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-21",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 30,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "nao_localizado_nas_exportacoes",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": ["data de emissão"],
+        "status_financeiro": null
+      }
+    },
+    "C13": {
+      "campos": {
+        "numero_documento": "NFS-e 2013",
+        "prestador": "Integra Diagnóstico",
+        "cnpj_cpf_prestador": "00.000.000/0013-00",
+        "valor_total": 450.0,
+        "data_emissao": null,
+        "data_atendimento": null,
+        "nome_profissional": "Dra. Fictícia Laura",
+        "descricao_servico": "Consulta e exame",
+        "registro_profissional": "CRM 100013/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "indeterminado",
+        "situacao_pedido": "data_documento_indeterminada",
+        "periodo_dos_datasets_cobre_data_base": null,
+        "campos_incompletos": ["data do atendimento", "data de emissão"],
+        "status_financeiro": null
+      }
+    },
+    "C14": {
+      "campos": {
+        "numero_documento": "NFS-e 2014",
+        "prestador": "Guardião Clínica",
+        "cnpj_cpf_prestador": "00.000.000/0014-00",
+        "valor_total": 265.0,
+        "data_emissao": "23/03/2026",
+        "data_atendimento": "23/03/2026",
+        "nome_profissional": "Dr. Fictício Marcos",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100014/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-23",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 1,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "localizado",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": "em_analise"
+      }
+    },
+    "C15": {
+      "campos": {
+        "numero_documento": "NFS-e 2015",
+        "prestador": "Segura Saúde",
+        "cnpj_cpf_prestador": "00.000.000/0015-00",
+        "valor_total": 375.0,
+        "data_emissao": "24/03/2026",
+        "data_atendimento": "24/03/2026",
+        "nome_profissional": "Dra. Fictícia Nina",
+        "descricao_servico": "Consulta médica",
+        "registro_profissional": "CRM 100015/SP",
+        "imagem_legivel": true,
+        "observacao_visual": null
+      },
+      "avaliacao": {
+        "data_base_prazo": "2026-03-24",
+        "origem_data_base_prazo": "data_atendimento",
+        "dias_desde_atendimento_ou_emissao": 1,
+        "situacao_prazo": "dentro_do_prazo_simulado",
+        "situacao_pedido": "localizado",
+        "periodo_dos_datasets_cobre_data_base": true,
+        "campos_incompletos": [],
+        "status_financeiro": "liberado_integral_aguardando_pagamento"
+      }
+    }
+  }
+}

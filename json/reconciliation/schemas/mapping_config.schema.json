@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/mapping_config.schema.json",
+  "title": "Configuração de mapeamento de reembolsos",
+  "description": "Liga os campos da nota e da exportação do plano ao modelo canônico do conciliador.",
+  "type": "object",
+  "required": ["schema_version", "version", "notes", "portal", "matching"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "version": {
+      "type": "string"
+    },
+    "mapping_method": {
+      "type": "object"
+    },
+    "notes": {
+      "$ref": "#/$defs/sourceMapping",
+      "properties": {
+        "result_path": {
+          "type": "string"
+        }
+      },
+      "required": ["records_path", "result_path", "fields"]
+    },
+    "portal": {
+      "$ref": "#/$defs/sourceMapping",
+      "required": ["records_path", "fields"]
+    },
+    "matching": {
+      "type": "object",
+      "required": [
+        "amount_tolerance",
+        "date_window_days",
+        "provider_min_similarity",
+        "provider_strong_similarity",
+        "provider_weak_similarity",
+        "service_min_similarity",
+        "relative_amount_tolerance"
+      ],
+      "properties": {
+        "amount_tolerance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "date_window_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "provider_min_similarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "provider_strong_similarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "provider_weak_similarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "service_min_similarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "relative_amount_tolerance": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "semantic_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "caveats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "fieldPath": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "sourceMapping": {
+      "type": "object",
+      "required": ["records_path", "fields"],
+      "properties": {
+        "records_path": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/fieldPath"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/health-refund-assistant/test_gold.schema.json",
+  "title": "Gabarito sintético",
+  "description": "Ground truth isolado do prompt: campos do documento e avaliação determinística esperada.",
+  "type": "object",
+  "required": ["schema_version", "dataset", "casos"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 2
+    },
+    "dataset": {
+      "type": "string"
+    },
+    "casos": {
+      "type": "object",
+      "minProperties": 15,
+      "patternProperties": {
+        "^C\\d{2}$": {
+          "type": "object",
+          "required": ["campos", "avaliacao"],
+          "properties": {
+            "campos": {
+              "$ref": "#/$defs/extraction"
+            },
+            "avaliacao": {
+              "$ref": "#/$defs/assessment"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+    "extraction": {
+      "type": "object",
+      "required": [
+        "numero_documento",
+        "prestador",
+        "cnpj_cpf_prestador",
+        "valor_total",
+        "data_emissao",
+        "data_atendimento",
+        "nome_profissional",
+        "descricao_servico",
+        "registro_profissional",
+        "imagem_legivel",
+        "observacao_visual"
+      ],
+      "properties": {
+        "numero_documento": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "prestador": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "cnpj_cpf_prestador": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "valor_total": {
+          "type": ["number", "null"]
+        },
+        "data_emissao": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "data_atendimento": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "nome_profissional": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "descricao_servico": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "registro_profissional": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "imagem_legivel": {
+          "type": "boolean"
+        },
+        "observacao_visual": {
+          "$ref": "#/$defs/nullableString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "assessment": {
+      "type": "object",
+      "required": [
+        "data_base_prazo",
+        "origem_data_base_prazo",
+        "dias_desde_atendimento_ou_emissao",
+        "situacao_prazo",
+        "situacao_pedido",
+        "periodo_dos_datasets_cobre_data_base",
+        "campos_incompletos",
+        "status_financeiro"
+      ],
+      "properties": {
+        "data_base_prazo": {
+          "type": ["string", "null"],
+          "format": "date"
+        },
+        "origem_data_base_prazo": {
+          "enum": ["data_atendimento", "data_emissao", null]
+        },
+        "dias_desde_atendimento_ou_emissao": {
+          "type": ["integer", "null"]
+        },
+        "situacao_prazo": {
+          "enum": [
+            "dentro_do_prazo_simulado",
+            "fora_do_prazo_simulado",
+            "data_futura",
+            "indeterminado"
+          ]
+        },
+        "situacao_pedido": {
+          "enum": [
+            "localizado",
+            "nao_localizado_nas_exportacoes",
+            "periodo_nao_coberto",
+            "data_documento_indeterminada",
+            "exportacao_com_erros"
+          ]
+        },
+        "periodo_dos_datasets_cobre_data_base": {
+          "type": ["boolean", "null"]
+        },
+        "campos_incompletos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status_financeiro": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

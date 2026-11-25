@@ -64,9 +64,9 @@ serviço; não execute com dados reais sem revisar os requisitos de privacidade
 aplicáveis.
 
 Os prompts v1.0–v3.0 declaram o contrato
-[`json/extraction/schemas/vlm_extraction.schema.json`](../json/schemas/vlm_extraction.schema.json);
+[`json/extraction/schemas/vlm_extraction.schema.json`](../json/extraction/schemas/vlm_extraction.schema.json);
 v4.0 declara
-[`json/extraction/schemas/vlm_extraction_v4.schema.json`](../json/schemas/vlm_extraction_v4.schema.json).
+[`json/extraction/schemas/vlm_extraction_v4.schema.json`](../json/extraction/schemas/vlm_extraction_v4.schema.json).
 Cada documentação Markdown do schema referencia de volta as versões de prompt que o
 utilizam. O extrator carrega o arquivo correspondente pela versão, inclui o schema e
 um template JSON na mensagem de sistema e também usa o contrato no `response_format`
@@ -114,11 +114,11 @@ nomes de campos, caminhos e tipos, sem valores dos registros.
 O comando `python -m health_refund_assistant.mapping` valida os caminhos propostos e salva um
 arquivo de proposta separado; ele nunca substitui o mapeamento ativo.
 O prompt declara como contrato de resposta
-[`json/reconciliation/schemas/mapping_proposal.schema.json`](../json/schemas/mapping_proposal.schema.json);
+[`json/reconciliation/schemas/mapping_proposal.schema.json`](../json/reconciliation/schemas/mapping_proposal.schema.json);
 o código carrega e inclui o schema e um template JSON na mensagem enviada ao modelo.
 O schema e sua documentação apontam de volta para este prompt. Após validar os
 caminhos, o código mescla a proposta na configuração definida por
-[`json/reconciliation/schemas/mapping_config.schema.json`](../json/schemas/mapping_config.schema.json).
+[`json/reconciliation/schemas/mapping_config.schema.json`](../json/reconciliation/schemas/mapping_config.schema.json).
 
 ## `reembolso_assistente`
 

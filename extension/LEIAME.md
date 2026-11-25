@@ -29,6 +29,6 @@ Cada reembolso: `pessoaConsultada, numeroSinistro, beneficiario, status, prestad
 [`manifest.json`](./manifest.json) é metadado obrigatório da extensão Chrome Manifest V3, não uma
 exportação de dados. As exportações baixadas são datasets separados e, quando
 importadas na aplicação, são validadas pelo
-[`plan_export.schema.json`](../json/schemas/plan_export.schema.json). Consulte também a
+[`plan_export.schema.json`](../json/plan/schemas/plan_export.schema.json). Consulte também a
 [documentação específica do manifesto](./manifest.md) e a
 [documentação da exportação JSON](./exportacao_reembolsos.md).

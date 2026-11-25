@@ -92,7 +92,7 @@ extension ──> JSON de exportação ────┤
 | `data/sinteticos/documentos/` | PDFs 100% fictícios usados na bateria |
 | `json/tests/synthetic/` | Manifesto, gabarito e exportação sintética |
 | `json/config/mapeamento_reembolsos.json` | Mapeamento ativo dos campos das notas e dos pedidos |
-| `json/schemas/` | Contratos JSON Schema; cada contrato tem documentação ao lado |
+| `json/{extraction,reconciliation,plan,documents,evaluation,tests}/schemas/` | Contratos JSON Schema organizados por processo; cada contrato tem documentação ao lado |
 | `json/tests/templates/` | Templates-fonte do manifesto e do gabarito |
 | `prompts/vlm_extractor/` | Prompts versionados de extração visual |
 | `prompts/reembolso_assistente/` | Prompts versionados de resposta conversacional |

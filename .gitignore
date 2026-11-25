@@ -32,4 +32,4 @@ json/evaluation/reports/*.json
 json/evaluation/reports/*.json.tmp
 json/reconciliation/reports/*.json
 json/reconciliation/reports/*.json.tmp
-json/config/*.proposta.json
+json/config/*.proposta.json.vscode/

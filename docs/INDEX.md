@@ -4,6 +4,27 @@
 
 ---
 
+## ⚠️ DIRETRIZES & PADRÕES (Obrigatório Ler Primeiro)
+
+👉 **[../.copilot-guidelines.md](../.copilot-guidelines.md)** ⭐⭐⭐
+- Padrões de nomenclatura (snake_case)
+- Configuração de modelos LLM (temperatura, top_p)
+- Ordem de leitura dos documentos
+- Rastreamento para o grupo (branch, changelog, testes)
+- **LEITURA OBRIGATÓRIA para todos os colaboradores**
+
+👉 **[00_guia_leitura_recomendado.md](./00_guia_leitura_recomendado.md)** ⭐⭐
+- 5 perfis com tempo estimado
+- Ordem de leitura por perfil
+- Próximas ações por perfil
+
+👉 **[00_audit_consistencia.md](./00_audit_consistencia.md)**
+- Auditoria de consistência de documentação
+- Inconsistências encontradas
+- Plano de correção
+
+---
+
 ## 🚀 Comece Aqui (01_quickstart/)
 
 Leia nesta ordem para começar rapidamente:

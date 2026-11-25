@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Care Plus – Coletor de Reembolsos",
+  "version": "1.1.0",
+  "description": "Navega pela Consulta de Reembolsos da Care Plus, extrai o detalhe de cada sinistro e exporta JSON (opcionalmente envia ao LM Studio).",
+  "permissions": ["scripting", "storage", "downloads", "activeTab"],
+  "host_permissions": [
+    "https://*.careplus.com.br/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": { "service_worker": "20_background/background.js" },
+  "action": { "default_popup": "10_popup/popup.html", "default_title": "Coletar Reembolsos" },
+  "content_scripts": [
+    {
+      "matches": ["https://*.careplus.com.br/portal/portal/modulos/reembolso/*"],
+      "js": ["30_content/bridge.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

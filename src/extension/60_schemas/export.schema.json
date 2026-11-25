@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Care Plus Export Schema",
+  "description": "Schema for JSON exported by Care Plus – Coletor de Reembolsos",
+  "type": "object",
+  "required": ["coleta_realizada_em", "total", "pessoas", "reembolsos", "erros"],
+  "properties": {
+    "coleta_realizada_em": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp da coleta"
+    },
+    "total": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total de reembolsos coletados"
+    },
+    "totalPorPessoa": {
+      "type": "object",
+      "description": "Contagem de reembolsos por beneficiário",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "pessoas": {
+      "type": "array",
+      "description": "Lista de beneficiários consultados",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reembolsos": {
+      "type": "array",
+      "description": "Array de reembolsos coletados",
+      "items": {
+        "type": "object",
+        "required": ["numeroSinistro", "pessoaConsultada"],
+        "properties": {
+          "pessoaConsultada": {
+            "type": "string",
+            "description": "Beneficiário que foi consultado"
+          },
+          "numeroSinistro": {
+            "type": "string",
+            "description": "ID único do sinistro"
+          },
+          "beneficiario": {
+            "type": ["string", "null"],
+            "description": "Beneficiário associado (pode diferir de consultada)"
+          },
+          "status": {
+            "type": ["string", "null"],
+            "enum": ["PAGO", "PARCIAL", "RECUSADO", "EM_ANALISE", null],
+            "description": "Status do reembolso"
+          },
+          "prestador": {
+            "type": ["string", "null"],
+            "description": "Nome da clínica/hospital"
+          },
+          "cobertura": {
+            "type": ["string", "null"],
+            "description": "Tipo de cobertura (INTERNAÇÃO, CONSULTA, etc)"
+          },
+          "dataSolicitacao": {
+            "type": ["string", "null"],
+            "format": "date",
+            "description": "Data de solicitação (YYYY-MM-DD)"
+          },
+          "dataRealizacao": {
+            "type": ["string", "null"],
+            "format": "date",
+            "description": "Data do serviço (YYYY-MM-DD)"
+          },
+          "dataPagamento": {
+            "type": ["string", "null"],
+            "format": "date",
+            "description": "Data do pagamento (YYYY-MM-DD)"
+          },
+          "origemDocumento": {
+            "type": ["string", "null"],
+            "description": "Tipo de documento (RECIBO, NOTA FISCAL, DECLARAÇÃO)"
+          },
+          "valorSolicitado": {
+            "type": ["string", "number", "null"],
+            "description": "Valor solicitado (pode ser string com formatação)"
+          },
+          "valorSolicitadoNum": {
+            "type": ["number", "null"],
+            "minimum": 0,
+            "description": "Valor solicitado (numérico puro)"
+          },
+          "valorCoparticipacao": {
+            "type": ["string", "number", "null"],
+            "description": "Coparticipação do beneficiário"
+          },
+          "valorCoparticipacaoNum": {
+            "type": ["number", "null"],
+            "minimum": 0,
+            "description": "Coparticipação (numérico puro)"
+          },
+          "valorFinalReembolsado": {
+            "type": ["string", "number", "null"],
+            "description": "Valor efetivamente reembolsado"
+          },
+          "valorFinalReembolsadoNum": {
+            "type": ["number", "null"],
+            "minimum": 0,
+            "description": "Valor final reembolsado (numérico puro)"
+          },
+          "descricao": {
+            "type": ["string", "null"],
+            "description": "Descrição do serviço"
+          },
+          "formaPagamento": {
+            "type": ["string", "null"],
+            "description": "Forma de pagamento (CREDITO, DOC, TED, etc)"
+          },
+          "procedimento": {
+            "type": ["string", "null"],
+            "description": "Código ou nome do procedimento médico"
+          },
+          "informacaoAdicional": {
+            "type": ["string", "null"],
+            "description": "Notas adicionais"
+          },
+          "camposBrutos": {
+            "type": ["object", "null"],
+            "description": "Todos os rótulos/valores como lidos da página",
+            "additionalProperties": true
+          },
+          "linhaLista": {
+            "type": ["object", "null"],
+            "description": "Dados brutos da linha da tabela",
+            "additionalProperties": true
+          },
+          "subItens": {
+            "type": ["array", "null"],
+            "description": "Sub-itens (ex: diárias de internação)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "descricao": {
+                  "type": "string"
+                },
+                "valor": {
+                  "type": ["number", "string"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "erros": {
+      "type": "array",
+      "description": "Array de erros encontrados durante coleta",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

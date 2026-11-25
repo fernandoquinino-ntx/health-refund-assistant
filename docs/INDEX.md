@@ -45,6 +45,45 @@ Documentação de requisitos e respostas:
 
 ---
 
+## 🤖 Evolução para AI Agent (Pós-Entrega)
+
+**Documentação estratégica para transformar em AI Agent profissional** (Fases 1-5):
+
+1. **[AI_AGENT_ARCHITECTURE.md](./AI_AGENT_ARCHITECTURE.md)** ⭐⭐⭐
+   - Visão completa: Knowledge Base + Memory + Tools + User Identity
+   - Componentes da arquitetura AI Agent
+   - Fluxo com memory + tools + knowledge
+   - Isolamento de dados (LGPD)
+   - **LER PRIMEIRO para entender visão**
+
+2. **[CASOS_TESTE_MEMORY_ISOLATION.md](./CASOS_TESTE_MEMORY_ISOLATION.md)** ⭐⭐
+   - 15 casos de teste (C01-C15) para:
+     * Validação de usuário (C01-C03)
+     * Isolamento de dados entre usuários (C04-C05)
+     * Persistência de memória (C06-C07)
+     * Auditoria LGPD (C08-C09)
+     * Injeção de memória em LLM (C10-C11)
+     * Concurrency multi-user (C12)
+     * Security & edge cases (C13-C15)
+
+3. **[ROADMAP_AI_AGENT.md](./ROADMAP_AI_AGENT.md)** ⭐⭐
+   - 5 Fases de implementação incremental
+   - Fase 1: Core Foundation (Knowledge + Memory + Auth)
+   - Fase 2: Tools Registry
+   - Fase 3: Prompt v4.0 com Memory
+   - Fase 4: Security Hardening + LGPD
+   - Fase 5: Extension Alignment (MCP)
+   - Timeline: Dez 2026 - Abr 2027
+
+4. **[EXTENSION_E_ARQUITETURA_AI.md](./EXTENSION_E_ARQUITETURA_AI.md)**
+   - Alinhamento Extension (VS Code) com Backend (MCP)
+   - Arquitetura MCP Server (JSON-RPC 2.0)
+   - Fluxo Extension ↔ MCP ↔ Orchestrator
+   - Código exemplo Python + JavaScript
+   - Schemas JSON-RPC
+
+---
+
 ## ✅ Testes e Validação (04_testing/)
 
 Teste e validação completa:

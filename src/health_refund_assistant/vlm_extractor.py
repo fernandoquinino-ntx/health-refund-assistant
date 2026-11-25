@@ -29,7 +29,7 @@ DOCUMENTO:
   Veja docs/caderno_projeto.md (R2 - Prompt Engineering) para evolução
 
 MODELO:
-  gpt-4o-mini (conforme configurado em DEFAULT_MODEL)
+  gpt-6-luna (conforme configurado em DEFAULT_MODEL)
 """
 
 # src/vlm_extractor.py

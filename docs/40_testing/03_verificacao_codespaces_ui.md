@@ -29,7 +29,7 @@ Procedimento para validar tudo antes de 02/12/2026
 # Verificar que está pronto:
 python --version          # 3.12
 pip list | grep openai    # Deve aparecer
-echo $MODEL_PREFERENCE    # gpt-6-luna
+echo $MODEL_PREFERENCE    # GPT-6 Luna
 ```
 
 ---

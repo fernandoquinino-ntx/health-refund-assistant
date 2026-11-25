@@ -12,7 +12,7 @@
 ### 1️⃣ Abertura (3 minutos)
 - **Título:** Assistente de Rastreamento de Reembolsos com IA + Isolamento de Dados
 - **Problema:** Notas fiscais dispersas em e-mails/WhatsApp → perda de rastreabilidade
-- **Solução:** VLM (gpt-4o-mini*) + Determinístico Python + JSON Exportação Portal
+- **Solução:** VLM (GPT-6 Luna*) + Determinístico Python + JSON Exportação Portal
   - *Versão Atual. Será migrado para GPT-6 Luna em Fase 1 (Jan 2027)
 - **Status:** ✅ 100% Pronto para Entrega
 

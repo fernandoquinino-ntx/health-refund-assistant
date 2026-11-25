@@ -59,7 +59,7 @@ As versões v1.0 a v3.0 retornam exatamente nove campos: `numero_documento`, `pr
 `registro_profissional`, `imagem_legivel` e `observacao_visual`. A saída é validada
 no código mesmo quando a API rejeita `json_schema`. A v4.0 acrescenta
 `data_atendimento` e `nome_profissional`, mantendo todos os outros campos. O
-processamento usa `gpt-6-luna` pela API OpenAI e envia a imagem do documento para esse
+processamento usa `GPT-6 Luna` pela API OpenAI e envia a imagem do documento para esse
 serviço; não execute com dados reais sem revisar os requisitos de privacidade
 aplicáveis.
 
@@ -75,7 +75,7 @@ e na validação da resposta.
 ### Resultados comparativos
 
 Resultados abaixo são da execução real anterior à migração, com `qwen2.5-vl-7b-instruct`
-no LM Studio. Eles não representam o desempenho de `gpt-6-luna`; execute novamente
+no LM Studio. Eles não representam o desempenho de `GPT-6 Luna`; execute novamente
 após configurar `OPENAPI_TOKEN`. Não use placares hipotéticos como evidência.
 
 | Versão | Modelo avaliado | Casos corretos / 15 | Acurácia por campo | Falhas críticas | Resultado |

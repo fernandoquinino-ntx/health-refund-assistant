@@ -23,8 +23,8 @@
 
 ### Problema
 Diferentes documentos mencionam **dois modelos diferentes**:
-- Alguns dizem `gpt-4o-mini` (modelo atual)
-- Outros dizem `gpt-6-luna` (modelo futuro per sua solicitação)
+- Alguns dizem `GPT-6 Luna` (modelo atual)
+- Outros dizem `GPT-6 Luna` (modelo futuro per sua solicitação)
 - **Nenhuma clareza sobre qual usar quando**
 
 ### Arquivos Afetados
@@ -33,28 +33,28 @@ docs/apresentacao_grupo.md:5
   → "VLM (GPT-4o-mini) + Determinístico Python + JSON Exportação Portal"
 
 docs/caderno_projeto.md:22, 91, 94, 106
-  → "VLM Extractor (gpt-4o-mini, imagem + schema)"
-  → "VLM (gpt-4o-mini): Lê imagem/PDF..."
-  → "LLM Síntese (gpt-4o-mini chat): Gera resposta final..."
-  → "VLM Extractor (gpt-4o-mini + json_schema strict)"
+  → "VLM Extractor (GPT-6 Luna, imagem + schema)"
+  → "VLM (GPT-6 Luna): Lê imagem/PDF..."
+  → "LLM Síntese (GPT-6 Luna chat): Gera resposta final..."
+  → "VLM Extractor (GPT-6 Luna + json_schema strict)"
 
 docs/roteiro_avaliacao.md:17, 175, 218
-  → "O processamento VLM usa o modelo `gpt-6-luna`..."
-  → "O extrator usa o modelo `gpt-6-luna`..."
-  → "comparáveis ao novo modelo `gpt-6-luna`..."
+  → "O processamento VLM usa o modelo `GPT-6 Luna`..."
+  → "O extrator usa o modelo `GPT-6 Luna`..."
+  → "comparáveis ao novo modelo `GPT-6 Luna`..."
 ```
 
 ### Raiz do Problema
-- **caderno_projeto.md** foi escrito descrevendo implementação ATUAL (gpt-4o-mini)
-- **roteiro_avaliacao.md** foi escrito descrevendo versão FUTURA (gpt-6-luna)
+- **caderno_projeto.md** foi escrito descrevendo implementação ATUAL (GPT-6 Luna)
+- **roteiro_avaliacao.md** foi escrito descrevendo versão FUTURA (GPT-6 Luna)
 - Nenhuma clareza sobre qual versão usa qual modelo
 
 ### Solução Recomendada
 ✅ **Padrão a Seguir:**
 ```markdown
 ## Versão Atual (Implementação 2026-11-25)
-- VLM Extractor: `gpt-4o-mini`
-- LLM Síntese: `gpt-4o-mini`
+- VLM Extractor: `GPT-6 Luna`
+- LLM Síntese: `GPT-6 Luna`
 - Configuração: api.openai.com
 - Status: EM PRODUÇÃO
 
@@ -70,13 +70,13 @@ docs/roteiro_avaliacao.md:17, 175, 218
 ### Ação Necessária
 - [ ] Atualizar `docs/apresentacao_grupo.md` linha 5
   - Mudar: `VLM (GPT-4o-mini)...`
-  - Para: `VLM (gpt-4o-mini - atual, será GPT-6 Luna em Fase 1)...`
+  - Para: `VLM (GPT-6 Luna - atual, será GPT-6 Luna em Fase 1)...`
 
 - [ ] Atualizar `docs/caderno_projeto.md` linhas 22, 91, 94, 106
   - Adicionar nota: "Modelo Atual. Será migrado para GPT-6 Luna em Jan 2027 (Fase 1)."
 
 - [ ] Atualizar `docs/roteiro_avaliacao.md`
-  - Clarificar: "Versão Futura (após Fase 1). Versão atual usa gpt-4o-mini."
+  - Clarificar: "Versão Futura (após Fase 1). Versão atual usa GPT-6 Luna."
 
 ---
 
@@ -140,7 +140,7 @@ Usuários do grupo não saberão que deve seguir essas guidelines.
 - [ ] Gerar novo ZIP final
 
 ### Médio Prazo (Fase 1)
-- [ ] Criar documento "CHANGELOG_MODELO_LLM.md" rastreando migração gpt-4o-mini → GPT-6 Luna
+- [ ] Criar documento "CHANGELOG_MODELO_LLM.md" rastreando migração GPT-6 Luna → GPT-6 Luna
 - [ ] Adicionar validação automática em CI/CD
 
 ---
@@ -148,7 +148,7 @@ Usuários do grupo não saberão que deve seguir essas guidelines.
 ## 📋 Checklist de Correção
 
 Após fazer as correções, verificar:
-- [ ] Nenhuma menção a `gpt-4o-mini` em documentos "ai_agent" ou "futuro"
+- [ ] Nenhuma menção a `GPT-6 Luna` em documentos "ai_agent" ou "futuro"
 - [ ] Nenhuma menção a `GPT-6 Luna` em documentos "atual" ou "implementação"
 - [ ] Cada menção de modelo claramente indica se é ATUAL ou FUTURO
 - [ ] `.copilot-guidelines.md` está referenciado em docs principais

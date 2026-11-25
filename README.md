@@ -72,7 +72,7 @@ Quando uma nota não está na exportação (ou foi emitida fora da janela), o si
                              │
                              ▼
         ┌────────────────────────────────────┐
-        │  VLM Extractor (gpt-4o-mini)       │
+        │  VLM Extractor (GPT-6 Luna)       │
         │  Schema JSON com validação estrita │
         │  (CRM, descrição, valor, data)     │
         └────────────────────────────────────┘
@@ -118,7 +118,7 @@ Quando uma nota não está na exportação (ou foi emitida fora da janela), o si
   ```bash
   OPENAI_API_KEY=sk-...  # Sua chave OpenAI
   OPENAI_BASE_URL=https://api.openai.com/v1  # (padrão)
-  VLM_MODEL_NAME=gpt-4o-mini  # (padrão)
+  VLM_MODEL_NAME=GPT-6 Luna  # (padrão)
   LM_STUDIO_PORT=1234  # Se usar LM Studio localmente
   ```
 
@@ -239,7 +239,7 @@ health-refund-assistant/
 ├── src/                                # Código principal
 │   ├── assistant.py                    # CLI interativo (input nota → output rastreabilidade)
 │   ├── web_app.py                      # FastAPI web interface (upload PDF → JSON resposta)
-│   ├── vlm_extractor.py                # Extração VLM com schema JSON (gpt-4o-mini)
+│   ├── vlm_extractor.py                # Extração VLM com schema JSON (GPT-6 Luna)
 │   ├── reconciliation.py               # Conciliação determinística contra exportação
 │   ├── assessment.py                   # Auditoria pré-envio (completude + 365 dias)
 │   ├── paths.py                        # Configuração centralizada de caminhos

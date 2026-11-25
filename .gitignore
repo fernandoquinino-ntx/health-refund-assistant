@@ -1,8 +1,9 @@
+# Python
 .venv/
 __pycache__/
 *.py[cod]
-.DS_Store
-.env
+*.pyc
+*.pyo
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -10,6 +11,19 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+
+# System
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # Ignore local PDFs and outputs; only synthetic fixtures are versioned.
 data/*

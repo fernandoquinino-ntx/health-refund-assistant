@@ -279,9 +279,9 @@ R: Será registrado no JSON com status "FALHOU" + motivo completo.
 
 ## 📝 Versão do Modelo
 
-- **VLM Extractor:** `gpt-4o-mini` (conforme original)
-- **Assistente LLM:** `gpt-6-luna` (conforme solicitado)
-- **Avaliação:** `gpt-6-luna` (Relatório v4.0)
+- **VLM Extractor:** `GPT-6 Luna` (conforme original)
+- **Assistente LLM:** `GPT-6 Luna` (conforme solicitado)
+- **Avaliação:** `GPT-6 Luna` (Relatório v4.0)
 
 ---
 

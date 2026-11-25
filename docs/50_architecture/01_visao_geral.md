@@ -29,7 +29,7 @@ health-refund-assistant/
 │   └── roteiro_avaliacao.md           # Roteiro de avaliação
 ├── src/health_refund_assistant/
 │   ├── assistant.py                   # Orquestrador principal
-│   ├── vlm_extractor.py               # VLM Extractor (gpt-4o-mini)
+│   ├── vlm_extractor.py               # VLM Extractor (GPT-6 Luna)
 │   ├── assessment.py                  # Auditoria (D-2 + 365 dias)
 │   ├── reconciliation.py              # Reconciliação com plano
 │   ├── web_app.py                     # Interface Streamlit
@@ -208,7 +208,7 @@ Criar arquivo `.env` (NÃO versionado, local apenas):
 ```env
 OPENAI_API_KEY=sk-...seu-token-aqui...
 OPENAI_BASE_URL=https://api.openai.com/v1
-VLM_MODEL_NAME=gpt-4o-mini
+VLM_MODEL_NAME=GPT-6 Luna
 ```
 
 **Ou** em Codespaces:
@@ -230,7 +230,7 @@ VLM_MODEL_NAME=gpt-4o-mini
 | Conformidade LGPD | ✅ Verificada |
 | Segurança (Injection) | ✅ Zero falhas críticas |
 | Codespaces | ✅ Pronto para usar |
-| Modelo IA | ✅ gpt-6-luna v4.0 |
+| Modelo IA | ✅ GPT-6 Luna v4.0 |
 
 ---
 
@@ -248,7 +248,7 @@ Todas as 5 Fases Executadas:
 
 Pronto para Entrega: 02/12/2026
 Responsável: Fernando Quinnino
-Assistente IA: Copilot (gpt-6-luna)
+Assistente IA: Copilot (GPT-6 Luna)
 ```
 
 ---

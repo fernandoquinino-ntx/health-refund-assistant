@@ -40,7 +40,7 @@
 ### 2.1 — Relatório de Avaliação
 - **Arquivo:** `json/evaluation/reports/avaliacao_5_casos_v4_gpt6luna.json`
 - **Data de Execução:** 2026-11-25T16:29:53Z
-- **Modelo:** gpt-6-luna (conforme configurado)
+- **Modelo:** GPT-6 Luna (conforme configurado)
 - **Resultado:** ✅ **TODOS OS 5 CASOS PASSANDO**
 
 ```
@@ -111,7 +111,7 @@ streamlit run src/health_refund_assistant/web_app.py
 
 ### 4.3 — Fluxo Sincronizado (Fase 3)
 - ✅ **3 Etapas Encadeadas:**
-  1. VLM Extractor (gpt-4o-mini + json_schema strict)
+  1. VLM Extractor (GPT-6 Luna + json_schema strict)
   2. Verificação Determinística (D-2 + 365 dias + completude)
   3. LLM Síntese (resposta ancorada em fatos)
 - ✅ Sem bypass possível de verificação crítica
@@ -204,7 +204,7 @@ git archive -o health-refund-assistant-entrega.zip HEAD
 | Conformidade LGPD | Dados reais removidos | ✅ OK |
 | Segurança (Injection) | Zero falhas críticas | ✅ OK |
 | Codespaces | .devcontainer atualizado | ✅ Pronto |
-| Modelo IA | gpt-6-luna v4.0 | ✅ Configurado |
+| Modelo IA | GPT-6 Luna v4.0 | ✅ Configurado |
 
 ---
 

@@ -60,7 +60,7 @@
 
 | Dúvida | Resposta Rápida | Documento |
 |--------|-----------------|-----------|
-| **"Como funciona o sistema?"** | VLM (gpt-4o-mini*) extrai JSON → Python valida → LLM responde | [`docs/caderno_projeto.md`](docs/caderno_projeto.md) |
+| **"Como funciona o sistema?"** | VLM (GPT-6 Luna*) extrai JSON → Python valida → LLM responde | [`docs/caderno_projeto.md`](docs/caderno_projeto.md) |
 | **"Como manter memória?"** | `json/memory/users/{user_id}/conversation_history.json` | [`docs/ai_agent_architecture.md`](docs/ai_agent_architecture.md) |
 | **"Como evitar vazar dados?"** | PIN + path validation + testes isolamento | [`docs/ai_agent_architecture.md`](docs/ai_agent_architecture.md) |
 | **"Tem testes formais?"** | SIM! 15 casos (C01-C15) | [`docs/casos_teste_memory_isolation.md`](docs/casos_teste_memory_isolation.md) |

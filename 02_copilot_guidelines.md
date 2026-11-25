@@ -53,7 +53,7 @@
 ### Temperatura e Top P
 ```json
 {
-  "modelo_padrao": "gpt-6-luna",
+  "modelo_padrao": "GPT-6 Luna",
   "temperatura": {
     "analise_tecnica": 0.3,
     "criacao_codigo": 0.5,
@@ -116,7 +116,7 @@
 ### Regras de Ouro
 ✅ **Fazer:**
 - Um documento referencia outro? Use links relativos `[texto](../caminho/arquivo.md)`
-- Versão de modelo mencionada? Use EXATAMENTE: `GPT-6 Luna` (não `gpt-6-luna`, não `GPT-6-LUNA`)
+- Versão de modelo mencionada? Use EXATAMENTE: `GPT-6 Luna` (não `GPT-6 Luna`, não `GPT-6-LUNA`)
 - Data mencionada? Use formato ISO: `2026-11-25`
 - Número de caso? Use EXATAMENTE: `C01`, `C02`, ..., `C15` (não `C1`, não `caso_01`)
 

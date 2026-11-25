@@ -42,7 +42,7 @@ python3 scripts/case_evaluation.py --models v1.0 v2.0 v3.0 v4.0
 ```
 src/health_refund_assistant/
 ├── assistant.py          # Orquestrador (3 etapas)
-├── vlm_extractor.py      # Extração VLM (gpt-4o-mini + schema)
+├── vlm_extractor.py      # Extração VLM (GPT-6 Luna + schema)
 ├── reconciliation.py     # Lógica determinística
 ├── assessment.py         # Auditoria pré-envio + janela D-2
 └── web_app.py            # Interface Streamlit

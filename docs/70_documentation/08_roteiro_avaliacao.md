@@ -14,7 +14,7 @@ os dados de referência ficam em JSON separado e nunca são enviados ao modelo.
   python -m pip install -r requirements.txt
   ```
 
-- O processamento VLM usa o modelo `gpt-6-luna` pela API OpenAI. Configure
+- O processamento VLM usa o modelo `GPT-6 Luna` pela API OpenAI. Configure
   `OPENAPI_TOKEN` no terminal antes de processar documentos:
 
   ```bash
@@ -172,7 +172,7 @@ O avaliador usa por padrão os JSONs em `json/tests/synthetic/` e os PDFs em
 `data/sinteticos/documentos/`. Os caminhos de relatório acima são locais e ignorados
 pelo Git. Para escolher outros arquivos, passe `--casos`, `--gabarito` e `--documentos`.
 
-O extrator usa o modelo `gpt-6-luna`, envia JSON Schema estrito e valida as nove
+O extrator usa o modelo `GPT-6 Luna`, envia JSON Schema estrito e valida as nove
 chaves do contrato v1.0–v3.0 ou as onze chaves do contrato v4.0. Se a API rejeitar
 explicitamente `json_schema`, o código repete a chamada sem esse formato e aplica a
 validação local. Saída incompatível é erro de extração, não uma resposta aprovada.
@@ -215,7 +215,7 @@ Compare uma versão por vez, mantendo modelo, PDFs, gabarito e parâmetros iguai
 Registre os resultados observados na tabela de
 [prompt_library.md](../prompts/prompt_library.md). Resultados não medidos ficam como
 “Pendente”. Os resultados históricos nessa tabela vieram do Qwen local e não são
-comparáveis ao novo modelo `gpt-6-luna`; os relatórios para OpenAI precisam ser
+comparáveis ao novo modelo `GPT-6 Luna`; os relatórios para OpenAI precisam ser
 gerados novamente.
 
 ### Diagnóstico: prompt ou código?

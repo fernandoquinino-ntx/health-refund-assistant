@@ -5,9 +5,9 @@
 ✅ **FEITO**
 
 **O que foi configurado:**
-- Variável de ambiente `MODEL_PREFERENCE = "gpt-6-luna"` no `.devcontainer/devcontainer.json`
+- Variável de ambiente `MODEL_PREFERENCE = "GPT-6 Luna"` no `.devcontainer/devcontainer.json`
 - Assistente LLM usa GPT-6 Luna (você)
-- VLM Extractor mantém `gpt-4o-mini` (conforme original — esse não muda)
+- VLM Extractor mantém `GPT-6 Luna` (conforme original — esse não muda)
 - Avaliação executada com GPT-6 Luna
 - Relatório gerado: `json/evaluation/reports/avaliacao_5_casos_v4_gpt6luna.json`
 
@@ -16,7 +16,7 @@
 **Verificação:**
 ```bash
 # No Codespaces, quando for usar, a variável estará disponível:
-echo $MODEL_PREFERENCE  # Output: gpt-6-luna
+echo $MODEL_PREFERENCE  # Output: GPT-6 Luna
 ```
 
 ---
@@ -51,7 +51,7 @@ echo $MODEL_PREFERENCE  # Output: gpt-6-luna
 # Para verificar que está tudo pronto:
 python --version  # 3.12
 pip list | grep openai  # Ver se tem openai
-echo $MODEL_PREFERENCE  # gpt-6-luna
+echo $MODEL_PREFERENCE  # GPT-6 Luna
 ```
 
 **Resultado:** 🟢 Codespaces 100% funcional e pronto ✅

@@ -19,7 +19,7 @@ O sistema responde com **fatos** (não especulações) às 3 perguntas-chave:
 3. **Prontidão Pré-Envio**: "Esta nota está completa e dentro do prazo para submissão (365 dias)?"
 
 ### Estimativa de Tokens e Custo por Chamada
-- **VLM Extractor** (gpt-4o-mini*, imagem + schema):  
+- **VLM Extractor** (GPT-6 Luna*, imagem + schema):  
   ~500 input tokens (imagem base64 + prompt) → ~200 output tokens → ~$0.0007/chamada
   - *Modelo Atual. Será migrado para GPT-6 Luna em Fase 1 (Jan 2027)
 - **LLM Chat** (síntese de resposta, fatos + prompt):  
@@ -89,11 +89,11 @@ Cada versão de extração é validada contra um schema JSON (ex: `vlm_extractio
 ## R3 — Recurso de IA (Opção A)
 
 ### Combinação: VLM Multimodal + Dados Estruturados
-1. **VLM (gpt-4o-mini*)**: Lê imagem/PDF (1ª página) → extrai campos fiscais com schema JSON rigoroso.
+1. **VLM (GPT-6 Luna*)**: Lê imagem/PDF (1ª página) → extrai campos fiscais com schema JSON rigoroso.
    - *Modelo Atual. Será migrado para GPT-6 Luna em Fase 1 (Jan 2027)
 2. **Dados Estruturados (JSON)**: Exportação do plano de saúde (ingestion em JSON) → contém pedidos processados com datas, valores, status.
 3. **Lógica Determinística (Python)**: Busca correspondência entre nota extraída e pedido na exportação; verifica janela D-2 e prazo 365 dias.
-4. **LLM Síntese (gpt-4o-mini* chat)**: Gera resposta final ancorada nos fatos retornados.
+4. **LLM Síntese (GPT-6 Luna* chat)**: Gera resposta final ancorada nos fatos retornados.
    - *Modelo Atual. Será migrado para GPT-6 Luna em Fase 1 (Jan 2027)
 
 ### Vantagens desta Abordagem
@@ -106,7 +106,7 @@ Cada versão de extração é validada contra um schema JSON (ex: `vlm_extractio
 ```
 PDF/Imagem
     ↓
-VLM Extractor (gpt-4o-mini* + json_schema strict)
+VLM Extractor (GPT-6 Luna* + json_schema strict)
     ↓ Extração: {nome, CRM, descrição, data, valor}
 Conciliador (Python determinístico)
     ├─ Calcula D-2 (hoje - 2 dias)

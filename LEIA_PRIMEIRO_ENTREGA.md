@@ -113,9 +113,44 @@ pytest -v  # Esperado: 60/60 testes PASSANDO ✅
 
 ---
 
-## 🧪 TESTES
+## 🧪 TESTES COM RASTREAMENTO
 
-### Executar Todos (Local)
+### ⭐ Executar com Rastreamento (Codespaces — Recomendado)
+
+**📌 NOVO:** Sistema de rastreamento automático para Codespaces!
+
+```bash
+# GitHub > Code > Codespaces > Create codespace on main
+# Aguardar 2-3 minutos (auto-install via post-create command)
+
+# Dentro do Codespaces, execute com rastreamento:
+python scripts/test_tracker.py --mode run --verbose
+
+# Resultado esperado:
+# ✅ 60 testes PASSANDO
+# 📋 Logs salvos automaticamente em json/evaluation/reports/
+# 📊 Relatório JSON para auditoria
+```
+
+**O que será rastreado:**
+- ✅ Timestamp de cada teste
+- ✅ Status (PASSOU / FALHOU / ERRO)
+- ✅ Output completo (stdout + stderr)
+- ✅ Relatório JSON do pytest
+- ✅ Arquivo de log estruturado
+
+**Revisar logs:**
+```bash
+# Dentro do Codespaces, após executar os testes:
+cat json/evaluation/reports/test_execution_*.json
+cat json/evaluation/reports/test_tracker_*.log
+```
+
+📖 **Leia:** `GUIA_RASTREAMENTO_CODESPACES.md` para detalhes completos
+
+---
+
+### Executar Todos (Local — sem rastreamento)
 ```bash
 # Terminal local ou dentro de venv
 pytest -v
@@ -135,14 +170,10 @@ pytest tests/test_vlm_extractor.py -k "case_05" -v
 pytest tests/test_vlm_extractor.py -k "adversarial" -v
 ```
 
-### Executar em Codespaces (Recomendado)
+### Executar Teste Específico com Rastreamento (Codespaces)
 ```bash
-# GitHub > Code > Codespaces > Create codespace on main
-# Aguardar 2-3 minutos (auto-install via post-create command)
-
 # Dentro do Codespaces:
-pytest -v
-# Resultado esperado: 60/60 testes PASSANDO ✅
+python scripts/test_tracker.py --mode test --name tests/test_reconciliation.py::test_case_01_pago_integralmente
 ```
 
 ---

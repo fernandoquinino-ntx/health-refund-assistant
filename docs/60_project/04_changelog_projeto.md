@@ -7,12 +7,20 @@ detalhes de cada commit.
 
 ### Adicionado
 
+- Prompts versionados de extração `v4.2`, revisão `v1.1`, mapeamento `v1.2`
+  e resposta `v1.2`; extração inclui trechos da IA para revisão humana.
 - Prompts de extração `v4.1` e de mapeamento `v1.1`, sem duplicar o formato JSON.
 - Instruções do Copilot para preservar a organização, os contratos e os padrões.
 - Esta política de changelog e versionamento.
 
 ### Alterado
 
+- A interface seleciona as novas versões de extração, revisão e resposta, e o
+  comando de mapeamento usa `v1.2` por padrão; contratos e prompts anteriores
+  permanecem disponíveis. A IA continua a
+  calcular a estimativa de pagamento, conferida de forma independente em Python.
+- Guias de entrada, navegação e operação revisados; documentação histórica e
+  propostas identificadas, com links JSON e limitações corrigidos.
 - As tarefas de revisão, resposta e estimativa recebem, pelo código, o prompt,
   o schema JSON e um modelo gerado a partir do contrato.
 - Módulos compartilhados de caminhos, contratos e prompts foram organizados em

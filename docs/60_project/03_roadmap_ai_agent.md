@@ -1,5 +1,10 @@
 # Roadmap - AI Agent Project Evolution
 
+> **Planejamento histórico:** datas, estrutura e fases abaixo são propostas,
+> não compromisso ou evidência de implementação. A memória atual é local e
+> individual; autenticação e isolamento multiusuário não existem. Consulte o
+> [status atual](../00_status_auditoria.md).
+
 > **Visão**: Transformar Health Refund Assistant em AI Agent Profissional com Memory, Knowledge, Tools  
 > **Timeline**: Fases Incrementais pós-entrega 02/12/2026
 

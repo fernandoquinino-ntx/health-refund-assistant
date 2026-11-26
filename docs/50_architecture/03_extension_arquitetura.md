@@ -1,5 +1,10 @@
 # Extension & Arquitetura AI Agent
 
+> **Proposta histórica:** as descrições de situação atual, caminhos e integração
+> abaixo estão desatualizadas e não comprovam funcionalidades. A extensão
+> carregável exporta JSON; o usuário o importa na interface. Consulte o
+> [guia atual](../10_quickstart/03_comece_aqui_extension.md).
+
 > **Propósito**: Alinhar extension (VS Code) com arquitetura AI Agent  
 > **Data**: 25 de novembro de 2026
 

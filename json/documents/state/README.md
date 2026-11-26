@@ -1,6 +1,6 @@
 # Estado local
 
-## [`notas_extraidas.json`](./notas_extraidas.json)
+## `notas_extraidas.json`
 
 Este arquivo pode conter nomes, identificadores e dados de saúde extraídos. É local e
 ignorado pelo Git. Consulte a [documentação por tipo](./notas_extraidas.md) e o

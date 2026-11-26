@@ -22,13 +22,16 @@ class WebAppTests(unittest.TestCase):
 
         self.assertEqual(
             extraction_versions,
-            ["v1.0", "v1.1", "v2.0", "v3.0", "v4.0", "v4.1"],
+            ["v1.0", "v1.1", "v2.0", "v3.0", "v4.0", "v4.1", "v4.2"],
         )
-        self.assertEqual(assistant_versions, ["v1.0", "v1.1"])
+        self.assertEqual(assistant_versions, ["v1.0", "v1.1", "v1.2"])
 
     def test_chat_submits_uploaded_pdf_and_saves_analysis(self):
         response = SimpleNamespace(
-            document_fields={"valor_total": 100},
+            document_fields={
+                "valor_total": 100,
+                "evidencias_literais": {"valor_total": "Total R$ 100,00"},
+            },
             assessment={
                 "situacao_pedido": "nao_localizado_nas_exportacoes",
                 "situacao_prazo": "indeterminado",
@@ -65,8 +68,13 @@ class WebAppTests(unittest.TestCase):
                 app.chat_input[0].set_value("Este pedido foi pago?").run()
                 self.assertFalse(app.exception)
                 self.assertEqual(handler.call_args.args[0].pdf_bytes, b"%PDF-test")
-                self.assertEqual(handler.call_args.args[0].extraction_prompt_version, "v4.1")
+                self.assertEqual(handler.call_args.args[0].extraction_prompt_version, "v4.2")
                 self.assertEqual(load_conversation(path)["evidence"]["documento"]["valor_total"], 100)
+                self.assertEqual(
+                    load_conversation(path)["evidence"]["documento"]["evidencias_literais"]["valor_total"],
+                    "Total R$ 100,00",
+                )
+                self.assertTrue(any("trechos foram transcritos pela IA" in item.value for item in app.caption))
                 self.assertEqual(load_conversation(path)["messages"][-1]["content"], "Não localizado.")
 
     def test_follow_up_is_displayed_and_persisted_without_new_pdf(self):

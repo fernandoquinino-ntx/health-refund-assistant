@@ -1,5 +1,9 @@
 # 📋 Respostas Às Suas Perguntas Específicas
 
+> **Histórico não verificado:** os resultados e comandos abaixo não comprovam
+> execução real. O antigo avaliador gerava afirmações fixas. Para fluxo, limites
+> e testes atuais, consulte o [README](../../README.md).
+
 ## Pergunta 1: "EU QUERO USAR O GPT-6 Luna CONFORME TAVA ANTES"
 
 ✅ **FEITO**

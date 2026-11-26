@@ -4,6 +4,6 @@ Contrato JSON Schema Draft 2020-12 da configuração
 [`json/config/mapeamento_reembolsos.json`](../../config/mapeamento_reembolsos.json).
 Verifica o formato do mapeamento de campos e parâmetros de conciliação. O processo
 opcional de proposta está descrito em
-[`reembolso_status/v1.1.md`](../../../prompts/reembolso_status/v1.1.md) e retorna o
+[`reembolso_status/v1.2.md`](../../../prompts/reembolso_status/v1.2.md) e retorna o
 contrato separado [`mapping_proposal.schema.json`](./mapping_proposal.schema.json).
 Não descreve uma exportação nem armazena dados de beneficiários.

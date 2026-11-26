@@ -1,5 +1,9 @@
 # Resumo Executivo - Evolução AI Agent
 
+> **Proposta histórica:** não use as afirmações abaixo como descrição do estado
+> atual. Não há autenticação ou isolamento multiusuário implementados. Veja o
+> [README](../../README.md) e o [status atual](../00_status_auditoria.md).
+
 > **Para**: Fernando Quinino  
 > **De**: Copilot Assistant  
 > **Data**: 25 de novembro de 2026  

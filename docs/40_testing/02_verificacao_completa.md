@@ -3,6 +3,7 @@
 > **Atenção:** os checklists e resultados abaixo são históricos e não foram
 > verificados nesta reorganização. O antigo `case_evaluation_v3.py` produzia
 > afirmações fixas sem chamar a API; não comprova avaliação real nem entrega pronta.
+> Não execute os comandos históricos; consulte o [README](../../README.md).
 
 **Data:** 25 de novembro de 2026  
 **Status:** 🟢 TODAS AS 5 FASES COMPLETAS  

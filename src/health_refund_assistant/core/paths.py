@@ -21,6 +21,7 @@ PROMPTS_DIR = PROJECT_ROOT / "prompts"
 SCHEMA_LOCATIONS = {
     "vlm_extraction.schema.json": JSON_ROOT / "extraction" / "schemas" / "vlm_extraction.schema.json",
     "vlm_extraction_v4.schema.json": JSON_ROOT / "extraction" / "schemas" / "vlm_extraction_v4.schema.json",
+    "vlm_extraction_v4_2.schema.json": JSON_ROOT / "extraction" / "schemas" / "vlm_extraction_v4_2.schema.json",
     "mapping_config.schema.json": JSON_ROOT / "reconciliation" / "schemas" / "mapping_config.schema.json",
     "mapping_proposal.schema.json": JSON_ROOT / "reconciliation" / "schemas" / "mapping_proposal.schema.json",
     "reconciliation_report.schema.json": JSON_ROOT / "reconciliation" / "schemas" / "reconciliation_report.schema.json",

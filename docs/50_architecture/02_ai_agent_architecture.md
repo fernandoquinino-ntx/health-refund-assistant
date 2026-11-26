@@ -1,5 +1,10 @@
 # AI Agent Architecture - Health Refund Assistant
 
+> **Proposta histórica:** descrições de autenticação, isolamento e ferramentas
+> futuras não são funcionalidades implementadas. A aplicação possui memória
+> local para um usuário, sem autenticação ou isolamento. Veja o
+> [README atual](../../README.md).
+
 > **Status**: Proposta de Alinhamento com Conceitos de Foundry/AI Agents  
 > **Data**: 25 de novembro de 2026
 

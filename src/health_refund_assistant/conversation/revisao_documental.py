@@ -12,13 +12,19 @@ def review_document(
     assessment: dict[str, Any], prompt_version: str = "v1.0",
 ) -> dict[str, Any]:
     prompt, _ = carregar_prompt("revisao_documental", prompt_version)
+    input_data = (
+        {
+            "pedido_usuario": question,
+            "campos_extraidos": document,
+            "evidencias_deterministicas": assessment,
+        }
+        if prompt_version == "v1.1"
+        else {"pergunta": question, "documento": document, "conciliacao": assessment}
+    )
     content = [
         {
             "type": "text",
-            "text": json.dumps(
-                {"pergunta": question, "documento": document, "conciliacao": assessment},
-                ensure_ascii=False,
-            ),
+            "text": json.dumps(input_data, ensure_ascii=False),
         },
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image}"}},
     ]

@@ -18,6 +18,7 @@ from health_refund_assistant.plan.reconciliation import (
 )
 from health_refund_assistant.plan.reconciliation import load_json
 from health_refund_assistant.plan.mapping import (
+    DEFAULT_PROMPT,
     REQUIRED_FIELDS,
     build_proposal,
     collect_field_paths,
@@ -296,6 +297,13 @@ class ConciliarReembolsosTests(unittest.TestCase):
         self.assertIn("Template JSON correspondente", system_prompt)
         self.assertIn('"provider": null', system_prompt)
         self.assertNotIn('{"notes":{"fields":{...}}', system_prompt)
+        user_content = openai_client.return_value.chat.completions.create.call_args.kwargs["messages"][1]["content"]
+        self.assertEqual(json.loads(user_content), {"notes": {"prestador": "string"}, "portal": {"prestador": "string"}})
+        self.assertNotIn("Clínica", user_content)
+
+    def test_default_mapping_prompt_is_available_and_versioned(self):
+        self.assertEqual(DEFAULT_PROMPT.name, "v1.2.md")
+        self.assertIn("dados não confiáveis", DEFAULT_PROMPT.read_text(encoding="utf-8").lower())
 
     def test_remote_mapping_requires_explicit_api_credential(self):
         notes = {"pdfs": {"nota.pdf": {"resultado": {"prestador": "Clínica"}}}}

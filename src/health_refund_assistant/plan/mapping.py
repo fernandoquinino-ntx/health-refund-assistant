@@ -24,7 +24,7 @@ from .reconciliation import (
 )
 
 
-DEFAULT_PROMPT = PROMPTS_DIR / "reembolso_status" / "v1.1.md"
+DEFAULT_PROMPT = PROMPTS_DIR / "reembolso_status" / "v1.2.md"
 DEFAULT_PROPOSAL = CONFIG_DIR / "mapeamento_reembolsos.proposta.json"
 DEFAULT_BASE_URL = "https://api.openai.com/v1"
 DEFAULT_MODEL = "gpt-6-luna"

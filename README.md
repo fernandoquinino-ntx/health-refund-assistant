@@ -10,6 +10,8 @@ concierge e os pedidos são atualizados posteriormente no portal.
 2. Na conversa, anexe um PDF e escreva sua pergunta. Apenas a primeira página do
    PDF é processada.
 3. O VLM extrai campos conforme o schema JSON; a aplicação valida a estrutura.
+   Na versão v4.2, também retorna trechos para revisão visual humana; esses
+   trechos são gerados pela IA e não comprovam que correspondam à imagem.
 4. Código Python compara os dados com a exportação e identifica campos ausentes.
    Para pedidos não localizados, calcula um prazo de envio **simulado**.
    Uma tarefa de IA revisa a imagem e os dados extraídos,
@@ -114,6 +116,7 @@ Codespace tenha sido iniciado, nem que as respostas reais estejam corretas.
 
 ## Documentação e código
 
+- [Leia primeiro](01_leia_primeiro.md) e [índice da documentação](docs/70_documentation/01_index.md)
 - [Status e limitações](docs/00_status_auditoria.md)
 - [Organização do código e dos testes](docs/70_documentation/04_estrutura_projeto.md)
 - [Changelog e política de versões](docs/60_project/04_changelog_projeto.md)

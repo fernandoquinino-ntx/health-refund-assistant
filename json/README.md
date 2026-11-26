@@ -9,7 +9,7 @@ processo. Os caminhos são definidos em
 ```text
 json/
 ├── extraction/
-│   └── schemas/                     # Contratos VLM: vlm_extraction.schema.json, v4
+│   └── schemas/                     # Contratos VLM por versão, inclusive v4.2
 ├── reconciliation/
 │   ├── schemas/                     # Contratos: mapping_config, mapping_proposal, reconciliation_report
 │   └── reports/                     # Relatórios de conciliação
@@ -67,7 +67,8 @@ Exportações, estado e relatórios são ignorados pelo Git:
 - `json/reconciliation/reports/*.json` → relatórios gerados
 - `json/evaluation/reports/*.json` → resultados de benchmark
 
-Somente `json/tests/` é versionado (dados fictícios).
+Schemas, configuração e fixtures sintéticas também são versionados; dados reais
+e saídas locais não devem ser incluídos.
 
 ## Exceções obrigatórias
 
@@ -75,4 +76,4 @@ Somente `json/tests/` é versionado (dados fictícios).
 - `extension/manifest.json` → Chrome Web Store
 - Downloads → Extensão baixa exportações; cópia em `json/plan/imports/`
 
-Veja [`docs/json_catalogo.md`](../docs/json_catalogo.md) para o catálogo completo e fluxo de dados.
+Veja o [catálogo JSON](../docs/70_documentation/05_json_catalogo.md) para o fluxo de dados.

@@ -7,32 +7,39 @@ Schemas para extração de dados de documentos fiscais usando Visual Language Mo
 ### `vlm_extraction.schema.json`
 Contrato para extração de dados de nota fiscal em versões 1.0–3.0 do prompt VLM.
 
-**Campos:** 10 campos estruturados (descrição, prestador, profissional, etc.)
+**Campos:** nove campos estruturados (descrição, prestador, registro, etc.).
 
 **Usado por:**
-- [vlm_extractor.py](/src/health_refund_assistant/vlm_extractor.py)
-- [prompts/vlm_extractor/v1.0.md](/prompts/vlm_extractor/v1.0.md)
-- [prompts/vlm_extractor/v1.1.md](/prompts/vlm_extractor/v1.1.md)
-- [prompts/vlm_extractor/v2.0.md](/prompts/vlm_extractor/v2.0.md)
-- [prompts/vlm_extractor/v3.0.md](/prompts/vlm_extractor/v3.0.md)
+- [vlm_extractor.py](../../../src/health_refund_assistant/documents/vlm_extractor.py)
+- [prompts/vlm_extractor/v1.0.md](../../../prompts/vlm_extractor/v1.0.md)
+- [prompts/vlm_extractor/v1.1.md](../../../prompts/vlm_extractor/v1.1.md)
+- [prompts/vlm_extractor/v2.0.md](../../../prompts/vlm_extractor/v2.0.md)
+- [prompts/vlm_extractor/v3.0.md](../../../prompts/vlm_extractor/v3.0.md)
 
-**Referência de documentação:** [vlm_extraction.schema.md](/json/extraction/schemas/vlm_extraction.schema.md)
+**Referência de documentação:** [vlm_extraction.schema.md](vlm_extraction.schema.md)
 
 ---
 
 ### `vlm_extraction_v4.schema.json`
-Contrato para extração de dados com 11 campos (versão 4.0+).
+Contrato para extração de dados com 11 campos (versões 4.0 e 4.1).
 
 **Campos:** 11 campos, incluindo `data_atendimento` adicional para melhor rastreamento.
 
 **Usado por:**
-- [vlm_extractor.py](/src/health_refund_assistant/documents/vlm_extractor.py) (prompts v4.0 e v4.1)
-- [prompts/vlm_extractor/v4.0.md](/prompts/vlm_extractor/v4.0.md)
-- [prompts/vlm_extractor/v4.1.md](/prompts/vlm_extractor/v4.1.md)
+- [vlm_extractor.py](../../../src/health_refund_assistant/documents/vlm_extractor.py) (prompts v4.0 e v4.1)
+- [prompts/vlm_extractor/v4.0.md](../../../prompts/vlm_extractor/v4.0.md)
+- [prompts/vlm_extractor/v4.1.md](../../../prompts/vlm_extractor/v4.1.md)
 
-**Referência de documentação:** [vlm_extraction_v4.schema.md](/json/extraction/schemas/vlm_extraction_v4.schema.md)
+**Referência de documentação:** [vlm_extraction_v4.schema.md](vlm_extraction_v4.schema.md)
 
 ---
+
+### `vlm_extraction_v4_2.schema.json`
+
+Contrato do [prompt v4.2](../../../prompts/vlm_extractor/v4.2.md), que acrescenta
+trechos informados pela IA para revisão humana. Consulte a
+[documentação do contrato](vlm_extraction_v4_2.schema.md); os trechos não são
+prova independente de que a imagem contém os dados.
 
 ## Integração com Código
 

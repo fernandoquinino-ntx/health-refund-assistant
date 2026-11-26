@@ -1,7 +1,7 @@
 # Copilot Agent Instructions
 
 **Projeto:** health-refund-assistant  
-**Versão:** 2.0  
+**Versão do documento:** 2.0
 **Data:** 2026-11-25  
 **Modelo LLM:** GPT-6 Luna
 
@@ -71,12 +71,13 @@ Este arquivo define as regras que **TODO o Copilot DEVE seguir** automaticamente
 
 ## 2️⃣ MODELOS LLM
 
-### Modelo Único Obrigatório
-- **Grafia EXATA:** `GPT-6 Luna` (nunca `gpt-6-luna`, `GPT-6-LUNA`, `gpt-6 luna`)
-- **Em código Python:** Variável `model="gpt-6-luna"` (string lowercase)
-- **Em documentação:** Sempre `GPT-6 Luna` (título case)
+### Modelo configurado
+- A aplicação usa por padrão o identificador `gpt-6-luna`. A disponibilidade e
+  compatibilidade precisam ser verificadas com o provedor da API.
+- Na documentação, distinga o nome de apresentação `GPT-6 Luna` do identificador
+  exato da API. Preserve nomes de modelos em resultados e prompts históricos.
 
-### Temperatura e Top P (por tarefa)
+### Temperatura e Top P (referência, não configuração comprovada)
 ```
 Análise/Review:       temperature=0.3, top_p=0.9    (máxima precisão)
 Revisão de código:    temperature=0.3, top_p=0.9    (máxima precisão)
@@ -91,7 +92,6 @@ Documentação:         temperature=0.4, top_p=0.85   (clareza + estrutura)
 - [ ] Verificar se temperatura/top_p correspondem à tarefa
 - Os parâmetros dependem da API e da tarefa; consulte o código e a compatibilidade
   do modelo antes de afirmar que estão ativos. Eles não garantem privacidade.
-- Comando: `grep -r "gpt-4o-mini" docs/ && echo "⚠️ ATUALIZAR"`
 
 ---
 
@@ -147,9 +147,9 @@ docs/
 ### Documentos Centrais (00_*.md)
 - `00_mapa_estrutura.md` — Hub de navegação
 - `00_guia_rapido_inicio.md` — 3 Passos para começar
-- `00_checklist_funcionalidades.md` — Verificação 100%
+- `00_checklist_funcionalidades.md` — Roteiro de verificação
 - `00_relatorio_reorganizacao_v2.0.md` — Relatório completo
-- `00_audit_consistencia.md` — Auditoria de inconsistências
+- `70_documentation/03_audit_consistencia.md` — Auditoria histórica
 
 ---
 
@@ -167,7 +167,7 @@ Exemplo: `feature/fernando/ai-agent-memory-isolation`
 ### Checklist Pré-Merge
 - [ ] Nome segue padrão: `feature/nome/descricao`
 - [ ] Changelog do projeto atualizado
-- [ ] TEST_EXECUTION_LOG.csv atualizado
+- [ ] Resultados de testes realmente executados registrados quando necessário
 - [ ] Arquivos em snake_case + ordinais
 - [ ] Modelos LLM = "GPT-6 Luna"
 - [ ] Testes passam: `.venv/bin/python -m unittest discover -s tests -v`
@@ -177,13 +177,9 @@ Exemplo: `feature/fernando/ai-agent-memory-isolation`
 
 ## 6️⃣ RASTREAMENTO DE TESTES (Grupo)
 
-### Arquivo: TEST_EXECUTION_LOG.csv
-Exemplo de formato, não resultados reais:
-```csv
-data,hora,usuario,teste,metodo,resultado,tempo_segundos
-2026-11-25,19:50,fernando,test_vlm_extractor,pytest,PASS,2.3
-2026-11-25,19:51,fernando,test_assessment,pytest,PASS,1.8
-```
+Registre resultados somente quando forem observados, sem criar um arquivo de log
+obrigatório fictício. O rastreador opcional tem limitações documentadas em
+`docs/20_process/01_rastreamento_testes.md`.
 
 ### Changelog do projeto
 
@@ -226,9 +222,8 @@ find docs -name "*.md" | grep -E "[A-Z]" && echo "⚠️ MAIÚSCULA ENCONTRADA"
 # 2. Verificar números ordinais
 find docs -name "*.md" | grep -v "^docs/[0-9][0-9]_" && echo "⚠️ SEM ORDINAIS"
 
-# 3. Verificar modelos LLM
-grep -r "gpt-4o-mini" docs/ && echo "⚠️ ATUALIZAR PARA GPT-6 Luna"
-grep -r "gpt-6-luna" docs/ && echo "⚠️ USE 'GPT-6 Luna' em docs"
+# 3. Verificar identificadores de modelo e preservar registros históricos
+grep -r "gpt-6-luna" src docs
 
 # 4. Verificar lixo
 find . -name "__pycache__" -o -name "*.pyc" -o -name ".pytest_cache"
@@ -244,7 +239,7 @@ find . -name "__pycache__" -o -name "*.pyc" -o -name ".pytest_cache"
 | Documento | Propósito | Localização |
 |---|---|---|
 | `01_leia_primeiro.md` | Entrada do projeto | Raiz |
-| `02_copilot_guidelines.md` | Diretrizes permanentes | Raiz |
+| `02_copilot_guidelines.md` | Atalho para as instruções mantidas | Raiz |
 | `docs/00_mapa_estrutura.md` | Hub de navegação | docs/ |
 | `docs/00_guia_rapido_inicio.md` | 3 Passos para começar | docs/ |
 | `docs/60_project/01_caderno_projeto.md` | Projeto R1-R5 formal | docs/60_project/ |
@@ -269,10 +264,10 @@ find . -name "__pycache__" -o -name "*.pyc" -o -name ".pytest_cache"
 
 1. ✅ Leia `01_leia_primeiro.md` + `docs/00_mapa_estrutura.md`
 2. ✅ Use SEMPRE: `snake_case` + `NN_ordinais`
-3. ✅ Use SEMPRE: `"GPT-6 Luna"` (nunca gpt-4o-mini)
+3. ✅ Confira o identificador e a disponibilidade do modelo da API
 4. ✅ Coloque markdown em: `docs/NN_categoria/MM_nome.md`
 5. ✅ Execute: `.venv/bin/python -m unittest discover -s tests -v` antes de commit
-6. ✅ Valide: `grep -r "gpt-4o-mini" docs/` (deve estar vazio)
+6. ✅ Preserve nomes e resultados de modelos históricos sem tratá-los como atuais
 7. ✅ Commit: `git commit -m "type: description"` (Conventional)
 8. ✅ Branch: `feature/nome/descricao`
 

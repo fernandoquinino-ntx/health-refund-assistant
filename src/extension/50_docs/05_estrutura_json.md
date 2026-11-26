@@ -1,5 +1,9 @@
 # 5. Estrutura JSON – Formato dos Dados
 
+> Este guia descreve a reorganização não validada em `src/extension/`. O
+> [contrato atual da exportação](../../../json/plan/schemas/plan_export.schema.json)
+> é a referência para importação na aplicação.
+
 ## Visão Geral
 
 O JSON exportado segue este padrão:
@@ -159,14 +163,14 @@ Cada item em `reembolsos` contém:
 
 ## Validação
 
-O JSON é validado automaticamente pelo schema:
+Ao importar uma exportação, a aplicação valida o JSON com o schema:
 ```
 json/plan/schemas/plan_export.schema.json
 ```
 
 **Use para:**
 - ✅ Validar importação na aplicação
-- ✅ Garantir conformidade com padrão esperado
+- ✅ Conferir a estrutura esperada, sem garantir a veracidade dos dados
 - ✅ Debugar campos faltantes
 
 ---

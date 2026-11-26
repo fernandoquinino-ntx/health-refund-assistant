@@ -1,4 +1,5 @@
 """Testes do extrator VLM."""
+import json
 import os
 import unittest
 from unittest.mock import Mock, patch
@@ -9,6 +10,7 @@ from health_refund_assistant.documents.vlm_extractor import (
     EXTRACTION_FIELDS,
     EXTRACTION_SCHEMA,
     EXTRACTION_SCHEMA_V4,
+    EXTRACTION_SCHEMA_V4_2,
     VLMExtractor,
     carregar_prompt,
 )
@@ -165,6 +167,41 @@ class VLMExtractorTests(unittest.TestCase):
         self.assertNotIn('"numero_documento":', extractor.system_prompt)
         self.assertIn('"numero_documento": null', call["messages"][0]["content"])
         self.assertEqual(call["response_format"]["json_schema"]["schema"], EXTRACTION_SCHEMA_V4)
+
+    def test_v42_uses_evidence_schema_and_wraps_image(self):
+        with patch.dict(os.environ, {"OPENAPI_TOKEN": "test-token"}):
+            extractor = VLMExtractor(prompt_version="v4.2")
+        extractor.client = Mock()
+        extractor._solicitar_resposta("abc", "image/jpeg", 0.0)
+        call = extractor.client.chat.completions.create.call_args.kwargs
+        self.assertEqual(call["response_format"]["json_schema"]["schema"], EXTRACTION_SCHEMA_V4_2)
+        self.assertIn('"evidencias_literais"', call["messages"][0]["content"])
+        self.assertIn("documento_nao_confiavel", call["messages"][1]["content"][0]["text"])
+        self.assertEqual(call["messages"][1]["content"][-1]["text"], "</documento_nao_confiavel>")
+
+        data = {
+            **valid_output(),
+            "data_atendimento": None,
+            "nome_profissional": None,
+            "evidencias_literais": {
+                "valor_total": "Total R$ 450,00",
+                "data_emissao": "Emissão: 10/03/2026",
+                "data_atendimento": None,
+                "registro_profissional": "CRM 100001/SP",
+            },
+        }
+        self.assertEqual(extractor._validar_e_normalizar(data)["evidencias_literais"], data["evidencias_literais"])
+        response = Mock(choices=[Mock(message=Mock(content=json.dumps(data)))])
+        extractor.client.chat.completions.create.return_value = response
+        extracted = extractor.extrair_dados_nf_visual("abc")
+        self.assertEqual(extracted["_meta"]["status"], "OK")
+        self.assertEqual(extracted["evidencias_literais"], data["evidencias_literais"])
+        missing_evidence = {**data, "evidencias_literais": {**data["evidencias_literais"], "valor_total": "  "}}
+        with self.assertRaisesRegex(ValueError, "Falta trecho de evidência"):
+            extractor._validar_e_normalizar(missing_evidence)
+        wrong_shape = {**data, "evidencias_literais": {**data["evidencias_literais"], "extra": "texto"}}
+        with self.assertRaises(ValueError):
+            extractor._validar_e_normalizar(wrong_shape)
 
     def test_schema_unsupported_falls_back_once_and_caches_capability(self):
         response = Mock()

@@ -6,7 +6,8 @@
 > O fluxo atual não avalia prazo de envio para pedido localizado e não implementa
 > regra de 365 dias. A estimativa de processamento de cinco dias úteis não considera
 > feriados, não foi confirmada com o plano e não garante pagamento. As afirmações
-> históricas abaixo não substituem resultados reais e atualizados.
+> históricas abaixo não substituem resultados reais e atualizados. Os comandos
+> são históricos; use o [roteiro atual](08_roteiro_avaliacao.md).
 
 **Projeto**: Health Refund Assistant  
 **Data**: 2025  

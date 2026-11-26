@@ -15,6 +15,8 @@ usuário alterar padrões do projeto.
   de IA e confere a resposta; preserve versões históricas dos prompts.
 - Atualize documentação, índices e imports afetados. Não invente resultados de
   testes nem afirme disponibilidade da API, do modelo ou do Codespaces sem testar.
+- Diferencie instruções atuais de propostas e relatórios históricos; preserve
+  modelos e resultados históricos sem tratá-los como verificação atual.
 - Registre alterações relevantes em `docs/60_project/04_changelog_projeto.md`;
   siga sua política SemVer e não crie releases ou tags fictícias.
 - Use somente dados sintéticos nos testes e não versione segredos ou dados de saúde.

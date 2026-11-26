@@ -14,7 +14,8 @@ os dados de referência ficam em JSON separado e nunca são enviados ao modelo.
   python -m pip install -r requirements.txt
   ```
 
-- O processamento VLM usa o modelo `GPT-6 Luna` pela API OpenAI. Configure
+- O processamento VLM usa por padrão o identificador `gpt-6-luna`, cuja
+  disponibilidade depende do provedor. Configure
   `OPENAPI_TOKEN` no terminal antes de processar documentos:
 
   ```bash
@@ -24,13 +25,13 @@ os dados de referência ficam em JSON separado e nunca são enviados ao modelo.
   export OPENAPI_TOKEN
   ```
 
-- O valor deve ser uma chave de API válida da OpenAI, sem `Bearer `; não use a senha
+- Para a API OpenAI, o valor deve ser uma chave válida, sem `Bearer `; não use a senha
   do ChatGPT, o nome da variável ou a chave local do LM Studio. Um erro HTTP 401
   `invalid_api_key` indica falha de autenticação, antes da análise da imagem.
 - A URL usa `OPENAI_BASE_URL` quando definida; o padrão é
   `https://api.openai.com/v1`. Um endpoint alternativo também receberá a chave e as
   imagens, então só configure um destino confiável.
-- A imagem da primeira página e o prompt são enviados à OpenAI. Notas e exportações
+- A imagem da primeira página e o prompt são enviados ao provedor configurado. Notas e exportações
   reais contêm dados pessoais e de saúde: use dados sintéticos, ou revise base legal,
   retenção e políticas aplicáveis antes de enviar documentos reais.
 - O LM Studio permanece opcional para a proposta local de mapeamento de schemas.
@@ -122,8 +123,8 @@ O comando cria:
 - `json/tests/synthetic/exportacao_ficticia.json`: exportação de exemplo CarePlus.
 
 O gerador lê os templates versionados
-[casos_teste.template.json](../json/tests/templates/casos_teste.template.json) e
-[gabarito.template.json](../json/tests/templates/gabarito.template.json). Ele recria os
+[casos_teste.template.json](../../json/tests/templates/casos_teste.template.json) e
+[gabarito.template.json](../../json/tests/templates/gabarito.template.json). Ele recria os
 JSONs em `json/tests/synthetic/` e os PDFs em `data/sinteticos/documentos/`; não
 coloque dados reais nas fixtures.
 
@@ -145,12 +146,13 @@ pedidos ausentes. O teste determinístico aplica os campos do gabarito à avalia
 conciliação, sem chamar o modelo conversacional. O benchmark de prompts continua
 medindo a extração visual; não mistura essa métrica com a regra simulada de prazo.
 
-As versões v1.0–v3.0 comparam os nove campos do contrato original. A v4.0 compara
+As versões v1.0–v3.0 comparam os nove campos do contrato original. As versões v4.0,
+v4.1 e v4.2 comparam
 também `nome_profissional` e `data_atendimento`, necessários para verificar
-completude e o prazo. Campos exclusivos da v4.0 não entram na pontuação das versões
+completude e o prazo. Campos exclusivos do contrato v4 não entram na pontuação das versões
 anteriores.
 
-## 5. Comparar v1.0, v1.1, v2.0, v3.0 e v4.0
+## 5. Comparar versões do extrator
 
 Com os fixtures gerados e `OPENAPI_TOKEN` configurado, execute cada versão usando os
 mesmos PDFs e o mesmo gabarito. Cada imagem será enviada à API OpenAI:
@@ -166,14 +168,19 @@ mesmos PDFs e o mesmo gabarito. Cada imagem será enviada à API OpenAI:
   --saida json/evaluation/reports/v3.0.json
 .venv/bin/python scripts/case_evaluation.py --prompt-version v4.0 \
   --saida json/evaluation/reports/v4.0.json
+.venv/bin/python scripts/case_evaluation.py --prompt-version v4.1 \
+  --saida json/evaluation/reports/v4.1.json
+.venv/bin/python scripts/case_evaluation.py --prompt-version v4.2 \
+  --saida json/evaluation/reports/v4.2.json
 ```
 
 O avaliador usa por padrão os JSONs em `json/tests/synthetic/` e os PDFs em
 `data/sinteticos/documentos/`. Os caminhos de relatório acima são locais e ignorados
 pelo Git. Para escolher outros arquivos, passe `--casos`, `--gabarito` e `--documentos`.
 
-O extrator usa o modelo `GPT-6 Luna`, envia JSON Schema estrito e valida as nove
-chaves do contrato v1.0–v3.0 ou as onze chaves do contrato v4.0. Se a API rejeitar
+O extrator usa por padrão `gpt-6-luna`, envia JSON Schema estrito e valida as nove
+chaves do contrato v1.0–v3.0, as onze chaves do contrato v4.0/v4.1 ou o contrato
+v4.2 com evidências. Se a API rejeitar
 explicitamente `json_schema`, o código repete a chamada sem esse formato e aplica a
 validação local. Saída incompatível é erro de extração, não uma resposta aprovada.
 
@@ -210,13 +217,17 @@ anteriores.
   os casos comuns.
 - **v4.0:** nome profissional e data do atendimento separados da emissão para permitir
   triagem de completude e cálculo do prazo simulado de 30 dias.
+- **v4.1:** prompt com o formato JSON fornecido pelo código a partir do schema.
+- **v4.2:** trechos gerados pela IA para revisão visual humana; ainda não medidos.
+
+O benchmark compara os campos extraídos previstos no gabarito; não avalia se os
+trechos de evidência são literais nem se sustentam cada valor.
 
 Compare uma versão por vez, mantendo modelo, PDFs, gabarito e parâmetros iguais.
 Registre os resultados observados na tabela de
 [prompt_library.md](../../prompts/prompt_library.md). Resultados não medidos ficam como
-“Pendente”. Os resultados históricos nessa tabela vieram do Qwen local e não são
-comparáveis ao novo modelo `GPT-6 Luna`; os relatórios para OpenAI precisam ser
-gerados novamente.
+“Pendente”. Os resultados históricos atribuídos ao Qwen local não foram verificados
+nesta revisão e não são comparáveis ao modelo configurado; gere novos relatórios.
 
 ### Diagnóstico: prompt ou código?
 

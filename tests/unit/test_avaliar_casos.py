@@ -149,7 +149,7 @@ class AvaliarCasosTests(unittest.TestCase):
                 )
             gold_path.write_text(json.dumps(gold), encoding="utf-8")
             extractor = self._mock_extractor([100.0 + index for index in range(15)])
-            for version in ("v4.0", "v4.1"):
+            for version in ("v4.0", "v4.1", "v4.2"):
                 with self.subTest(version=version):
                     extractor.prompt_version = version
                     extractor.extrair_dados_nf_visual.side_effect = outputs

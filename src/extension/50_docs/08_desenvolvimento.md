@@ -1,5 +1,9 @@
 # 8. Desenvolvimento – Contribuir / Modificar
 
+> Este guia descreve a reorganização não validada, não a extensão carregável.
+> Consulte o [guia atual](../../../docs/10_quickstart/03_comece_aqui_extension.md)
+> antes de modificar ou substituir qualquer cópia.
+
 ## Arquitetura Geral
 
 ```
@@ -71,7 +75,7 @@ Parser de dados. Responsável por:
 **Modificar se:** Portal mudou estrutura HTML, ou quer mudar lógica de parse.
 
 ### 6. `01_manifest.json`
-Metadados Chrome MV3. Veja [`06_manifest_mv3.md`](./50_docs/06_manifest_mv3.md).
+Metadados Chrome MV3. Veja [`06_manifest_mv3.md`](./06_manifest_mv3.md).
 
 ---
 
@@ -85,17 +89,18 @@ git clone https://github.com/fernandoquinino-ntx/health-refund-assistant.git
 cd health-refund-assistant
 ```
 
-### 2. Carregue em Modo Desenvolvimento
+### 2. Carregue a versão atual em Modo Desenvolvimento
 
 ```
 chrome://extensions → Habilitar "Modo Desenvolvedor"
 → "Carregar extensão sem compactação"
-→ Selecione src/extension/
+→ Selecione extension/
 ```
 
 ### 3. Edite arquivo
 
-Edite qualquer arquivo JavaScript (ex: `40_collector/collector.js`).
+Edite os arquivos da cópia carregável em `extension/`. Alterações em
+`src/extension/` não são aplicadas a ela automaticamente.
 
 ### 4. Recarregue
 

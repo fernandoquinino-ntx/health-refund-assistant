@@ -1,5 +1,9 @@
 # 🔍 AUDIT REPORT - Consistência de Documentação
 
+> **Relatório histórico:** as verificações e contagens abaixo não descrevem
+> necessariamente o estado atual nem comprovam que links ou testes estão válidos.
+> Consulte o [índice atual](01_index.md) e o [status](../00_status_auditoria.md).
+
 **Data:** 2026-11-25 19:45  
 **Revisor:** Copilot  
 **Status:** ⚠️ ENCONTRADAS INCONSISTÊNCIAS (3 principais)  

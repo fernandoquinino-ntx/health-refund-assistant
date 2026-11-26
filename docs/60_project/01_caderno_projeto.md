@@ -6,6 +6,16 @@
 > informada pelo usuário, não foi confirmada com o plano e não considera feriados.
 > Consulte o [README atual](../../README.md) e registre somente testes reais.
 
+## Atualização: tarefa de estimativa e conferência
+
+Para pedido elegível à estimativa, a tarefa de IA calcula os cinco dias úteis a
+partir das datas informadas; Python calcula de forma independente e bloqueia a
+resposta se o JSON da IA divergir. Depois, outra tarefa redige a resposta usando
+somente a estimativa conferida. A contagem exclui fins de semana, não feriados;
+a regra foi informada pelo usuário e não foi verificada com o plano. Não há
+garantia de pagamento. Uma estimativa não é produzida quando faltam condições
+para cálculo, como correspondência forte única ou status adequado.
+
 **Trabalho Final (Opção A — Código + Documentação)**  
 **Entreg
 

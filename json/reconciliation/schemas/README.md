@@ -10,24 +10,24 @@ Contrato para configuração versionada de mapeamento de campos.
 **Propósito:** Define caminhos dos campos de nota e pedido, tolerâncias para conciliação.
 
 **Consumidores:**
-- [reconciliation.py](/src/health_refund_assistant/reconciliation.py)
-- [mapping.py](/src/health_refund_assistant/mapping.py)
-- [json/config/mapeamento_reembolsos.json](/json/config/mapeamento_reembolsos.json)
+- [reconciliation.py](../../../src/health_refund_assistant/plan/reconciliation.py)
+- [mapping.py](../../../src/health_refund_assistant/plan/mapping.py)
+- [json/config/mapeamento_reembolsos.json](../../config/mapeamento_reembolsos.json)
 
-**Referência de documentação:** [mapping_config.schema.md](/json/reconciliation/schemas/mapping_config.schema.md)
+**Referência de documentação:** [mapping_config.schema.md](mapping_config.schema.md)
 
 ---
 
 ### `mapping_proposal.schema.json`
 Contrato para proposta de mapeamento automática gerada pelo modelo.
 
-**Propósito:** Estrutura de saída do prompt de proposta de mapeamento (reembolso_status/v1.1.md).
+**Propósito:** Estrutura de saída do prompt de proposta de mapeamento (reembolso_status/v1.2.md).
 
 **Usado por:**
-- [mapping.py](/src/health_refund_assistant/mapping.py) `build_proposal()`
-- [prompts/reembolso_status/v1.1.md](/prompts/reembolso_status/v1.1.md)
+- [mapping.py](../../../src/health_refund_assistant/plan/mapping.py) `build_proposal()`
+- [prompts/reembolso_status/v1.2.md](../../../prompts/reembolso_status/v1.2.md)
 
-**Referência de documentação:** [mapping_proposal.schema.md](/json/reconciliation/schemas/mapping_proposal.schema.md)
+**Referência de documentação:** [mapping_proposal.schema.md](mapping_proposal.schema.md)
 
 ---
 
@@ -37,10 +37,10 @@ Contrato para relatório final de conciliação.
 **Propósito:** Resultado da reconciliação com candidatos de match, notas não reconhecidas, etc.
 
 **Consumidores:**
-- [reconciliation.py](/src/health_refund_assistant/reconciliation.py) `gerar_relatorio()`
-- [json/reconciliation/reports/conciliacao.md](/json/reconciliation/reports/conciliacao.md)
+- [reconciliation.py](../../../src/health_refund_assistant/plan/reconciliation.py)
+- [json/reconciliation/reports/conciliacao.md](../reports/conciliacao.md)
 
-**Referência de documentação:** [reconciliation_report.schema.md](/json/reconciliation/schemas/reconciliation_report.schema.md)
+**Referência de documentação:** [reconciliation_report.schema.md](reconciliation_report.schema.md)
 
 ---
 

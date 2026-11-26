@@ -1,5 +1,10 @@
 # Care Plus – Coletor de Reembolsos
 
+> **Reorganização não validada:** não carregue esta pasta no navegador. A versão
+> carregável é [`extension/`](../../extension/); veja o
+> [guia atual](../../docs/10_quickstart/03_comece_aqui_extension.md). As
+> descrições abaixo precisam ser conferidas antes de substituir a extensão atual.
+
 **Chrome Extension Manifest V3** para coletar automaticamente dados de sinistros/reembolsos do portal Care Plus e exportar em JSON.
 
 ## 🎯 Propósito

@@ -1,5 +1,8 @@
 # 6. Manifest MV3 – Referência Técnica
 
+> Este manifesto pertence à reorganização não validada. A extensão carregável
+> usa [extension/manifest.json](../../../extension/manifest.json).
+
 ## O que é Manifest V3?
 
 **Manifest V3** (MV3) é a arquitetura atual do Chrome para extensões (desde 2023).

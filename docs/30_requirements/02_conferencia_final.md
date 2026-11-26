@@ -2,7 +2,8 @@
 
 > **Atenção:** este relatório histórico não comprova execução real ou prontidão
 > para entrega. O antigo `case_evaluation_v3.py` produzia afirmações fixas sem
-> chamar a API. Consulte o [status atual](../00_status_auditoria.md).
+> chamar a API. Os comandos abaixo também estão desatualizados; use o
+> [README](../../README.md) e o [status atual](../00_status_auditoria.md).
 
 **Data:** 25 de Novembro de 2026  
 **Vencimento:** 02 de Dezembro de 2026  

@@ -1,5 +1,9 @@
 # 🎉 RELATÓRIO FINAL - REORGANIZAÇÃO COMPLETA v2.0
 
+> **Histórico não verificado:** caminhos, percentuais, ZIP e resultados abaixo
+> não comprovam a situação atual nem uma entrega. Consulte o
+> [README](../README.md) e o [status atual](00_status_auditoria.md).
+
 **Data:** 2026-11-25  
 **Status:** ✅ **100% CONCLUÍDO**  
 **ZIP Final:** `health-refund-assistant-v2.0-final.zip` (267 KB, 201 arquivos)

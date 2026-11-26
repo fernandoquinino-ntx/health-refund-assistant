@@ -1,5 +1,8 @@
 # 4. LM Studio – Integração Opcional
 
+> Este guia descreve a reorganização não validada em `src/extension/`. Consulte
+> o [guia da extensão carregável](../../../extension/LEIAME.md).
+
 ## O que é LM Studio?
 
 [LM Studio](https://lmstudio.ai/) é uma aplicação que roda **modelos de linguagem localmente** (Mistral, Llama, etc) sem enviar dados pela internet.

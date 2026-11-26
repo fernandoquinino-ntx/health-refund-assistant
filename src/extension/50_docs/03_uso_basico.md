@@ -1,5 +1,8 @@
 # 3. Uso Básico – Como Usar
 
+> Este guia descreve a reorganização não validada em `src/extension/`. Para a
+> versão carregável, consulte o [guia atual](../../../extension/LEIAME.md).
+
 ## Resumo de 60 Segundos
 
 1. ✅ Instale a extensão ([`02_instalacao.md`](./02_instalacao.md))

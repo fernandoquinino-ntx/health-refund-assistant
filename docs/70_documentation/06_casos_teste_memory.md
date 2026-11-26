@@ -1,5 +1,9 @@
 # Casos de Teste - Memory System & User Isolation
 
+> **Casos propostos, não executados:** PIN, autenticação e isolamento entre
+> usuários não estão implementados. Estes cenários não comprovam segurança nem
+> conformidade LGPD. Consulte o [README](../../README.md).
+
 > **Propósito**: Validar memory persistence, user isolation e segurança LGPD  
 > **Data**: 25 de novembro de 2026
 

@@ -1,5 +1,8 @@
 # 📁 Estrutura de Documentação — Padrão snake_case
 
+> **Histórico:** caminhos e estrutura mostrados abaixo estão desatualizados.
+> Use o [índice atual](01_index.md) e a [estrutura do projeto](04_estrutura_projeto.md).
+
 **Data:** 25 de novembro de 2026  
 **Status:** 🟢 DOCUMENTAÇÃO REORGANIZADA E PADRONIZADA
 

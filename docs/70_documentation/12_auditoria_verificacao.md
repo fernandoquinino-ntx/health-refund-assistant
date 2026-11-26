@@ -4,6 +4,7 @@
 > verificadas e está desatualizado. Não use seus checklists como comprovação de
 > segurança, funcionamento do modelo, testes ou Codespaces. Consulte o
 > [status atual](../00_status_auditoria.md) e o [README](../../README.md).
+> Não execute os comandos históricos deste relatório.
 
 **Data**: 2024-12-18  
 **Status**: Em Progresso  

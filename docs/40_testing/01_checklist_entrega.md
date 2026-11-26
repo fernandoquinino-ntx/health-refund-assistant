@@ -1,4 +1,9 @@
 # ENTREGA FINAL — Health Refund Assistant (Opção A)
+
+> **Histórico não verificado:** os itens marcados abaixo não comprovam testes,
+> conformidade LGPD ou prontidão para entrega. Consulte o
+> [status atual](../00_status_auditoria.md) e registre somente resultados reais.
+> Não execute os comandos históricos abaixo; use o [README](../../README.md).
 **Trabalho Final — 02/12/2026**
 
 ---

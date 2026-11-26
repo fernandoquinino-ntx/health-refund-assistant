@@ -2,7 +2,7 @@
 
 Esta pasta é destinada aos PDFs de entrada/saída e aos documentos sintéticos. Os JSONs
 da aplicação foram centralizados em [`json/`](../json/); consulte o
-[catálogo JSON](../docs/json_catalogo.md) para localizar datasets, estado, relatórios,
+[catálogo JSON](../docs/70_documentation/05_json_catalogo.md) para localizar datasets, estado, relatórios,
 configuração e schemas.
 
 | Pasta | Tipo | O que armazena |

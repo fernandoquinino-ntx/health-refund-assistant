@@ -11,15 +11,19 @@ prompts/
 │   ├── v2.0.md
 │   ├── v3.0.md
 │   ├── v4.0.md
-│   └── v4.1.md
+│   ├── v4.1.md
+│   └── v4.2.md
 ├── reembolso_assistente/
 │   ├── v1.0.md
-│   └── v1.1.md
+│   ├── v1.1.md
+│   └── v1.2.md
 ├── reembolso_status/
 │   ├── v1.0.md
-│   └── v1.1.md
+│   ├── v1.1.md
+│   └── v1.2.md
 ├── revisao_documental/
-│   └── v1.0.md
+│   ├── v1.0.md
+│   └── v1.1.md
 └── estimativa_pagamento/
     └── v1.0.md
 ```
@@ -50,6 +54,7 @@ prompts/
 | v3.0 | [vlm_extractor/v3.0.md](./vlm_extractor/v3.0.md) | Regras compactas para modelo 7B e delimitação de conteúdo visual não confiável contra prompt injection. |
 | v4.0 | [vlm_extractor/v4.0.md](./vlm_extractor/v4.0.md) | Acrescenta data de atendimento e nome do profissional, mantendo os campos anteriores. |
 | v4.1 | [vlm_extractor/v4.1.md](./vlm_extractor/v4.1.md) | Mantém as instruções da v4.0 sem repetir o objeto JSON; o código fornece o contrato. |
+| v4.2 | [vlm_extractor/v4.2.md](./vlm_extractor/v4.2.md) | Acrescenta trechos relatados pela IA para revisão humana; resultado ainda não medido. |
 
 As versões v1.0 e v1.1 são preservadas sem edição. O extrator seleciona a versão
 mais recente por padrão, mas as comparações acadêmicas devem fixar explicitamente
@@ -69,6 +74,8 @@ cada versão para manter a mesma bateria.
   deve permitir avaliar prazo e campos incompletos sem confundir emissão e atendimento.
 - **v4.0 → v4.1:** hipótese de que fornecer o formato somente pelo código mantenha
   a extração com menos duplicação. Ainda não há resultado medido para a v4.1.
+- **v4.1 → v4.2:** hipótese de que trechos associados a valor, datas e registro
+  facilitem a revisão humana. A aplicação não comprova que estejam na imagem.
 
 ### Contrato de saída
 
@@ -76,15 +83,19 @@ As versões v1.0 a v3.0 retornam exatamente nove campos: `numero_documento`, `pr
 `cnpj_cpf_prestador`, `valor_total`, `data_emissao`, `descricao_servico`,
 `registro_profissional`, `imagem_legivel` e `observacao_visual`. A saída é validada
 no código mesmo quando a API rejeita `json_schema`. As versões v4.0 e v4.1 acrescentam
-`data_atendimento` e `nome_profissional`, mantendo todos os outros campos. O
-processamento usa `GPT-6 Luna` pela API OpenAI e envia a imagem do documento para esse
-serviço; não execute com dados reais sem revisar os requisitos de privacidade
-aplicáveis.
+`data_atendimento` e `nome_profissional`; a v4.2 adiciona `evidencias_literais`.
+Trechos são gerados pelo mesmo modelo, exigem conferência visual e podem conter
+dados sensíveis. O
+processamento usa por padrão o identificador `gpt-6-luna` e envia a imagem do
+documento ao provedor configurado. A disponibilidade do modelo não foi comprovada;
+não execute com dados reais sem revisar os requisitos de privacidade aplicáveis.
 
 Os prompts v1.0–v3.0 declaram o contrato
 [`json/extraction/schemas/vlm_extraction.schema.json`](../json/extraction/schemas/vlm_extraction.schema.json);
 v4.0 e v4.1 usam
-[`json/extraction/schemas/vlm_extraction_v4.schema.json`](../json/extraction/schemas/vlm_extraction_v4.schema.json).
+[`json/extraction/schemas/vlm_extraction_v4.schema.json`](../json/extraction/schemas/vlm_extraction_v4.schema.json);
+v4.2 usa
+[`json/extraction/schemas/vlm_extraction_v4_2.schema.json`](../json/extraction/schemas/vlm_extraction_v4_2.schema.json).
 Cada documentação Markdown do schema referencia de volta as versões de prompt que o
 utilizam. O extrator carrega o arquivo correspondente pela versão, inclui o schema e
 um template JSON na mensagem de sistema e também usa o contrato no `response_format`
@@ -92,9 +103,10 @@ e na validação da resposta.
 
 ### Resultados comparativos
 
-Resultados abaixo são da execução real anterior à migração, com `qwen2.5-vl-7b-instruct`
-no LM Studio. Eles não representam o desempenho de `GPT-6 Luna`; execute novamente
-após configurar `OPENAPI_TOKEN`. Não use placares hipotéticos como evidência.
+Resultados abaixo são atribuídos a uma execução anterior com `qwen2.5-vl-7b-instruct`
+no LM Studio, mas os relatórios não estão versionados e não foram verificados nesta
+revisão. Eles não representam o desempenho de `GPT-6 Luna`; execute novamente após
+configurar `OPENAPI_TOKEN`. Não use placares não verificados como evidência.
 
 | Versão | Modelo avaliado | Casos corretos / 15 | Acurácia por campo | Falhas críticas | Resultado |
 |---|---|---:|---:|---:|---|
@@ -103,11 +115,11 @@ após configurar `OPENAPI_TOKEN`. Não use placares hipotéticos como evidência
 | v2.0 | Qwen2.5-VL-7B-Instruct | 13/15 (86,7%) | 98,5% | 0 | Aprovado |
 | v3.0 | Qwen2.5-VL-7B-Instruct | 12/15 (80,0%) | 97,0% | 0 | Reprovado |
 
-Os relatórios históricos do Qwen são registros de execuções anteriores e não fazem
-parte do dataset versionado. Novas execuções com OpenAI devem ser salvas em
-`json/evaluation/reports/v1.0.json` até `json/evaluation/reports/v4.1.json`. A v3.0 histórica ficou abaixo
+Os relatórios históricos atribuídos ao Qwen não fazem parte do dataset versionado
+e não foram conferidos nesta revisão. Novas execuções devem ser salvas em
+`json/evaluation/reports/v1.0.json` até `json/evaluation/reports/v4.2.json`. A v3.0 histórica ficou abaixo
 do limiar inicial de 85%; as execuções atuais devem ser medidas novamente com o
-modelo OpenAI.
+modelo configurado.
 
 ### Caso de uso registrado: descrição e registro profissional
 
@@ -126,7 +138,8 @@ quando aparecem explicitamente na imagem.
 | Versão | Arquivo | Status |
 |---|---|---|
 | v1.0 | [reembolso_status/v1.0.md](./reembolso_status/v1.0.md) | Histórico |
-| v1.1 | [reembolso_status/v1.1.md](./reembolso_status/v1.1.md) | Padrão; formato fornecido pelo código. |
+| v1.1 | [reembolso_status/v1.1.md](./reembolso_status/v1.1.md) | Formato fornecido pelo código. |
+| v1.2 | [reembolso_status/v1.2.md](./reembolso_status/v1.2.md) | Padrão; tarefa e metadados estruturais. |
 
 Prompt para propor o mapa entre schemas uma única vez. A entrada deve conter apenas
 nomes de campos, caminhos e tipos, sem valores dos registros.
@@ -145,6 +158,7 @@ caminhos, o código mescla a proposta na configuração definida por
 |---|---|---|
 | v1.0 | [reembolso_assistente/v1.0.md](./reembolso_assistente/v1.0.md) | Responder à pergunta do usuário usando apenas evidências determinísticas; não inferir pagamento, cobertura ou ausência de pedido fora do período exportado. |
 | v1.1 | [reembolso_assistente/v1.1.md](./reembolso_assistente/v1.1.md) | Considerar a estimativa validada de processamento e distinguir do prazo de envio simulado. |
+| v1.2 | [reembolso_assistente/v1.2.md](./reembolso_assistente/v1.2.md) | Separar pedido, histórico e evidências em JSON e reforçar fundamentação. |
 
 O assistente de resposta é independente do extrator. A interface permite escolher a
 versão de cada componente separadamente e fornece ao prompt conversacional os campos
@@ -157,8 +171,9 @@ para pedido localizado. A versão histórica do arquivo permanece inalterada.
 
 ## `revisao_documental`
 
-O [v1.0](./revisao_documental/v1.0.md) orienta a revisão consultiva da imagem
-e dos dados extraídos. A saída segue o
+O [v1.0](./revisao_documental/v1.0.md) orienta a revisão consultiva. A
+[v1.1](./revisao_documental/v1.1.md) separa pergunta, extração e evidências em
+JSON e solicita justificativa fundamentada. Ambas recebem a imagem; a saída segue o
 [contrato de revisão](../json/reconciliation/schemas/document_review.schema.md).
 
 ## `estimativa_pagamento`

@@ -309,6 +309,11 @@ def main() -> None:
             )
         with st.expander("Ver evidências da última análise"):
             st.json(evidence["documento"])
+            if "evidencias_literais" in evidence["documento"]:
+                st.caption(
+                    "Os trechos foram transcritos pela IA e podem estar incorretos; "
+                    "confira-os na imagem original."
+                )
             _show_assessment(evidence["conciliacao"])
             if "revisao_ia" in evidence:
                 st.subheader("Revisão consultiva da IA")

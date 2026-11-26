@@ -1,5 +1,10 @@
 # src/pdf_converter.py
-"""Converte a primeira página de PDFs para a extração visual."""
+"""Objetivo: preparar a imagem de um PDF para extração visual.
+
+Entradas: caminho ou bytes de PDF.
+Processamento: renderiza apenas a primeira página como JPEG.
+Saídas: imagem codificada em Base64 ou erro de leitura/renderização.
+"""
 
 import base64
 import pymupdf

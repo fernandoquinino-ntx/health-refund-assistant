@@ -26,7 +26,7 @@ Contrato para gabarito (ground truth).
 **Consumidores:**
 - [json/tests/synthetic/gabarito.md](../synthetic/gabarito.md)
 - [json/tests/templates/gabarito.template.md](../templates/gabarito.template.md)
-- [case_evaluation.py](../../../scripts/case_evaluation.py) (comparação contra VLM)
+- [case_evaluation.py](../../../src/toolbox/case_evaluation.py) (comparação contra VLM)
 - [tests/test_*.py](../../../tests)
 
 **Referência de documentação:** [test_gold.schema.md](test_gold.schema.md)
@@ -37,7 +37,7 @@ Contrato para gabarito (ground truth).
 
 ```python
 from health_refund_assistant.core.json_contracts import carregar_schema_json, validar_contrato_json
-from scripts.test_paths import TEST_SCHEMAS
+from toolbox.test_paths import TEST_SCHEMAS
 
 # Carregar schemas
 test_cases = carregar_schema_json(TEST_SCHEMAS["test_cases.schema.json"])

@@ -1,3 +1,10 @@
+"""Objetivo: importar e disponibilizar exportações do plano de saúde.
+
+Entradas: arquivos JSON ou caminhos selecionados.
+Processamento: valida conteúdo e período, salva ou carrega exportações.
+Saídas: caminhos e dados das exportações ou erros de importação.
+"""
+
 import json
 from datetime import datetime
 from pathlib import Path

@@ -111,7 +111,7 @@ estiver ausente ou inválido.
 Na raiz do repositório, gere os PDFs, manifesto, gabarito e exportação fictícia:
 
 ```bash
-.venv/bin/python -m scripts.gerar_fixtures_sinteticas
+.venv/bin/python -m toolbox gerar_fixtures
 ```
 
 O comando cria:
@@ -158,19 +158,19 @@ Com os fixtures gerados e `OPENAPI_TOKEN` configurado, execute cada versão usan
 mesmos PDFs e o mesmo gabarito. Cada imagem será enviada à API OpenAI:
 
 ```bash
-.venv/bin/python scripts/case_evaluation.py --prompt-version v1.0 \
+.venv/bin/python -m toolbox avaliar --prompt-version v1.0 \
   --saida json/evaluation/reports/v1.0.json
-.venv/bin/python scripts/case_evaluation.py --prompt-version v1.1 \
+.venv/bin/python -m toolbox avaliar --prompt-version v1.1 \
   --saida json/evaluation/reports/v1.1.json
-.venv/bin/python scripts/case_evaluation.py --prompt-version v2.0 \
+.venv/bin/python -m toolbox avaliar --prompt-version v2.0 \
   --saida json/evaluation/reports/v2.0.json
-.venv/bin/python scripts/case_evaluation.py --prompt-version v3.0 \
+.venv/bin/python -m toolbox avaliar --prompt-version v3.0 \
   --saida json/evaluation/reports/v3.0.json
-.venv/bin/python scripts/case_evaluation.py --prompt-version v4.0 \
+.venv/bin/python -m toolbox avaliar --prompt-version v4.0 \
   --saida json/evaluation/reports/v4.0.json
-.venv/bin/python scripts/case_evaluation.py --prompt-version v4.1 \
+.venv/bin/python -m toolbox avaliar --prompt-version v4.1 \
   --saida json/evaluation/reports/v4.1.json
-.venv/bin/python scripts/case_evaluation.py --prompt-version v4.2 \
+.venv/bin/python -m toolbox avaliar --prompt-version v4.2 \
   --saida json/evaluation/reports/v4.2.json
 ```
 

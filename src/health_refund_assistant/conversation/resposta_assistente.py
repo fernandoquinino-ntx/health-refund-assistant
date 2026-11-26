@@ -1,4 +1,9 @@
-"""Tarefa de resposta ao usuário a partir de evidências estruturadas."""
+"""Objetivo: gerar a resposta consultiva da conversa.
+
+Entradas: pergunta, histórico, evidências e versão do prompt.
+Processamento: solicita resposta estruturada à IA e valida o contrato.
+Saídas: texto da resposta ou erro de geração.
+"""
 
 import json
 from typing import Any, Sequence

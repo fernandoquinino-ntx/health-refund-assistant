@@ -4,7 +4,8 @@
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "postCreateCommand": "python -m venv .venv && .venv/bin/python -m pip install -r requirements.txt && .venv/bin/python scripts/gerar_fixtures_sinteticas.py",
+  "postCreateCommand": "bash src/treinamento_visual/scripts/setup_codespaces_treinamento.sh",
+  "postStartCommand": "bash src/treinamento_visual/scripts/start_codespaces_assistant.sh",
   "remoteEnv": {
     "PYTHONPATH": "${containerWorkspaceFolder}/src:${containerWorkspaceFolder}",
     "MODEL_PREFERENCE": "gpt-6-luna"

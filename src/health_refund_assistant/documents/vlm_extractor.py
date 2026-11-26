@@ -1,43 +1,17 @@
+"""Objetivo: extrair campos de documentos usando um modelo visual.
+
+Entradas: imagem codificada, prompt versionado, schema e configuração da API.
+Processamento: envia a imagem ao modelo e valida a resposta estruturada.
+Saídas: campos extraídos e metadados de estado ou indicação de falha.
 """
-Extrator VLM (Visão Multimodal)
-
-OBJETIVO:
-  Extrai dados estruturados de PDFs/imagens de notas fiscais usando GPT-4o-mini.
-  Converte imagem → JSON com campos obrigatórios definidos em schema.
-
-ENTRADA:
-  - PDF ou imagem de nota fiscal
-  - Schema JSON (contrato de saída)
-  - Prompt versionado (instrução + few-shot + regras)
-
-SAÍDA:
-  - JSON estruturado com campos:
-    * data_emissao, data_consulta
-    * cnpj_cpf_prestador, nome_prestador
-    * crm, crn (identificador do profissional)
-    * descricao_servico
-    * valor_total
-    * profissao
-
-PROCESSO (ETAPA 1 DO FLUXO):
-  Nota Fiscal (imagem) → VLM Extractor → JSON Schema
-
-VERSÕES:
-  v1.0 → v2.0 → v3.0 → v4.0 (consultar docs/caderno_projeto.md)
-
-DOCUMENTO:
-  Veja docs/caderno_projeto.md (R2 - Prompt Engineering) para evolução
-
-MODELO:
-  gpt-6-luna (conforme configurado em DEFAULT_MODEL)
-"""
-
-# src/vlm_extractor.py
 import json
 import math
 import os
 import re
+import subprocess
+import tempfile
 import time
+from pathlib import Path
 from typing import Any, Dict, Optional
 from openai import APIConnectionError, APITimeoutError, BadRequestError, OpenAI
 
@@ -50,6 +24,90 @@ DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
 DEFAULT_MODEL = "gpt-6-luna"
 PROMPT_COMPONENT = "vlm_extractor"
 VERSOES_SCHEMA_V4 = frozenset({"v4.0", "v4.1", "v4.2"})
+
+
+class LocalVLMExtractor:
+    """Chama um modelo visual local baseado em MLX no Mac."""
+
+    def __init__(
+        self,
+        model_path: Path,
+        adapter_path: Optional[Path] = None,
+        prompt_version: Optional[str] = None,
+    ):
+        self.model_path = model_path
+        self.adapter_path = adapter_path
+        self.prompt_version = prompt_version or "v4.2"
+        self.system_prompt, self.prompt_version = carregar_prompt(
+            PROMPT_COMPONENT, prompt_version
+        )
+
+    def extrair_dados_nf_visual(
+        self,
+        imagem_base64: str,
+        mime_type: str = "image/jpeg",
+        temperature: float = 0.0,
+    ) -> Dict[str, Any]:
+        inicio = time.perf_counter()
+        suffix = ".jpg" if mime_type == "image/jpeg" else ".png"
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temporary:
+            temporary.write(__import__("base64").b64decode(imagem_base64))
+            image_path = Path(temporary.name)
+
+        command = [
+            str(Path(__import__("os").getcwd()) / ".venv-treinamento" / "bin" / "mlx_vlm.generate"),
+            "--model",
+            str(self.model_path),
+            "--image",
+            str(image_path),
+            "--prompt",
+            f"{self.system_prompt}\nRetorne exclusivamente um objeto JSON.",
+            "--max-tokens",
+            "1024",
+            "--temperature",
+            str(temperature),
+            "--no-verbose",
+        ]
+        if self.adapter_path:
+            command.extend(["--adapter-path", str(self.adapter_path)])
+        try:
+            result = subprocess.run(command, capture_output=True, text=True, timeout=300)
+            if result.returncode != 0:
+                return self._retorno_erro("ERRO_CONEXAO_LOCAL", result.stderr.strip(), inicio)
+            dados = self._parse_json_seguro(result.stdout)
+            dados["_meta"] = {
+                "status": "OK",
+                "model": str(self.model_path),
+                "adapter": str(self.adapter_path) if self.adapter_path else None,
+                "prompt_version": self.prompt_version,
+                "temperature": temperature,
+                "latencia_seg": round(time.perf_counter() - inicio, 2),
+            }
+            return dados
+        except (OSError, subprocess.TimeoutExpired, ValueError) as error:
+            return self._retorno_erro("ERRO_MODELO_LOCAL", str(error), inicio)
+        finally:
+            image_path.unlink(missing_ok=True)
+
+    def _parse_json_seguro(self, texto: str) -> Dict[str, Any]:
+        inicio = texto.find("{")
+        fim = texto.rfind("}")
+        if inicio < 0 or fim <= inicio:
+            raise ValueError("O modelo local não retornou JSON.")
+        dados = json.loads(texto[inicio:fim + 1])
+        if not isinstance(dados, dict):
+            raise ValueError("A saída local não é um objeto JSON.")
+        campos = set(EXTRACTION_FIELDS_V4_2)
+        return {chave: dados.get(chave) for chave in campos}
+
+    def _retorno_erro(self, status: str, detalhe: str, inicio: float) -> Dict[str, Any]:
+        return {
+            "_meta": {
+                "status": status,
+                "detalhe": detalhe,
+                "latencia_seg": round(time.perf_counter() - inicio, 2),
+            }
+        }
 
 
 def _schema_api_corpo(nome_schema: str) -> Dict[str, Any]:

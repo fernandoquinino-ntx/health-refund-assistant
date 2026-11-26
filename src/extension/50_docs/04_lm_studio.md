@@ -1,7 +1,6 @@
 # 4. LM Studio – Integração Opcional
 
-> Este guia descreve a reorganização não validada em `src/extension/`. Consulte
-> o [guia da extensão carregável](../../../extension/LEIAME.md).
+> Este guia descreve a implementação fonte em `src/extension/`.
 
 ## O que é LM Studio?
 

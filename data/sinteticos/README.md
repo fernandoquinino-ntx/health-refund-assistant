@@ -5,7 +5,7 @@ estão centralizados em `json/tests/`; consulte
 [`json/README.md`](../../json/README.md). Recrie os documentos e fixtures com:
 
 ```bash
-.venv/bin/python -m scripts.gerar_fixtures_sinteticas
+.venv/bin/python -m toolbox gerar_fixtures
 ```
 
 Os PDFs ficam em `documentos/`. O manifesto, o gabarito e a exportação fictícia ficam

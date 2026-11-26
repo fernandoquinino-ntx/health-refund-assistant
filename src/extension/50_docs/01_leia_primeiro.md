@@ -1,7 +1,7 @@
 # 1. Leia Primeiro – Conceitos Essenciais
 
-> **Reorganização não validada:** para instalar e usar a versão carregável,
-> consulte o [guia atual](../../../docs/10_quickstart/03_comece_aqui_extension.md).
+> Esta é a implementação fonte única. Para instalar e usar, consulte o
+> [guia atual](../../../docs/10_quickstart/03_comece_aqui_extension.md).
 
 ## O que é esta extensão?
 

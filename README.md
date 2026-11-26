@@ -113,6 +113,83 @@ na memória; campos extraídos, perguntas e respostas podem conter dados sensív
 
 Os testes automatizados não comprovam que o modelo esteja disponível, que o
 Codespace tenha sido iniciado, nem que as respostas reais estejam corretas.
+O [workflow do GitHub](.github/workflows/tests.yml) executa a mesma suíte em
+push, pull request ou acionamento manual, sem chamar a API. Ele usa as fixtures
+de teste já versionadas, não os PDFs privados em `data/treinamento/`.
+
+Para preparar seus próprios PDFs e anotar campos sem chamar uma API, consulte o
+[guia de anotação de documentos](docs/40_testing/04_anotacao_documentos.md).
+
+Para o fluxo visual foram verificados no Mac Tesseract **5.5.4** e o idioma
+`por`. Versões ou dados de idioma diferentes podem alterar o OCR.
+
+O fluxo implementado fica em `src/treinamento_visual/`: ingestão, rotulagem,
+montagem do dataset, validação, treino LoRA no Mac e pipeline de GitHub Actions.
+Os dados privados ficam em `data/treinamento/` e modelos em `models/`; ambos
+são ignorados pelo Git.
+
+Com as dependências de `requirements-treinamento.txt` instaladas no ambiente
+isolado Python 3.12, coloque seus PDFs ou imagens JPG/PNG em
+`data/treinamento/entrada/` e execute:
+
+```bash
+PYTHONPATH=src .venv-treinamento/bin/python -m treinamento_visual.ingest
+```
+
+O programa renderiza os PDFs a 300 DPI e preserva as dimensões das imagens,
+aplicando sua orientação EXIF. As páginas ficam em
+`data/treinamento/paginas/ocr_300dpi/`; palavras, coordenadas e linhas ficam em `data/treinamento/ocr/`, organizadas
+por documento. Resultados existentes são preservados; erros detalhados ficam em
+`data/treinamento/logs/ingestao.log`. Não compartilhe imagens, textos ou logs.
+A pasta de OCR de cada documento contém `origem.json` para associá-la ao arquivo
+de entrada; esse arquivo também é privado.
+A reconstrução de colunas é aproximada e o OCR pode errar ou não encontrar
+texto: revise visualmente cada página. O modelo visual recebe a imagem; o OCR
+é apenas apoio.
+
+Para verificar a instalação isolada do Label Studio com Sentry e analytics
+desativados, execute:
+
+```bash
+PYTHONPATH=src .venv-treinamento/bin/python -m treinamento_visual.label.cli --version
+```
+
+O iniciador usa armazenamento local em `data/treinamento/label_studio/`,
+desativa a consulta automática de versão, restringe o servidor a `127.0.0.1`
+e executa o processo no sandbox de rede do macOS, permitindo conexões locais.
+Ele não inicia o servidor em outros sistemas nem sem o sandbox.
+Não execute o Label Studio diretamente: sua configuração padrão ativa o Sentry.
+O sandbox cobre somente o processo do servidor; não isola o navegador nem impede
+que outros serviços locais encaminhem dados. Não carregue documentos até concluir
+a revisão de isolamento. A configuração em
+`src/treinamento_visual/label/config.xml` define os campos e a transcrição por
+região.
+O comando abaixo prepara um JSON privado de tarefas sem carregar imagens no
+Label Studio nem sobrescrever um arquivo anterior:
+
+```bash
+PYTHONPATH=src .venv-treinamento/bin/python -m treinamento_visual.label.cli preparar
+```
+
+O arquivo `data/treinamento/label_studio/tarefas.json` contém referências às
+páginas, não suas imagens. O iniciador configura o serviço local de arquivos
+com a raiz `data/treinamento/paginas/`.
+
+O conversor GGUF usa o ambiente Python 3.12 separado `.venv-conversao/`,
+com dependências fixadas em `requirements-conversao.txt`. O clone ignorado
+`tools/llama.cpp/` está na revisão
+`a8ad690ca9239ea35db4de47e00cf632d01895fd`; use essa revisão ao recriá-lo.
+Para verificar a ajuda do conversor a partir da raiz do projeto:
+
+```bash
+PYTHONPATH=tools/llama.cpp .venv-conversao/bin/python tools/llama.cpp/convert_hf_to_gguf.py --help
+```
+
+O pipeline também suporta exportação do modelo SmolVLM e mmproj. Não ative um
+adaptador sem comparar base e adaptado no conjunto `test` reservado.
+
+O fluxo completo de Codespaces, publicação autorizada e treino no GitHub está em
+[pipeline de treinamento visual](docs/40_testing/05_pipeline_treinamento_visual.md).
 
 ## Documentação e código
 
@@ -129,9 +206,11 @@ Codespace tenha sido iniciado, nem que as respostas reais estejam corretas.
 O benchmark da extração fica fora do núcleo da aplicação:
 
 ```bash
-.venv/bin/python scripts/case_evaluation.py --help
+.venv/bin/python -m toolbox --help
+.venv/bin/python -m toolbox avaliar --help
 ```
 
 Uma avaliação real usa a API configurada e gera um relatório local. O antigo
-`scripts/case_evaluation_v3.py` gerava resultados fixos sem executar a avaliação;
-seus relatórios anteriores não são evidência de testes reais.
+`scripts/case_evaluation_v3.py` gerava resultados fixos em sua implementação
+histórica; seus relatórios anteriores não são evidência de testes reais. Os
+comandos antigos de `scripts/` foram substituídos pelos da toolbox.

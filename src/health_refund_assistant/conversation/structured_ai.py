@@ -1,4 +1,9 @@
-"""Executa tarefas de IA com schema estrito e validação local."""
+"""Objetivo: executar chamadas estruturadas das tarefas de IA.
+
+Entradas: prompt, conteúdo, nome do schema e configuração de API.
+Processamento: envia a requisição e valida localmente o JSON retornado.
+Saídas: objeto validado ou erro de API, formato ou contrato.
+"""
 
 import json
 import os

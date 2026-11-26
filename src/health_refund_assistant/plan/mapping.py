@@ -1,3 +1,10 @@
+"""Objetivo: propor o mapeamento dos campos das exportações.
+
+Entradas: estruturas dos dados, prompt, schema e configuração de API.
+Processamento: descreve estruturas, solicita proposta à IA e valida caminhos.
+Saídas: proposta JSON para revisão humana ou erro de validação.
+"""
+
 import argparse
 import json
 import os

@@ -1,4 +1,9 @@
-"""Tarefa de revisão consultiva da imagem e dos dados extraídos."""
+"""Objetivo: revisar de forma consultiva a extração documental.
+
+Entradas: imagem, pergunta, campos extraídos, avaliação e versão do prompt.
+Processamento: solicita revisão estruturada à IA e confere inconsistências.
+Saídas: revisão validada ou erro; não comprova autenticidade.
+"""
 
 import json
 from typing import Any

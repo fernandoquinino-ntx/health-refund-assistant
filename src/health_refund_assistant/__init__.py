@@ -1,3 +1,7 @@
-"""Assistant for extracting and reviewing health reimbursement documents."""
+"""Objetivo: identificar o pacote principal do assistente de reembolso.
 
-__version__ = "0.1.0"
+Entradas: nenhuma na importação. Processamento: inicializa o pacote.
+Saídas: disponibiliza seus módulos e a versão declarada.
+"""
+
+__version__ = "0.2.0"

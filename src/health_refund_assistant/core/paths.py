@@ -1,4 +1,9 @@
-"""Define caminhos do projeto e a localização dos contratos JSON."""
+"""Objetivo: centralizar caminhos operacionais e contratos do assistente.
+
+Entradas: localização do projeto e nome de schema solicitado.
+Processamento: define diretórios e resolve nomes conhecidos de schemas.
+Saídas: constantes de caminhos, caminho resolvido ou erro para schema inválido.
+"""
 
 from pathlib import Path
 

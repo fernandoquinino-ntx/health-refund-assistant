@@ -1,4 +1,9 @@
-"""Tarefa de IA para estimar processamento e conferir seus cálculos."""
+"""Objetivo: estimar o processamento de um pedido de reembolso localizado.
+
+Entradas: datas, evidências do pedido e configuração da tarefa.
+Processamento: solicita estimativa à IA e confere a contagem de dias úteis.
+Saídas: estimativa validada ou indicação de que não pode ser calculada.
+"""
 
 import json
 from datetime import date, timedelta

@@ -1,4 +1,9 @@
-"""Localiza e carrega as versões de prompts Markdown das tarefas."""
+"""Objetivo: disponibilizar prompts versionados às tarefas de IA.
+
+Entradas: componente e versão solicitada.
+Processamento: localiza e lê arquivos Markdown da biblioteca.
+Saídas: versões disponíveis, conteúdo selecionado ou erro de localização.
+"""
 
 import re
 from pathlib import Path

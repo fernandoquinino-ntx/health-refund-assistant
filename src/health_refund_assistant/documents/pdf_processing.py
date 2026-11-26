@@ -1,3 +1,10 @@
+"""Objetivo: processar em lote PDFs recebidos pelo assistente.
+
+Entradas: pastas de PDFs, estado anterior e configurações de extração.
+Processamento: identifica duplicatas, extrai dados e organiza arquivos.
+Saídas: estado JSON, PDFs processados ou falhos e mensagens de operação.
+"""
+
 import argparse
 import hashlib
 import json

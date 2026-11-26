@@ -9,7 +9,7 @@
 ```bash
 .venv/bin/python -m unittest discover -s tests -v
 .venv/bin/streamlit run app.py
-.venv/bin/python scripts/case_evaluation.py --help
+.venv/bin/python -m toolbox avaliar --help
 ```
 
 A avaliação real requer API configurada e pode gerar custos. Não atribua resultados

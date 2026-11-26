@@ -1,8 +1,7 @@
 # 8. Desenvolvimento – Contribuir / Modificar
 
-> Este guia descreve a reorganização não validada, não a extensão carregável.
-> Consulte o [guia atual](../../../docs/10_quickstart/03_comece_aqui_extension.md)
-> antes de modificar ou substituir qualquer cópia.
+> Este guia descreve a implementação fonte única da extensão. Consulte o
+> [guia atual](../../../docs/10_quickstart/03_comece_aqui_extension.md).
 
 ## Arquitetura Geral
 
@@ -74,7 +73,7 @@ Parser de dados. Responsável por:
 
 **Modificar se:** Portal mudou estrutura HTML, ou quer mudar lógica de parse.
 
-### 6. `01_manifest.json`
+### 6. `manifest.json`
 Metadados Chrome MV3. Veja [`06_manifest_mv3.md`](./06_manifest_mv3.md).
 
 ---
@@ -94,13 +93,14 @@ cd health-refund-assistant
 ```
 chrome://extensions → Habilitar "Modo Desenvolvedor"
 → "Carregar extensão sem compactação"
-→ Selecione extension/
+→ Selecione src/extension/
 ```
 
 ### 3. Edite arquivo
 
-Edite os arquivos da cópia carregável em `extension/`. Alterações em
-`src/extension/` não são aplicadas a ela automaticamente.
+Edite os arquivos diretamente em `src/extension/`. Execute
+`bash src/treinamento_visual/scripts/build_extension.sh` para gerar
+`build/extension/` para testes ou empacotamento.
 
 ### 4. Recarregue
 

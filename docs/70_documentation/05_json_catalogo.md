@@ -2,7 +2,7 @@
 
 Os JSONs da aplicação ficam centralizados em [`json/`](../../json/), organizados por
 processo. Os arquivos obrigatórios das plataformas continuam em seus caminhos fixos:
-`.devcontainer/devcontainer.json` e `extension/manifest.json`.
+`.devcontainer/devcontainer.json` e `src/extension/manifest.json`.
 
 ## Para onde os dados vão
 
@@ -29,7 +29,7 @@ Os PDFs sintéticos ficam em `data/sinteticos/documentos/`.
 |---|---|---|---|
 | `json/config/mapeamento_reembolsos.json` | Configuração dos campos e critérios de conciliação | Revisado por pessoa; lido pelo conciliador e assistente | [Schema](../../json/reconciliation/schemas/mapping_config.schema.json) · [Guia](../../json/config/mapeamento_reembolsos.md) |
 | `json/config/mapeamento_reembolsos.proposta.json` | Proposta local temporária, requer revisão | `mapping.py`; não substitui a configuração ativa | [Schema da proposta](../../json/reconciliation/schemas/mapping_proposal.schema.json) · [Guia](../../json/config/mapeamento_reembolsos.md) |
-| `Downloads/careplus-reembolsos-*.json` | Exportação baixada pela extensão, antes da importação | Extensão Chrome; enviada pelo usuário à interface | [Schema](../../json/plan/schemas/plan_export.schema.json) · [Guia](../../extension/exportacao_reembolsos.md) |
+| `Downloads/careplus-reembolsos-*.json` | Exportação baixada pela extensão, antes da importação | Extensão Chrome; enviada pelo usuário à interface | [Schema](../../json/plan/schemas/plan_export.schema.json) · [Guia](../../src/extension/50_docs/10_exportacao_reembolsos.md) |
 | `json/plan/imports/*.json` | Dataset importado do portal, com período e pedidos | Importação da interface; lido pela avaliação e conciliação | [Schema](../../json/plan/schemas/plan_export.schema.json) · [Guia do tipo](../../json/plan/imports/exportacao_plano.md) |
 | `json/documents/state/notas_extraidas.json` | Estado operacional das extrações em lote | `pdf_processing.py`; lido por processamento e conciliação | [Schema](../../json/documents/schemas/notes_state.schema.json) · [Guia](../../json/documents/state/notas_extraidas.md) |
 | `json/documents/state/conversa_local.json` | Conversa e última análise de um usuário local | Interface do assistente; saída local não criptografada | [Privacidade](../../README.md#memória-e-privacidade) |
@@ -41,7 +41,7 @@ Os PDFs sintéticos ficam em `data/sinteticos/documentos/`.
 | `json/tests/templates/*.template.json` | Templates-fonte do manifesto e gabarito | Mantidos por desenvolvedores; copiados pelo gerador | [Guias](../../json/tests/templates/README.md) |
 | `json/*/schemas/*.schema.json` | Contratos estruturais usados pelo código e prompts | Validadores locais e API OpenAI | [Índice de schemas](../../json/schemas/README.md); cada schema tem um `.md` adjacente |
 | `.devcontainer/devcontainer.json` | Configuração externa do Codespaces/Dev Containers | GitHub Codespaces e VS Code | [Guia](../../.devcontainer/devcontainer.md) |
-| `extension/manifest.json` | Metadados externos da extensão Chrome MV3 | Google Chrome | [Guia](../../extension/manifest.md) |
+| `src/extension/manifest.json` | Metadados externos da extensão Chrome MV3 | Google Chrome | [Guia](../../src/extension/50_docs/11_manifest.md) |
 
 Os arquivos importados e relatórios variam por execução; seus guias documentam o tipo,
 sem criar um `.md` para cada cópia. Assim evitamos duplicação e não reproduzimos nomes

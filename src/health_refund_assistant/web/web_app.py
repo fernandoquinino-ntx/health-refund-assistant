@@ -1,50 +1,8 @@
-"""
-UI Web (Streamlit) — Interface do Assistente
+"""Objetivo: apresentar a interface Streamlit do assistente.
 
-OBJETIVO:
-  Interface interativa para usuários testarem o sistema:
-  1. Upload de nota fiscal (PDF/imagem)
-  2. Seleção de exportação do plano
-  3. Execução do fluxo completo (extração → reconciliação → auditoria)
-  4. Exibição de resultado
-
-FLUXO NA UI:
-  1. User faz upload do PDF
-  2. Seleciona exportação do plano disponível
-  3. Clica "Analisar"
-  4. Sistema executa:
-     - VLM Extractor
-     - Reconciliation
-     - Assessment
-  5. UI exibe:
-     - Dados extraídos
-     - Status de reconciliação
-     - Resultado de auditoria
-     - Resposta final do assistente
-
-ENTRADA:
-  - Arquivo PDF/imagem
-  - Exportação do plano (dropdown)
-
-SAÍDA:
-  - JSON extraído
-  - Status de reembolso
-  - Resultado de auditoria
-  - Resposta em linguagem natural
-
-USO:
-  streamlit run src/health_refund_assistant/web_app.py
-  Acesso: http://localhost:8501
-
-DOCUMENTO:
-  Veja docs/02_process/01_rastreamento_testes.md para usar UI
-  Veja docs/01_quickstart/01_comece_aqui.md para 3 passos
-
-TESTE NO CODESPACES:
-  1. Criar Codespaces
-  2. Executar: streamlit run src/health_refund_assistant/web_app.py
-  3. Acessar http://localhost:8501
-  4. Upload PDF + click "Analisar"
+Entradas: PDFs, exportações, perguntas e opções fornecidas pelo usuário.
+Processamento: coordena a conversa e chama os fluxos de análise.
+Saídas: respostas e evidências na interface e estado de conversa local.
 """
 
 from datetime import datetime
@@ -64,6 +22,7 @@ from ..conversation.assistant import (
 )
 from ..plan.assessment import DEADLINE_DAYS, ExportPeriodError
 from ..conversation.conversation_memory import clear_conversation, load_conversation, save_conversation
+from ..conversation.agent import handle_agent_turn
 from ..core.paths import INCOMING_DIR, PROMPTS_DIR
 from ..core.prompt_library import prompt_versions
 from ..plan.plan_exports import available_plan_exports, import_plan_export
@@ -196,97 +155,42 @@ def main() -> None:
         st.error("Não encontrei as versões necessárias da biblioteca de prompts.")
         return
 
+    extraction_version = extraction_versions[-1]
+    assistant_version = assistant_versions[-1]
+    review_version = review_versions[-1]
+    payment_version = payment_versions[-1]
+    reference_date = datetime.now(ZoneInfo("America/Sao_Paulo")).date()
+    deadline_days = DEADLINE_DAYS
+
     with st.sidebar:
-        if st.button("Apagar conversa local"):
+        if st.button("Nova conversa"):
             try:
                 clear_conversation()
             except OSError as error:
                 st.error(f"Não foi possível apagar a conversa: {error}")
             else:
-                st.session_state["conversation"] = {"messages": [], "evidence": None}
-                st.session_state["upload_version"] = (
-                    st.session_state.get("upload_version", 0) + 1
-                )
+                st.session_state["conversation"] = {
+                    "messages": [],
+                    "evidence": None,
+                    "agent": None,
+                }
+                st.session_state.pop("pending_pdf", None)
+                st.session_state.pop("pending_image", None)
                 st.rerun()
-        st.header("Prompts e avaliação")
-        extraction_version = st.selectbox(
-            "Prompt de extração",
-            extraction_versions,
-            index=len(extraction_versions) - 1,
-        )
-        assistant_version = st.selectbox(
-            "Prompt do assistente",
-            assistant_versions,
-            index=len(assistant_versions) - 1,
-        )
-        review_version = st.selectbox("Prompt de revisão documental", review_versions, index=len(review_versions) - 1)
-        payment_version = st.selectbox("Prompt de estimativa de pagamento", payment_versions, index=len(payment_versions) - 1)
-        prompt_path = PROMPTS_DIR / "vlm_extractor" / f"{extraction_version}.md"
-        with st.expander("Ver prompt de extração"):
-            st.code(prompt_path.read_text(encoding="utf-8"), language="text")
-        assistant_prompt_path = ASSISTANT_PROMPTS_DIR / f"{assistant_version}.md"
-        with st.expander("Ver prompt do assistente"):
-            st.code(assistant_prompt_path.read_text(encoding="utf-8"), language="text")
-        for component, version, label in (
-            ("revisao_documental", review_version, "Ver prompt de revisão documental"),
-            ("estimativa_pagamento", payment_version, "Ver prompt de estimativa de pagamento"),
-        ):
-            with st.expander(label):
-                st.code((PROMPTS_DIR / component / f"{version}.md").read_text(encoding="utf-8"), language="text")
-        reference_date = st.date_input(
-            "Data de referência",
-            value=datetime.now(ZoneInfo("America/Sao_Paulo")).date(),
-            help="A data permite repetir cenários de teste; no uso normal, mantenha hoje.",
-        )
-        deadline_days = st.number_input(
-            "Prazo de envio simulado (dias)",
-            min_value=0,
-            value=DEADLINE_DAYS,
-            step=1,
-        )
-
-    st.subheader("1. Importar exportação do plano")
-    uploads = st.file_uploader(
-        "Selecione arquivos JSON baixados pela extensão",
-        type=["json"],
-        accept_multiple_files=True,
-    )
-    if uploads and st.button("Importar JSON selecionados"):
-        imported_paths = []
-        for upload in uploads:
-            try:
-                imported_paths.append(import_plan_export(upload.name, upload.getvalue()))
-            except (OSError, ValueError, ExportPeriodError) as error:
-                st.error(str(error))
-        if imported_paths:
-            st.session_state["selected_export_paths"] = [
-                str(path) for path in imported_paths
-            ]
-            st.success(
-                f"{len(imported_paths)} exportação(ões) válida(s) armazenada(s) "
-                "em json/plan/imports/."
+        with st.expander("Configurações avançadas"):
+            reference_date = st.date_input(
+                "Data de referência",
+                value=reference_date,
+                help="Usada para repetir cenários e estimar prazos.",
             )
-            st.rerun()
+            deadline_days = st.number_input(
+                "Prazo simulado (dias)",
+                min_value=0,
+                value=DEADLINE_DAYS,
+                step=1,
+            )
 
-    local_exports = available_plan_exports()
-    if not local_exports:
-        st.warning(
-            "Importe uma exportação com `periodo.de` e `periodo.ate`. "
-            "Sem o período consultado, a análise é interrompida."
-        )
-    selected_paths = st.multiselect(
-        "Datasets do plano que devem ser consultados",
-        options=[str(path) for path in local_exports],
-        default=[
-            path
-            for path in st.session_state.get("selected_export_paths", [])
-            if Path(path).is_file()
-        ],
-        format_func=lambda value: Path(value).name,
-    )
-    st.caption("As exportações ficam em `json/plan/imports/` e não são versionadas.")
-
-    st.subheader("2. Conversa")
+    st.subheader("Conversa")
     conversation = st.session_state["conversation"]
     for message in conversation["messages"]:
         with st.chat_message(message["role"]):
@@ -294,116 +198,102 @@ def main() -> None:
 
     evidence = conversation["evidence"]
     if evidence:
-        st.caption(
-            "Perguntas sem novo PDF usam a última análise salva; o status pode ter "
-            "mudado. Para atualizar, envie novamente o PDF e selecione a exportação."
-        )
-        eligibility = evidence["conciliacao"].get("elegibilidade")
-        if eligibility:
-            st.warning("Elegibilidade: não é possível avaliar. " + eligibility["motivo"])
-        if "revisao_ia" in evidence:
-            st.info(
-                "Revisão consultiva da IA: "
-                + evidence["revisao_ia"]["situacao_documental"]
-                + ". Revise as evidências antes de decidir."
-            )
-        with st.expander("Ver evidências da última análise"):
+        with st.expander("Ver evidências da análise"):
             st.json(evidence["documento"])
-            if "evidencias_literais" in evidence["documento"]:
-                st.caption(
-                    "Os trechos foram transcritos pela IA e podem estar incorretos; "
-                    "confira-os na imagem original."
-                )
             _show_assessment(evidence["conciliacao"])
-            if "revisao_ia" in evidence:
-                st.subheader("Revisão consultiva da IA")
+            if evidence.get("revisao_ia"):
+                st.subheader("Revisão documental")
                 st.json(evidence["revisao_ia"])
-            else:
-                st.warning("Análise anterior sem revisão por IA. Reenvie o PDF.")
-            if "versoes_prompts" in evidence:
-                st.subheader("Versões de prompts selecionadas")
-                st.json(evidence["versoes_prompts"])
 
-    pdf_upload = st.file_uploader(
-        "Anexar nota fiscal ou recibo em PDF (opcional após a primeira análise)",
-        type=["pdf"],
-        key=f"chat_pdf_{st.session_state.get('upload_version', 0)}",
+    attachments = st.file_uploader(
+        "Anexar documento ou exportação",
+        type=["pdf", "png", "jpg", "jpeg", "json"],
+        accept_multiple_files=True,
+        key=f"agent_attachments_{st.session_state.get('upload_version', 0)}",
     )
-    local_pdfs = get_local_pdfs()
-    pdf_path = st.selectbox(
-        "Ou escolha um PDF em data/incoming/",
-        options=[None, *local_pdfs],
-        format_func=lambda value: value.name if value else "Nenhum",
-        key=f"chat_local_pdf_{st.session_state.get('upload_version', 0)}",
-    )
-    question = st.chat_input("Escreva sua pergunta sobre o reembolso")
+
+    question = st.chat_input("Fale com o assistente sobre seu reembolso")
     if question is not None:
-        if not question.strip():
-            st.error("Escreva uma pergunta para o assistente.")
-        elif pdf_upload and pdf_path:
-            st.error("Selecione apenas um PDF: upload ou arquivo local.")
-        elif (pdf_upload or pdf_path) and not selected_paths:
-            st.error("Selecione ao menos uma exportação do plano para analisar o PDF.")
-        elif not pdf_upload and not pdf_path and not evidence:
-            st.info("Anexe um PDF e selecione uma exportação para começar a análise.")
-        elif not pdf_upload and not pdf_path and "revisao_ia" not in evidence:
-            st.error("A análise anterior não tem revisão por IA. Reenvie o PDF.")
+        if not question.strip() and not attachments:
+            st.error("Escreva uma pergunta ou anexe um documento.")
         else:
             try:
                 history = conversation["messages"]
-                if pdf_upload or pdf_path:
-                    pdf_bytes = pdf_upload.getvalue() if pdf_upload else pdf_path.read_bytes()
-                    request = AssistantRequest(
+                pdf_bytes = None
+                image_bytes = None
+                import_paths = []
+
+                if isinstance(attachments, (list, tuple)):
+                    attachment_items = attachments
+                else:
+                    attachment_items = [attachments] if attachments is not None else []
+
+                for attachment in attachment_items:
+                    suffix = Path(attachment.name).suffix.lower()
+                    content = attachment.getvalue()
+                    if suffix == ".pdf":
+                        pdf_bytes = content
+                    elif suffix in (".png", ".jpg", ".jpeg"):
+                        image_bytes = content
+                    elif suffix == ".json":
+                        import_paths.append(import_plan_export(attachment.name, content))
+
+                if not import_paths:
+                    pending_exports = st.session_state.pop(
+                        "pending_export_paths",
+                        [],
+                    )
+                    import_paths = [
+                        Path(path)
+                        for path in pending_exports
+                        if Path(path).is_file()
+                    ]
+                else:
+                    st.session_state["pending_export_paths"] = [
+                        str(path) for path in import_paths
+                    ]
+
+                if pdf_bytes is None and image_bytes is None:
+                    pending_pdf = st.session_state.pop("pending_pdf", None)
+                    pending_image = st.session_state.pop("pending_image", None)
+                    pdf_bytes = pending_pdf
+                    image_bytes = pending_image
+
+                with st.spinner("O agente está verificando a solicitação…"):
+                    result = handle_agent_turn(
+                        message=question,
+                        agent_state=conversation.get("agent"),
+                        evidence=evidence,
                         pdf_bytes=pdf_bytes,
-                        question=question,
-                        export_paths=[Path(path) for path in selected_paths],
-                        extraction_prompt_version=extraction_version,
-                        response_prompt_version=assistant_version,
+                        image_bytes=image_bytes,
+                        export_paths=import_paths,
                         reference_date=reference_date,
                         deadline_days=int(deadline_days),
-                        review_prompt_version=review_version,
-                        payment_prompt_version=payment_version,
                     )
-                    with st.spinner("Extraindo e avaliando o documento…"):
-                        response = handle_request(request, history)
-                    evidence = {
-                        "documento": response.document_fields,
-                        "conciliacao": response.assessment,
-                        "revisao_ia": response.review,
-                        "versoes_prompts": {
-                            "extracao": extraction_version,
-                            "revisao_documental": review_version,
-                            "estimativa_pagamento": payment_version,
-                            "resposta": assistant_version,
-                        },
-                    }
-                    answer = response.answer
-                else:
-                    with st.spinner("Consultando as evidências da última análise…"):
-                        evidence = {
-                            **evidence,
-                            "conciliacao": atualizar_estimativa(
-                                evidence["conciliacao"], reference_date, payment_version
-                            ),
-                            "versoes_prompts": {
-                                **evidence.get("versoes_prompts", {}),
-                                "estimativa_pagamento": payment_version,
-                                "resposta": assistant_version,
-                            },
-                        }
-                        answer = create_assistant_answer(
-                            question, evidence, assistant_version, history
-                        )
+
+                if result["state"].get("status") == "aguardando_exportacao":
+                    if pdf_bytes:
+                        st.session_state["pending_pdf"] = pdf_bytes
+                    if image_bytes:
+                        st.session_state["pending_image"] = image_bytes
+                elif result["state"].get("status") == "concluido":
+                    st.session_state.pop("pending_pdf", None)
+                    st.session_state.pop("pending_image", None)
+                    st.session_state.pop("pending_export_paths", None)
+
                 messages = history + [
-                    {"role": "user", "content": question},
-                    {"role": "assistant", "content": answer},
+                    {"role": "user", "content": question or "Documento anexado"},
+                    {"role": "assistant", "content": result["answer"]},
                 ]
-                save_conversation(messages, evidence)
+                save_conversation(
+                    messages,
+                    result["evidence"],
+                    agent=result["state"],
+                )
                 st.session_state["conversation"] = load_conversation()
-                if pdf_upload or pdf_path:
-                    st.session_state["upload_version"] = (
-                        st.session_state.get("upload_version", 0) + 1
-                    )
+                st.session_state["upload_version"] = (
+                    st.session_state.get("upload_version", 0) + 1
+                )
                 st.rerun()
             except ExtractionError as error:
                 st.error(str(error))

@@ -23,10 +23,13 @@ Este arquivo define as regras que **TODO o Copilot DEVE seguir** automaticamente
   ali; não invente releases, tags, datas ou resultados de testes.
 - Mantenha a aplicação em `src/health_refund_assistant/`: módulos compartilhados
   em `core/`, tarefas em `conversation/`, documentos em `documents/`, plano em
-  `plan/` e interface em `web/`. `app.py` é o ponto de entrada; testes ficam em
-  `tests/` e ferramentas de avaliação em `scripts/`, não no núcleo.
-- Inicie cada arquivo de código com uma descrição breve do que faz e da etapa do
-  processo, usando a forma apropriada da linguagem, como docstring em Python.
+  `plan/` e interface em `web/`. O programa independente de preparação de
+  anotações fica em `src/anotacao_documentos/`; seus dados privados ficam em
+  `data/treinamento/`. `app.py` é o ponto de entrada do assistente; testes
+  ficam em `tests/` e ferramentas operacionais independentes em `src/toolbox/`.
+- Inicie cada arquivo Python com uma docstring que descreva objetivo, entradas,
+  processamento e saídas. Para outros arquivos de código, descreva brevemente
+  sua função e etapa na forma apropriada da linguagem.
 - JSONs ficam em `json/` por processo; registre caminhos em `core/paths.py` e
   documente contratos ao lado dos schemas. Os prompts versionados ficam em
   `prompts/`: não sobrescreva versões históricas. O Python carrega o prompt e o

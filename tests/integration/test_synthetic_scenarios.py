@@ -1,11 +1,16 @@
-"""Testes dos cenários sintéticos de conciliação."""
+"""Objetivo: verificar a integração da avaliação com cenários existentes.
+
+Entradas: casos, gabaritos e exportação fictícios.
+Processamento: executa a avaliação determinística e compara os resultados.
+Saídas: asserções de sucesso ou falha para o runner de testes.
+"""
 import json
 import unittest
 from datetime import date
 from pathlib import Path
 
 from health_refund_assistant.plan.assessment import avaliar_documento
-from scripts.test_paths import SYNTHETIC_DATA_DIR
+from toolbox.test_paths import SYNTHETIC_DATA_DIR
 from health_refund_assistant.plan.reconciliation import DEFAULT_MAPPING, load_json
 
 

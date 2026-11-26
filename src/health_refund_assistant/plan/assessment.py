@@ -1,7 +1,8 @@
-"""Avalia campos, prazo simulado e correspondência nas exportações do plano.
+"""Objetivo: avaliar campos e possíveis pedidos nas exportações do plano.
 
-Esta etapa é determinística; a síntese da resposta é feita posteriormente pela IA.
-O prazo padrão de 30 dias é uma simulação, não uma regra contratual.
+Entradas: dados extraídos, exportações, mapeamento e data de referência.
+Processamento: verifica campos, cobertura, candidatos e prazo simulado.
+Saídas: evidências estruturadas; não determina elegibilidade contratual.
 """
 
 from datetime import date

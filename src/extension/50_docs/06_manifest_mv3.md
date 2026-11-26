@@ -1,7 +1,7 @@
 # 6. Manifest MV3 – Referência Técnica
 
-> Este manifesto pertence à reorganização não validada. A extensão carregável
-> usa [extension/manifest.json](../../../extension/manifest.json).
+> Este documento descreve o manifest da implementação fonte única em
+> `src/extension/manifest.json`.
 
 ## O que é Manifest V3?
 
@@ -14,7 +14,7 @@ Substituiu MV2 (deprecated) com melhorias:
 
 ---
 
-## Arquivo: `01_manifest.json`
+## Arquivo: `manifest.json`
 
 ```json
 {
@@ -176,7 +176,7 @@ Permite acesso a:
 
 Quando fazer mudanças:
 
-1. **Atualizar versão** em `01_manifest.json`:
+1. **Atualizar versão** em `manifest.json`:
    ```json
    "version": "1.2.0"  // foi 1.1.0
    ```

@@ -1,0 +1,16 @@
+<View>
+  <Image name="imagem" value="$image" zoomControl="true"/>
+  <RectangleLabels name="campo" toName="imagem" choice="single">
+    <Label value="numero_documento"/>
+    <Label value="prestador"/>
+    <Label value="cnpj_cpf_prestador"/>
+    <Label value="valor_total"/>
+    <Label value="data_emissao"/>
+    <Label value="data_atendimento"/>
+    <Label value="nome_profissional"/>
+    <Label value="descricao_servico"/>
+    <Label value="registro_profissional"/>
+  </RectangleLabels>
+  <TextArea name="transcricao" toName="imagem" perRegion="true"
+            editable="true" rows="2" required="true"/>
+</View>

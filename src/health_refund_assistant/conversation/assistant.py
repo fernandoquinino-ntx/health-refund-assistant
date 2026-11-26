@@ -1,32 +1,13 @@
-"""
-Assistente Principal de Reembolso
+"""Objetivo: coordenar a análise consultiva de reembolso.
 
-OBJETIVO:
-  Orquestra o fluxo completo de verificação de notas fiscais:
-  1. Extração VLM: Converte PDF/imagem → JSON com dados estruturados
-  2. Reconciliação: Busca na exportação do plano e verifica sua cobertura
-  3. Auditoria: Verifica campos e calcula prazo simulado
-  4. Resposta: Gera síntese fundamentada em fatos
-
-ENTRADA:
-  - Nota fiscal (PDF/imagem) do usuário
-  - Exportação do plano (JSON)
-  - Prompt de reembolso (templates)
-
-SAÍDA:
-  - Evidências de possíveis correspondências e status do portal
-  - Auditoria pré-envio (completude documental)
-  - Resposta fundamentada ao usuário
-
-PROCESSO:
-  User envia nota → VLMExtractor → Reconciliation → Assessment → Assistente → Resposta
-
-DOCUMENTO:
-  Veja docs/05_architecture/01_visao_geral.md para fluxo completo
+Entradas: PDF, pergunta, exportações selecionadas, histórico e opções.
+Processamento: extrai a primeira página, concilia, revisa e gera resposta.
+Saídas: campos, avaliação, revisão, resposta e erros quando a análise falha.
 """
 
 from dataclasses import dataclass
 from datetime import date
+import os
 from pathlib import Path
 from typing import Any, Dict, Sequence
 
@@ -36,6 +17,7 @@ from ..documents.pdf_converter import converter_pdf_bytes_primeira_pagina_base64
 from ..plan.plan_exports import load_selected_exports
 from ..documents.vlm_extractor import (
     DEFAULT_MODEL,
+    LocalVLMExtractor,
     VLMExtractor,
 )
 from .revisao_documental import review_document
@@ -60,6 +42,7 @@ class AssistantRequest:
     deadline_days: int = DEADLINE_DAYS
     review_prompt_version: str = "v1.0"
     payment_prompt_version: str = "v1.0"
+    image_bytes: bytes = b""
 
 
 @dataclass(frozen=True)
@@ -75,8 +58,8 @@ def handle_request(
 ) -> AssistantResponse:
     if not request.question.strip():
         raise ValueError("Escreva uma pergunta para o assistente.")
-    if not request.pdf_bytes:
-        raise ValueError("O PDF enviado está vazio.")
+    if not request.pdf_bytes and not request.image_bytes:
+        raise ValueError("O documento enviado está vazio.")
     if not request.export_paths:
         raise ExportPeriodError(
             "Nenhuma exportação do plano selecionada; análise não executada."
@@ -84,11 +67,24 @@ def handle_request(
 
     exports = load_selected_exports(list(request.export_paths))
     mapping = load_mapping(DEFAULT_MAPPING)
-    image = converter_pdf_bytes_primeira_pagina_base64(request.pdf_bytes)
-    extractor = VLMExtractor(
-        model=DEFAULT_MODEL,
-        prompt_version=request.extraction_prompt_version,
-    )
+    if request.image_bytes:
+        import base64
+        image = base64.b64encode(request.image_bytes).decode("ascii")
+    else:
+        image = converter_pdf_bytes_primeira_pagina_base64(request.pdf_bytes)
+    local_model = os.getenv("LOCAL_VLM_MODEL")
+    if local_model:
+        local_adapter = os.getenv("LOCAL_VLM_ADAPTER")
+        extractor = LocalVLMExtractor(
+            model_path=Path(local_model),
+            adapter_path=Path(local_adapter) if local_adapter else None,
+            prompt_version=request.extraction_prompt_version,
+        )
+    else:
+        extractor = VLMExtractor(
+            model=DEFAULT_MODEL,
+            prompt_version=request.extraction_prompt_version,
+        )
     extraction = extractor.extrair_dados_nf_visual(image)
     status = extraction.get("_meta", {}).get("status")
     if status != "OK":

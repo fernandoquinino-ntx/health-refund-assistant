@@ -1,4 +1,9 @@
-"""Memória local de uma conversa para uso individual e privado."""
+"""Objetivo: manter a memória local de uma conversa individual.
+
+Entradas: caminho e dados da conversa.
+Processamento: carrega, grava ou apaga o estado persistido.
+Saídas: estado validado ou arquivo local atualizado; erros são propagados.
+"""
 
 import json
 import os
@@ -51,6 +56,7 @@ def save_conversation(
     messages: list[dict[str, str]],
     evidence: dict[str, Any] | None,
     path: Path = CONVERSATION_STATE_PATH,
+    agent: dict[str, Any] | None = None,
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = None
@@ -59,11 +65,13 @@ def save_conversation(
             mode="w", encoding="utf-8", dir=path.parent, delete=False
         ) as file:
             temporary_path = Path(file.name)
-            json.dump(
-                {"messages": messages[-MAX_MESSAGES:], "evidence": evidence},
-                file,
-                ensure_ascii=False,
-            )
+            payload = {
+                "messages": messages[-MAX_MESSAGES:],
+                "evidence": evidence,
+            }
+            if agent is not None:
+                payload["agent"] = agent
+            json.dump(payload, file, ensure_ascii=False)
         os.replace(temporary_path, path)
     finally:
         if temporary_path is not None and temporary_path.exists():

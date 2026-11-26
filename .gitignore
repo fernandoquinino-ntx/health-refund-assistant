@@ -1,5 +1,8 @@
 # Python
 .venv/
+.venv-treinamento/
+.venv-label-studio/
+.venv-conversao/
 __pycache__/
 *.py[cod]
 *.pyc
@@ -37,6 +40,22 @@ data/sinteticos/documentos/*
 data/sinteticos/resultados/
 data/sinteticos/resultados/**
 
+# Documents and model artifacts must not be added, even outside data/.
+*.[pP][dD][fF]
+*.gguf
+*.safetensors
+/models/
+!/models/
+!/models/README.md
+/tools/llama.cpp/
+
+# Private training inputs and derived data.
+/data/treinamento/
+/data/pdf/
+/data/pages/
+/data/ocr/
+/data/dataset/
+
 # Imported datasets and runtime JSON outputs can contain personal/health data.
 json/plan/imports/*.json
 json/plan/imports/*.json.tmp
@@ -44,6 +63,7 @@ json/documents/state/*.json
 json/documents/state/*.json.tmp
 json/evaluation/reports/*.json
 json/evaluation/reports/*.json.tmp
+json/evaluation/reports/*.log
 json/reconciliation/reports/*.json
 json/reconciliation/reports/*.json.tmp
 json/config/*.proposta.json.vscode/

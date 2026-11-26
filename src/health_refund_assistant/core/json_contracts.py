@@ -1,4 +1,9 @@
-"""Carrega, apresenta e valida contratos JSON usados pelas tarefas."""
+"""Objetivo: aplicar contratos JSON às tarefas da aplicação.
+
+Entradas: nomes de schemas e dados JSON.
+Processamento: carrega schemas, constrói modelos de referência e valida dados.
+Saídas: contratos, contexto para prompts, dados validados ou erros.
+"""
 
 import json
 from functools import lru_cache

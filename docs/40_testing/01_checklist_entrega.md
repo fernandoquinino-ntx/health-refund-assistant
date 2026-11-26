@@ -37,7 +37,7 @@ Todos os itens solicitados foram executados e verificados:
   1. **VLM Extractor** (`vlm_extractor.py` linha 117-178): Extrai dados com schema JSON strict
   2. **Verificação Determinística** (`assessment.py` linha 92-166 + `reconciliation.py`): Valida D-2 (janela) + 365 dias (prazo)
   3. **Síntese de Resposta** (`assistant.py` linha 49-77): LLM chat ancorada em fatos
-- ✅ Fluxo é determin ístico, sem chances de bypass de verificação
+- ✅ Fluxo é determinístico, sem chances de bypass de verificação
 - ✅ Memória stored: `assistant flow synchronization` confirmada
 
 ### Fase 4: Artefatos Oficiais da Entrega Final

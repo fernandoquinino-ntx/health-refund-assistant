@@ -1,7 +1,7 @@
 # 00_INDICE_NAVEGACAO.md
 
-> **Reorganização não validada:** este índice descreve `src/extension/`, que não
-> é a pasta carregável. Para instalação e uso, consulte o
+> Este índice descreve a implementação fonte única em `src/extension/`. Para
+> instalação e uso, consulte o
 > [guia atual](../../docs/10_quickstart/03_comece_aqui_extension.md).
 
 ## 🎯 Bem-vindo à Extensão Chrome: Care Plus Reembolsos Coletor
@@ -90,7 +90,7 @@ Você vai explicar para executivos/stakeholders.
 ```
 src/extension/
 ├── README.md                           ⭐ Comece aqui
-├── 01_manifest.json                    Chrome MV3 config
+├── manifest.json                       Chrome MV3 config
 │
 ├── 10_popup/                           Interface
 │   ├── popup.html
@@ -143,7 +143,7 @@ Conceitos gerais | [`01_leia_primeiro.md`](./50_docs/01_leia_primeiro.md)
 ## ⚡ Início Rápido (3 Passos)
 
 ```bash
-1. Instale:   chrome://extensions → Load → extension/
+1. Instale:   chrome://extensions → Load → src/extension/
 2. Use:       Clique ícone → "Coletar Reembolsos"
 3. Resultado: JSON em Downloads
 ```

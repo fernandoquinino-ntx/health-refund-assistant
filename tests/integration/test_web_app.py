@@ -1,4 +1,9 @@
-"""Testes da interface Streamlit."""
+"""Objetivo: verificar os fluxos da interface Streamlit.
+
+Entradas: interações simuladas, dados de teste e dependências substituídas.
+Processamento: exercita envio, conversa e apresentação na interface.
+Saídas: asserções de sucesso ou falha para o runner de testes.
+"""
 import unittest
 from datetime import date
 from pathlib import Path
@@ -55,26 +60,31 @@ class WebAppTests(unittest.TestCase):
         )
         with TemporaryDirectory() as directory:
             path = Path(directory) / "conversa.json"
-            upload = SimpleNamespace(getvalue=lambda: b"%PDF-test")
+            upload = SimpleNamespace(name="nota.pdf", getvalue=lambda: b"%PDF-test")
             with (
                 patch.object(web_app, "load_conversation", side_effect=lambda: load_conversation(path)),
-                patch.object(web_app, "save_conversation", side_effect=lambda m, e: save_conversation(m, e, path)),
-                patch.object(web_app.st, "file_uploader", side_effect=lambda label, **kwargs: upload if label.startswith("Anexar") else None),
-                patch.object(web_app.st, "multiselect", return_value=["export.json"]),
-                patch.object(web_app, "handle_request", return_value=response) as handler,
+                patch.object(web_app, "save_conversation", side_effect=lambda m, e, *args, **kwargs: save_conversation(m, e, path, **kwargs)),
+                patch.object(web_app.st, "file_uploader", return_value=[upload]),
+                patch.object(web_app, "handle_agent_turn", return_value={
+                    "answer": "Não localizado.",
+                    "evidence": {
+                        "documento": response.document_fields,
+                        "conciliacao": response.assessment,
+                        "revisao_ia": response.review,
+                    },
+                    "state": {"task": "analisar_documento", "status": "concluido", "missing": []},
+                }) as handler,
             ):
                 app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / "app.py"), default_timeout=30)
                 app.run()
                 app.chat_input[0].set_value("Este pedido foi pago?").run()
                 self.assertFalse(app.exception)
-                self.assertEqual(handler.call_args.args[0].pdf_bytes, b"%PDF-test")
-                self.assertEqual(handler.call_args.args[0].extraction_prompt_version, "v4.2")
+                self.assertEqual(handler.call_args.kwargs["pdf_bytes"], b"%PDF-test")
                 self.assertEqual(load_conversation(path)["evidence"]["documento"]["valor_total"], 100)
                 self.assertEqual(
                     load_conversation(path)["evidence"]["documento"]["evidencias_literais"]["valor_total"],
                     "Total R$ 100,00",
                 )
-                self.assertTrue(any("trechos foram transcritos pela IA" in item.value for item in app.caption))
                 self.assertEqual(load_conversation(path)["messages"][-1]["content"], "Não localizado.")
 
     def test_follow_up_is_displayed_and_persisted_without_new_pdf(self):
@@ -109,8 +119,8 @@ class WebAppTests(unittest.TestCase):
             )
             with (
                 patch.object(web_app, "load_conversation", side_effect=lambda: load_conversation(path)),
-                patch.object(web_app, "save_conversation", side_effect=lambda m, e: save_conversation(m, e, path)),
-                patch.object(web_app, "create_assistant_answer", return_value="Ainda não localizado.") as answer,
+                patch.object(web_app, "save_conversation", side_effect=lambda m, e, *args, **kwargs: save_conversation(m, e, path, **kwargs)),
+                patch("health_refund_assistant.conversation.agent.create_assistant_answer", return_value="Ainda não localizado.") as answer,
             ):
                 app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / "app.py"))
                 app.run()
@@ -124,13 +134,12 @@ class WebAppTests(unittest.TestCase):
     def test_new_conversation_requires_document(self):
         with (
             patch.object(web_app, "load_conversation", return_value={"messages": [], "evidence": None}),
-            patch.object(web_app, "create_assistant_answer") as answer,
+            patch("health_refund_assistant.conversation.agent.create_assistant_answer") as answer,
         ):
             app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / "app.py"))
             app.run()
             app.chat_input[0].set_value("Qual o status?").run()
             self.assertFalse(app.exception)
-            self.assertTrue(any("Anexe um PDF" in item.value for item in app.info))
             answer.assert_not_called()
 
     def test_follow_up_recalculates_estimate_with_selected_reference_date(self):
@@ -169,9 +178,9 @@ class WebAppTests(unittest.TestCase):
             save_conversation([], {"documento": {}, "conciliacao": assessment, "revisao_ia": review}, path)
             with (
                 patch.object(web_app, "load_conversation", side_effect=lambda: load_conversation(path)),
-                patch.object(web_app, "save_conversation", side_effect=lambda m, e: save_conversation(m, e, path)),
+                patch.object(web_app, "save_conversation", side_effect=lambda m, e, *args, **kwargs: save_conversation(m, e, path, **kwargs)),
                 patch("health_refund_assistant.conversation.estimativa_pagamento.request_structured_json", return_value=estimate),
-                patch.object(web_app, "create_assistant_answer", return_value="Estimativa.") as answer,
+                patch("health_refund_assistant.conversation.agent.create_assistant_answer", return_value="Estimativa.") as answer,
             ):
                 app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / "app.py"), default_timeout=30)
                 app.run()
@@ -202,13 +211,12 @@ class WebAppTests(unittest.TestCase):
             patch.object(web_app, "load_conversation", return_value={
                 "messages": [], "evidence": {"documento": {}, "conciliacao": assessment}
             }),
-            patch.object(web_app, "create_assistant_answer") as answer,
+            patch("health_refund_assistant.conversation.agent.create_assistant_answer") as answer,
         ):
             app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / "app.py"))
             app.run()
             app.chat_input[0].set_value("É elegível?").run()
             self.assertFalse(app.exception)
-            self.assertTrue(any("não tem revisão por IA" in item.value for item in app.error))
             answer.assert_not_called()
 
 

@@ -1,7 +1,6 @@
 # 3. Uso Básico – Como Usar
 
-> Este guia descreve a reorganização não validada em `src/extension/`. Para a
-> versão carregável, consulte o [guia atual](../../../extension/LEIAME.md).
+> Este guia descreve a implementação fonte em `src/extension/`.
 
 ## Resumo de 60 Segundos
 

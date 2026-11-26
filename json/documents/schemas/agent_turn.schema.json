@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task": {
+      "type": "string",
+      "enum": [
+        "analisar_documento",
+        "consultar_status",
+        "confirmar_pagamento",
+        "verificar_prazo",
+        "revisar_completude"
+      ]
+    },
+    "note_reference": {
+      "type": ["string", "null"]
+    },
+    "missing": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "documento",
+          "exportacao_do_plano",
+          "numero_nota",
+          "data_atendimento",
+          "data_emissao",
+          "confirmacao_usuario"
+        ]
+      }
+    },
+    "mensagem": {
+      "type": ["string", "null"]
+    }
+  },
+  "required": ["task", "note_reference", "missing", "mensagem"],
+  "additionalProperties": false
+}

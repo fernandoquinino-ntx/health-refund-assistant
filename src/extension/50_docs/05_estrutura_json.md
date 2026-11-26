@@ -1,6 +1,6 @@
 # 5. Estrutura JSON – Formato dos Dados
 
-> Este guia descreve a reorganização não validada em `src/extension/`. O
+> Este guia descreve a implementação fonte em `src/extension/`. O
 > [contrato atual da exportação](../../../json/plan/schemas/plan_export.schema.json)
 > é a referência para importação na aplicação.
 

@@ -1,0 +1,7 @@
+{
+  "aprovado": false,
+  "responsavel": "",
+  "data_aprovacao": null,
+  "anonimizacao_revisada": false,
+  "observacao": "Defina aprovado=true somente depois de revisar e anonimizar todas as imagens e JSONL."
+}

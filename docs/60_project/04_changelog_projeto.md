@@ -5,8 +5,53 @@ detalhes de cada commit.
 
 ## Não lançado
 
+### Versão declarada
+
+- **0.2.0**: interface conversacional, estados de tarefa com interpretação
+  estruturada GPT-6 Luna, anexos naturais, reorganização do repositório e
+  pipelines de extensão/treinamento visual.
+
 ### Adicionado
 
+- UI conversacional do assistente com estados da tarefa, anexos naturais,
+  solicitação progressiva de documento/exportação e documentação dos casos de uso.
+
+- Organização do repositório: scripts operacionais em
+  `src/treinamento_visual/scripts/`, adaptadores em `models/adapters/` e testes
+  por domínio em `tests/unit/10_application/`, `tests/unit/20_training/` e
+  `tests/unit/30_toolbox/`.
+- Extensão Chrome consolidada em `src/extension/`; `build_extension.sh` gera
+  a cópia instalável sem manter uma segunda implementação na raiz.
+
+- Pipeline Git para treino visual: workflow acionado por push, consentimento
+  explícito de dados anonimizados, exportação segura do Codespaces e artefato
+  de adaptador no GitHub Actions.
+- Teste comparativo mostrou que os adaptadores curtos não devem ser ativados:
+  o adaptador melhorado chegou a alucinar campos fictícios e repetir tokens
+  visuais no documento reservado.
+
+- Pipeline Git para treino visual: workflow acionado por push, consentimento
+  explícito de dados anonimizados, exportação segura do Codespaces e artefato
+  de adaptador no GitHub Actions.
+
+- Pipeline de conversão do modelo visual para artefatos GGUF/mmproj, com
+  ambiente separado, modelo leve SmolVLM, exportação LoRA MLX e execução
+  automática ao iniciar um Codespace.
+- Comutador `LOCAL_VLM_MODEL`/`LOCAL_VLM_ADAPTER` para avaliar modelos locais
+  sem alterar o comportamento padrão da API remota.
+
+- Configuração inicial de campos e transcrição por região e preparação de
+  referências locais de tarefas para o Label Studio; isolamento de rede e
+  integração de importação/exportação ainda pendentes.
+- Ingestão local de PDFs e imagens JPG/PNG para treinamento visual: renderização
+  dos PDFs a 300 DPI e OCR com palavras, caixas e linhas em área ignorada.
+- Ambiente isolado e dependências fixadas para o conversor GGUF; a ajuda foi
+  verificada, mas a conversão do modelo visual ainda não foi testada.
+- Estrutura inicial do treinamento visual em `src/treinamento_visual/`, com
+  pastas privadas para dados e modelos; as etapas ainda não estão implementadas.
+- Preparação local de páginas de PDFs e conferência de anotações LabelMe para
+  dataset visual, em `src/anotacao_documentos/`, com guia de privacidade,
+  modelo sugerido e uso posterior em avaliação ou treino.
 - Prompts versionados de extração `v4.2`, revisão `v1.1`, mapeamento `v1.2`
   e resposta `v1.2`; extração inclui trechos da IA para revisão humana.
 - Prompts de extração `v4.1` e de mapeamento `v1.1`, sem duplicar o formato JSON.
@@ -15,6 +60,17 @@ detalhes de cada commit.
 
 ### Alterado
 
+- Label Studio isolado usa Sentry compatível; o iniciador local desativa Sentry
+  e analytics, usa sandbox de rede do macOS e mantém o banco e os dados em
+  `data/treinamento/`. O navegador ainda não está isolado.
+- Registrada a versão do Tesseract verificada no Mac para o futuro fluxo de
+  treinamento visual e a orientação de compatibilidade para o Codespace.
+- Ferramentas operacionais migradas de `scripts/` para `src/toolbox/`; os comandos
+  antigos foram substituídos. CI e execução local usam a mesma suíte unittest
+  com fixtures versionadas, sem regenerá-las automaticamente.
+- Rastreamento opcional usa unittest, retorna falhas e registra duração observada;
+  logs de execução também são ignorados pelo Git.
+- Cabeçalhos Python documentam objetivo, entradas, processamento e saídas.
 - A interface seleciona as novas versões de extração, revisão e resposta, e o
   comando de mapeamento usa `v1.2` por padrão; contratos e prompts anteriores
   permanecem disponíveis. A IA continua a
@@ -42,7 +98,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.1.0` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.2.0` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

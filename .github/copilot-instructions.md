@@ -7,9 +7,12 @@ usuário alterar padrões do projeto.
   os nomes exigidos por ferramentas, como `README.md` e `manifest.json`.
 - Em `src/health_refund_assistant/`, coloque infraestrutura compartilhada em
   `core/` e funcionalidades em `conversation/`, `documents/`, `plan/` ou `web/`.
-  Mantenha testes em `tests/` e avaliação em `scripts/`.
-- Inicie cada arquivo de código com uma descrição breve da função e da etapa do
-  processo, usando a forma apropriada da linguagem.
+  O programa de anotação fica em `src/anotacao_documentos/` e seus dados
+  privados em `data/treinamento/`. Mantenha testes em `tests/` e ferramentas
+  operacionais independentes em `src/toolbox/`.
+- Inicie cada arquivo Python com docstring de objetivo, entradas, processamento
+  e saídas; nos demais arquivos de código, descreva sua função e etapa na forma
+  apropriada da linguagem.
 - Mantenha JSONs por processo em `json/`, caminhos em `core/paths.py` e prompts
   versionados em `prompts/`. O Python inclui o schema e o modelo JSON na tarefa
   de IA e confere a resposta; preserve versões históricas dos prompts.

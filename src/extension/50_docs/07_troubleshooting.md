@@ -1,23 +1,22 @@
 # 7. Troubleshooting – Problemas Comuns
 
-> Este guia descreve a reorganização não validada. Para instalação da versão
-> carregável, veja o [guia atual](../../../docs/10_quickstart/03_comece_aqui_extension.md).
+> Este guia descreve a implementação fonte única. Para instalação, veja o
+> [guia atual](../../../docs/10_quickstart/03_comece_aqui_extension.md).
 
 ## Instalação
 
 ### "Pasta não contém manifest.json"
 **Problema:** Erro ao carregar extensão sem compactação.
-**Causa:** A pasta selecionada não contém `manifest.json`; `src/extension/`
-contém `01_manifest.json` e ainda não é carregável.
+**Causa:** A pasta selecionada não contém `manifest.json` na raiz.
 **Solução:**
-1. Selecione a pasta `extension/` na raiz do repositório.
-2. Certifique-se de que `manifest.json` está presente nessa pasta.
+1. Selecione `src/extension/`.
+2. Confirme que `manifest.json` está presente na raiz dessa pasta.
 
 ### "Erro: arquivo manifest.json inválido"
 **Problema:** Chrome rejeita o manifest.
 **Causa:** Arquivo corrompido, formatação JSON errada, ou encoding.
 **Solução:**
-1. Valide localmente com `python3 -m json.tool extension/manifest.json`.
+1. Valide localmente com `python3 -m json.tool src/extension/manifest.json`.
 2. Copie o arquivo original do repositório
 3. Reinstale
 

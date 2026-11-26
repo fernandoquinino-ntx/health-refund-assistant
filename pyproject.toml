@@ -4,16 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "health-refund-assistant"
-version = "0.1.0"
+version = "0.2.0"
 description = "Assistente para extrair e acompanhar solicitações de reembolso de saúde."
 requires-python = ">=3.10"
 dependencies = [
     "jsonschema>=4.21,<5",
     "openai>=1.0,<3",
     "PyMuPDF>=1.24,<2",
+    "pytesseract==0.3.13",
     "streamlit>=1.40,<2",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["health_refund_assistant*"]
+include = ["health_refund_assistant*", "anotacao_documentos*", "toolbox*", "treinamento_visual*"]

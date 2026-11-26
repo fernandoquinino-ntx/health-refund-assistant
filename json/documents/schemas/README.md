@@ -21,6 +21,12 @@ O estado completo é validado pelo processamento em lote, não cada objeto de no
 individualmente. O schema de [resposta do assistente](./assistant_answer.schema.md)
 também fica neste diretório.
 
+## Interpretação do agente
+
+`agent_turn.schema.json` descreve somente a intenção interpretada pelo agente:
+task, número explícito da nota, informações faltantes e orientação opcional.
+Os resultados documentais continuam nos schemas de extração, conciliação e revisão.
+
 ## Fluxo de Documento
 
 1. **Entrada:** PDF de nota fiscal

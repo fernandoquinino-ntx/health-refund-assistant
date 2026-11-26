@@ -1,11 +1,14 @@
 # Status do assistente
 
-Atualizado em 25/11/2026.
+Atualizado em 26/11/2026.
 
 ## Fluxo implementado
 
-- Interface de conversa com pergunta e anexo PDF; uma exportação do plano é exigida
-  para analisar um documento novo.
+- Interface conversacional com texto livre e anexos PDF/JPG/PNG/JSON.
+- Estados da tarefa solicitam documento ou exportação somente quando necessários.
+- O interpretador usa GPT-6 Luna com schema JSON; sem token usa fallback regex.
+- Visão documental usa modelo local quando `LOCAL_VLM_BASE_URL` aponta para o
+  runtime GGUF llama.cpp no Codespaces. Sem esse runtime, usa o VLM remoto.
 - Extração por VLM com contrato JSON, avaliação e conciliação em Python, revisão
   consultiva por IA e resposta estruturada em JSON. As saídas precisam de revisão
   humana e podem conter erros.
@@ -17,6 +20,10 @@ Atualizado em 25/11/2026.
 
 - Não há autenticação, isolamento multiusuário, criptografia da memória ou garantia
   contra prompt injection. Use somente ambiente privado e dados sintéticos para testes.
+- Visão local usa llama.cpp e GGUF no Codespaces. O servidor só inicia quando
+  `modelo_aprovado.json` está aprovado e os arquivos GGUF/mmproj existem.
+- Nenhum adaptador treinado foi aprovado atualmente. Os testes anteriores não
+  comprovaram melhoria suficiente e mostraram risco de alucinação.
 - A aplicação usa 30 dias como prazo **simulado**. As regras D-2 e 365 dias citadas
   em documentos anteriores não estão implementadas no fluxo atual. A elegibilidade
   contratual é indeterminada, pois as regras do plano não foram verificadas.

@@ -6,8 +6,8 @@ tenham sido testados.
 
 1. Crie um Codespace do repositório e aguarde a configuração.
 2. Configure `OPENAPI_TOKEN` como segredo do Codespaces. Não registre o valor.
-3. Execute `.venv/bin/python -m unittest discover -s tests -v`.
-4. Inicie `.venv/bin/streamlit run app.py` e abra a porta 8501.
+3. Execute `make test`.
+4. Inicie `make run` e abra a porta 8501.
 5. Com dados sintéticos, importe uma exportação com período válido, anexe um PDF e
    faça uma pergunta. Confira os dados extraídos, as evidências e a resposta.
 6. Registre somente resultados observados, incluindo erros e versões usadas.

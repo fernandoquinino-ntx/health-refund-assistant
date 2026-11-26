@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[3]
 CONSENT = ROOT / "json" / "training" / "visual" / "consentimento_publicacao.json"
 DATASET = ROOT / "json" / "training" / "visual" / "dataset"
 IMAGES = ROOT / "json" / "training" / "visual" / "images"
-OUTPUT = ROOT / "adapters" / "smolvlm_ci"
+OUTPUT = ROOT / "models" / "adapters" / "smolvlm_ci"
 
 
 def consentimento_aprovado(path: Path = CONSENT) -> bool:
@@ -71,14 +71,22 @@ def train(dataset_root: Path, images_root: Path, output: Path) -> int:
     import torch
     from peft import LoraConfig, get_peft_model
     from PIL import Image
-    from transformers import AutoModelForVision2Seq, AutoProcessor
+    from transformers import AutoModelForImageTextToText, AutoProcessor
+    from huggingface_hub import snapshot_download
 
-    model_id = "HuggingFaceTB/SmolVLM-Instruct"
-    processor = AutoProcessor.from_pretrained(model_id, local_files_only=False)
-    model = AutoModelForVision2Seq.from_pretrained(
-        model_id,
-        torch_dtype=torch.float32,
+    model_id = "HuggingFaceTB/SmolVLM-256M-Instruct"
+    base_path = ROOT / "models" / "smolvlm-hf"
+    snapshot_download(
+        repo_id=model_id,
+        local_dir=str(base_path),
+        local_dir_use_symlinks=False,
+    )
+    processor = AutoProcessor.from_pretrained(str(base_path), local_files_only=True)
+    model = AutoModelForImageTextToText.from_pretrained(
+        str(base_path),
+        dtype=torch.float32,
         low_cpu_mem_usage=True,
+        local_files_only=True,
     )
     lora = LoraConfig(
         r=8,

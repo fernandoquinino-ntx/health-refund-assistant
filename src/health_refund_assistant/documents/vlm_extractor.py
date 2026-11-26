@@ -27,7 +27,7 @@ VERSOES_SCHEMA_V4 = frozenset({"v4.0", "v4.1", "v4.2"})
 
 
 class LocalVLMExtractor:
-    """Chama um modelo visual local baseado em MLX no Mac."""
+    """Compatibilidade temporaria para modelos MLX locais no Mac."""
 
     def __init__(
         self,
@@ -108,6 +108,110 @@ class LocalVLMExtractor:
                 "latencia_seg": round(time.perf_counter() - inicio, 2),
             }
         }
+
+
+class LocalGGUFExtractor:
+    """Extrai campos usando um servidor llama.cpp multimodal local."""
+
+    def __init__(
+        self,
+        base_url: str | None = None,
+        model: str = "smolvlm-health-refund",
+        prompt_version: Optional[str] = None,
+        timeout: float = 300.0,
+    ):
+        self.base_url = (
+            base_url or os.getenv("LOCAL_VLM_BASE_URL")
+            or "http://127.0.0.1:8081/v1"
+        ).rstrip("/")
+        self.model = model
+        self.prompt_version = prompt_version or "v4.2"
+        self.timeout = timeout
+        self.system_prompt, self.prompt_version = carregar_prompt(
+            PROMPT_COMPONENT, prompt_version
+        )
+
+    def extrair_dados_nf_visual(
+        self,
+        imagem_base64: str,
+        mime_type: str = "image/jpeg",
+        temperature: float = 0.0,
+    ) -> Dict[str, Any]:
+        import requests
+
+        inicio = time.perf_counter()
+        payload = {
+            "model": self.model,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        f"{self.system_prompt}\n\n"
+                        f"{contexto_schema_para_prompt('vlm_extraction_v4_2.schema.json')}"
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Extraia os campos desta imagem."},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:{mime_type};base64,{imagem_base64}"
+                            },
+                        },
+                    ],
+                },
+            ],
+            "temperature": temperature,
+            "top_p": 0.9,
+            "max_tokens": 1024,
+            "stream": False,
+        }
+        try:
+            response = requests.post(
+                f"{self.base_url}/chat/completions",
+                json=payload,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+            data = response.json()
+            texto = data["choices"][0]["message"]["content"].strip()
+            inicio_json = texto.find("{")
+            fim_json = texto.rfind("}")
+            if inicio_json < 0 or fim_json <= inicio_json:
+                raise ValueError("O modelo local não retornou JSON.")
+            dados_brutos = json.loads(texto[inicio_json:fim_json + 1])
+            validar_contrato_json(
+                dados_brutos,
+                "vlm_extraction_v4_2.schema.json",
+                "modelo GGUF local",
+            )
+            dados_validados = dict(dados_brutos)
+            dados_validados["_meta"] = {
+                "status": "OK",
+                "model": self.model,
+                "runtime": "llama.cpp",
+                "prompt_version": self.prompt_version,
+                "temperature": temperature,
+                "latencia_seg": round(time.perf_counter() - inicio, 2),
+            }
+            return dados_validados
+        except (
+            requests.RequestException,
+            KeyError,
+            IndexError,
+            json.JSONDecodeError,
+            ValueError,
+        ) as error:
+            return {
+                "_meta": {
+                    "status": "ERRO_MODELO_LOCAL",
+                    "detalhe": str(error),
+                    "runtime": "llama.cpp",
+                    "latencia_seg": round(time.perf_counter() - inicio, 2),
+                }
+            }
 
 
 def _schema_api_corpo(nome_schema: str) -> Dict[str, Any]:

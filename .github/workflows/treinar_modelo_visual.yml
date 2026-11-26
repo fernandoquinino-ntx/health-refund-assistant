@@ -35,10 +35,44 @@ jobs:
             --dataset-root json/training/visual/dataset \
             --images-root json/training/visual/images \
             --output models/adapters/smolvlm_ci
+      - name: Avaliar adaptador no conjunto reservado
+        run: |
+          PYTHONPATH=src python -m treinamento_visual.train.evaluate_huggingface_adapter \
+            --dataset json/training/visual/dataset \
+            --images json/training/visual/images \
+            --base models/smolvlm-hf \
+            --adapter models/adapters/smolvlm_ci \
+            --report json/training/visual/avaliacao_adaptador.json
+      - name: Aprovar adaptador somente com ganho comprovado
+        run: |
+          PYTHONPATH=src python -m treinamento_visual.train.approve_adapter \
+            --report json/training/visual/avaliacao_adaptador.json \
+            --output json/training/visual/modelo_aprovado.json || true
+      - name: Instalar conversor GGUF
+        run: |
+          python -m venv .venv-conversao
+          .venv-conversao/bin/python -m pip install -r requirements/conversao.txt
+          mkdir -p tools
+          git clone --depth 1 https://github.com/ggerganov/llama.cpp tools/llama.cpp
+          git -C tools/llama.cpp checkout --detach a8ad690ca9239ea35db4de47e00cf632d01895fd
+          cmake -S tools/llama.cpp -B tools/llama.cpp/build -DLLAMA_CURL=OFF -DGGML_NATIVE=OFF
+          cmake --build tools/llama.cpp/build -j"$(nproc)" --target llama-server llama-quantize
+      - name: Converter adaptador aprovado para GGUF
+        run: |
+          if python -c 'import json; raise SystemExit(0 if json.load(open("json/training/visual/modelo_aprovado.json")).get("aprovado") else 1)'; then
+            bash src/treinamento_visual/scripts/converter_modelo_smolvlm.sh
+          else
+            echo "Adaptador não aprovado; conversão GGUF não executada."
+          fi
       - name: Publicar artefatos do modelo
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: modelo_visual_treinado
-          path: models/adapters/smolvlm_ci
+          path: |
+            models/adapters/smolvlm_ci
+            models/smolvlm-hf-fused
+            models/gguf
+            json/training/visual/avaliacao_adaptador.json
+            json/training/visual/modelo_aprovado.json
           if-no-files-found: warn

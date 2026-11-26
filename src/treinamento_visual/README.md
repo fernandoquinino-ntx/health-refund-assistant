@@ -18,3 +18,12 @@ Fluxo privado:
 6. Faça push; o workflow governa o treino Linux no GitHub Actions.
 
 Consulte [a documentação do pipeline](../../docs/40_testing/05_pipeline_treinamento_visual.md).
+## Atalho para leigos
+
+Use `make help` para ver os comandos. O fluxo usual é:
+`make ingest → make prepare-tasks → make label-studio → make build-dataset →
+make check-dataset → make train-mac → make evaluate-adapter →
+make approve-adapter → make convert`.
+
+Não chame o adaptador de “modelo” completo. Ele é uma correção pequena aplicada
+sobre o modelo base SmolVLM. Não publique nem ative sem avaliação reservada.

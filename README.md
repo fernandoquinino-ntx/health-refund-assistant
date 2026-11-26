@@ -126,7 +126,7 @@ na memória; campos extraídos, perguntas e respostas podem conter dados sensív
 ## Testes
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
+make test
 ```
 
 Os testes automatizados não comprovam que o modelo esteja disponível, que o
@@ -151,7 +151,7 @@ isolado Python 3.12, coloque seus PDFs ou imagens JPG/PNG em
 `data/treinamento/entrada/` e execute:
 
 ```bash
-PYTHONPATH=src .venv-treinamento/bin/python -m treinamento_visual.ingest
+make ingest
 ```
 
 O programa renderiza os PDFs a 300 DPI e preserva as dimensões das imagens,
@@ -169,7 +169,7 @@ Para verificar a instalação isolada do Label Studio com Sentry e analytics
 desativados, execute:
 
 ```bash
-PYTHONPATH=src .venv-treinamento/bin/python -m treinamento_visual.label.cli --version
+make label-studio
 ```
 
 O iniciador usa armazenamento local em `data/treinamento/label_studio/`,
@@ -186,7 +186,7 @@ O comando abaixo prepara um JSON privado de tarefas sem carregar imagens no
 Label Studio nem sobrescrever um arquivo anterior:
 
 ```bash
-PYTHONPATH=src .venv-treinamento/bin/python -m treinamento_visual.label.cli preparar
+make prepare-tasks
 ```
 
 O arquivo `data/treinamento/label_studio/tarefas.json` contém referências às
@@ -200,11 +200,16 @@ com dependências fixadas em `requirements/conversao.txt`. O clone ignorado
 Para verificar a ajuda do conversor a partir da raiz do projeto:
 
 ```bash
-PYTHONPATH=tools/llama.cpp .venv-conversao/bin/python tools/llama.cpp/convert_hf_to_gguf.py --help
+make convert
 ```
 
-O pipeline também suporta exportação do modelo SmolVLM e mmproj. Não ative um
-adaptador sem comparar base e adaptado no conjunto `test` reservado.
+O pipeline suporta treino Hugging Face no Linux com o modelo
+[SmolVLM-256M-Instruct](https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct),
+conversão GGUF, `mmproj` e execução por [llama.cpp](https://github.com/ggml-org/llama.cpp).
+Os GGUF oficiais estão em
+[ggml-org/SmolVLM GGUF](https://huggingface.co/collections/ggml-org/smolvlm-gguf).
+Não ative um adaptador sem comparar
+base e adaptado no conjunto `test` reservado e gerar uma aprovação positiva.
 
 O fluxo completo de Codespaces, publicação autorizada e treino no GitHub está em
 [pipeline de treinamento visual](docs/40_testing/05_pipeline_treinamento_visual.md).

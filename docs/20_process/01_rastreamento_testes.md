@@ -3,7 +3,7 @@
 Para executar a suíte mantida pelo projeto, use:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
+make test
 ```
 
 O [test_tracker.py](../../src/toolbox/test_tracker.py) é uma ferramenta opcional,

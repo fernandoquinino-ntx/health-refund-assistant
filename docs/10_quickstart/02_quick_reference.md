@@ -7,9 +7,11 @@
 - Estrutura e código: [estrutura do projeto](../70_documentation/04_estrutura_projeto.md).
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
-.venv/bin/streamlit run app.py
-.venv/bin/python -m toolbox avaliar --help
+make setup
+make test
+make run
+make test-agent
+make build-extension
 ```
 
 A avaliação real requer API configurada e pode gerar custos. Não atribua resultados

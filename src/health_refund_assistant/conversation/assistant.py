@@ -17,6 +17,7 @@ from ..documents.pdf_converter import converter_pdf_bytes_primeira_pagina_base64
 from ..plan.plan_exports import load_selected_exports
 from ..documents.vlm_extractor import (
     DEFAULT_MODEL,
+    LocalGGUFExtractor,
     LocalVLMExtractor,
     VLMExtractor,
 )
@@ -72,19 +73,27 @@ def handle_request(
         image = base64.b64encode(request.image_bytes).decode("ascii")
     else:
         image = converter_pdf_bytes_primeira_pagina_base64(request.pdf_bytes)
-    local_model = os.getenv("LOCAL_VLM_MODEL")
-    if local_model:
-        local_adapter = os.getenv("LOCAL_VLM_ADAPTER")
-        extractor = LocalVLMExtractor(
-            model_path=Path(local_model),
-            adapter_path=Path(local_adapter) if local_adapter else None,
+    local_base_url = os.getenv("LOCAL_VLM_BASE_URL")
+    if local_base_url:
+        extractor = LocalGGUFExtractor(
+            base_url=local_base_url,
+            model=os.getenv("LOCAL_VLM_MODEL", "smolvlm-health-refund"),
             prompt_version=request.extraction_prompt_version,
         )
     else:
-        extractor = VLMExtractor(
-            model=DEFAULT_MODEL,
-            prompt_version=request.extraction_prompt_version,
-        )
+        local_model = os.getenv("LOCAL_VLM_MODEL")
+        if local_model:
+            local_adapter = os.getenv("LOCAL_VLM_ADAPTER")
+            extractor = LocalVLMExtractor(
+                model_path=Path(local_model),
+                adapter_path=Path(local_adapter) if local_adapter else None,
+                prompt_version=request.extraction_prompt_version,
+            )
+        else:
+            extractor = VLMExtractor(
+                model=DEFAULT_MODEL,
+                prompt_version=request.extraction_prompt_version,
+            )
     extraction = extractor.extrair_dados_nf_visual(image)
     status = extraction.get("_meta", {}).get("status")
     if status != "OK":

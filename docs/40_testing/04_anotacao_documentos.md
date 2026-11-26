@@ -30,7 +30,7 @@ Treinamento, pesos e exemplos também podem reter ou revelar informações.
 No terminal do Codespace, instale as dependências conforme o README. Execute:
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m anotacao_documentos preparar
+make prepare-pages
 ```
 
 O comando cria `data/treinamento/entrada/` e `data/treinamento/paginas/`.
@@ -60,13 +60,13 @@ PDFs protegidos por senha e arquivos inválidos são reportados como falhas.
    imagem correspondente. O comando não sobrescreve uma anotação existente.
    Ausência de JSON significa pendente.
 ```bash
-PYTHONPATH=src .venv/bin/python -m anotacao_documentos sem_campos data/treinamento/paginas/doc_HASH/pagina_0001.png
+make mark-no-fields CAMINHO=data/treinamento/paginas/doc_HASH/pagina_0001.png
 ```
 
 5. Execute:
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m anotacao_documentos verificar
+make verify-annotations
 ```
 
 O verificador confere a quantidade de páginas renderizadas, exige um JSON por

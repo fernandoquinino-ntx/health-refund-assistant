@@ -7,6 +7,10 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.3.0**: separação correta entre GPT-6 Luna para tarefas textuais e
+  modelo SmolVLM GGUF para visão, runtime llama.cpp no Codespaces, avaliação
+  reservada de adaptadores e ativação automática somente após aprovação.
+
 - **0.2.0**: interface conversacional, estados de tarefa com interpretação
   estruturada GPT-6 Luna, anexos naturais, reorganização do repositório e
   pipelines de extensão/treinamento visual.
@@ -101,7 +105,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.2.0` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.3.0` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

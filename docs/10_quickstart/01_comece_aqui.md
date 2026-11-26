@@ -7,8 +7,7 @@ Consulte o [README](../../README.md) para detalhes do fluxo e limitações.
 Na raiz do repositório, com Python 3.10 ou superior:
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements/base.txt
+make setup
 ```
 
 Configure `OPENAPI_TOKEN` no ambiente ou como segredo do Codespaces, sem
@@ -19,8 +18,8 @@ depende do provedor configurado.
 ## Testar e iniciar
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
-.venv/bin/streamlit run app.py
+make test
+make run
 ```
 
 Abra a porta 8501. Selecione uma exportação do plano, anexe um PDF e faça uma

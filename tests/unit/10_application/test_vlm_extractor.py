@@ -16,6 +16,7 @@ from health_refund_assistant.documents.vlm_extractor import (
     EXTRACTION_SCHEMA,
     EXTRACTION_SCHEMA_V4,
     EXTRACTION_SCHEMA_V4_2,
+    LocalGGUFExtractor,
     VLMExtractor,
     carregar_prompt,
 )
@@ -278,6 +279,42 @@ class VLMExtractorTests(unittest.TestCase):
             self.extractor._validar_e_normalizar(
                 {**valid_output(), "valor_total": "450.00"}
             )
+
+    def test_local_gguf_accepts_structured_json(self):
+        payload = {
+            "numero_documento": "1049",
+            "prestador": "FURIERI",
+            "cnpj_cpf_prestador": "47.066.222/0001-70",
+            "valor_total": 500.0,
+            "data_emissao": "01/10/2026",
+            "data_atendimento": "01/10/2026",
+            "nome_profissional": "PATRICIA",
+            "descricao_servico": "CONSULTA",
+            "registro_profissional": "CRM-7154",
+            "imagem_legivel": True,
+            "observacao_visual": None,
+            "evidencias_literais": {
+                "valor_total": "500,00",
+                "data_emissao": "01/10/2026",
+                "data_atendimento": "01/10/2026",
+                "registro_profissional": "CRM-7154",
+            },
+        }
+        response = Mock()
+        response.raise_for_status = Mock()
+        response.json.return_value = {
+            "choices": [{"message": {"content": json.dumps(payload)}}]
+        }
+        with patch("requests.post", return_value=response) as post:
+            extractor = LocalGGUFExtractor(
+                base_url="http://127.0.0.1:8081/v1",
+                model="smolvlm-health-refund",
+                prompt_version="v4.2",
+            )
+            result = extractor.extrair_dados_nf_visual("aGVsbG8=", "image/png")
+        self.assertEqual(result["_meta"]["runtime"], "llama.cpp")
+        self.assertEqual(result["numero_documento"], "1049")
+        self.assertIn("/chat/completions", post.call_args.args[0])
 
 
 if __name__ == "__main__":

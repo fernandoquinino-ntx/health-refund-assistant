@@ -1,0 +1,8 @@
+{
+  "aprovado": false,
+  "motivo": "O adaptador 256M privado foi testado em Hugging Face e GGUF; a base e o adaptador não produziram JSON útil no documento reservado.",
+  "documentos_testados": 1,
+  "base_taxa_acerto": 0,
+  "adaptado_taxa_acerto": 0,
+  "ganho": 0
+}

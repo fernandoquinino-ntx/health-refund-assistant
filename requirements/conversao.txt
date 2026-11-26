@@ -79,3 +79,5 @@ typing-extensions==4.16.0
     #   torch
 urllib3==2.8.0
     # via requests
+peft==0.18.1
+accelerate==1.12.0

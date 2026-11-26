@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "health-refund-assistant"
-version = "0.2.0"
+version = "0.3.0"
 description = "Assistente para extrair e acompanhar solicitações de reembolso de saúde."
 requires-python = ">=3.10"
 dependencies = [
@@ -13,6 +13,7 @@ dependencies = [
     "PyMuPDF>=1.24,<2",
     "pytesseract==0.3.13",
     "streamlit>=1.40,<2",
+    "requests>=2.32,<3",
 ]
 
 [tool.setuptools.packages.find]

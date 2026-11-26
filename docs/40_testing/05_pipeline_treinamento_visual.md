@@ -2,28 +2,58 @@
 
 Este guia descreve o fluxo completo sem enviar PDFs reais ao Git.
 
+## Conceitos essenciais
+
+- **Modelo base:** entende imagens e texto em geral. Neste projeto é o
+  [SmolVLM-256M-Instruct](https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct).
+- **Adaptador/LoRA:** arquivo pequeno que ensina preferências e formatos
+  específicos do projeto. Ele não substitui todo o modelo.
+- **Label/anelação:** desenhar uma caixa na página e transcrever o valor que
+  está visível. Isso cria o gabarito usado no treino.
+- **Dataset:** conjunto organizado em treino, validação e teste. Cada exemplo
+  contém imagem, instrução e resposta JSON revisada.
+- **Teste reservado:** documentos nunca usados no treino, usados apenas para
+  medir se o adaptador realmente aprendeu.
+- **Aprovação:** gate obrigatório. Só um adaptador aprovado vira GGUF ativo no
+  Codespaces.
+
+Terminologia prática:
+
+```text
+PDF real
+  -> imagem privada
+  -> OCR auxiliar
+  -> caixa + transcrição = label
+  -> JSONL
+  -> treino
+  -> adaptador
+  -> avaliação reservada
+  -> aprovação
+  -> fusão + GGUF
+  -> llama.cpp no Codespaces
+```
+
 ## 1. Preparar no Codespaces
 
 1. Abra o Codespace criado a partir do branch.
-2. Aguarde `postCreateCommand` instalar `.venv-treinamento`, baixar SmolVLM e
-   preparar o Label Studio.
+2. Aguarde `postCreateCommand` instalar `.venv-treinamento`, preparar llama.cpp,
+   baixar o modelo SmolVLM Hugging Face e configurar o Label Studio.
 3. Execute OCR e construa o dataset privado em `data/treinamento/dataset/`.
 4. Rode a interface do Label Studio e revise cada caixa visualmente.
-5. Execute `PYTHONPATH=src .venv/bin/python -m treinamento_visual.train.check_dataset`.
+5. Execute `make check-dataset`.
 
 ### Comandos mínimos
 
 Coloque PDFs ou imagens em `data/treinamento/entrada/` e execute:
 
 ```bash
-PYTHONPATH=src .venv-treinamento/bin/python -m treinamento_visual.ingest
+make ingest
 ```
 
 Inicie o Label Studio local:
 
 ```bash
-PYTHONPATH=src .venv-treinamento/bin/python \
-  -m treinamento_visual.label.cli start --port 8080
+make label-studio
 ```
 
 Abra `http://localhost:8080`. Na primeira execução:
@@ -51,9 +81,8 @@ Em cada tarefa:
 Quando todas as tarefas tiverem sido revisadas:
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m treinamento_visual.train.build_dataset
-PYTHONPATH=src .venv/bin/python \
-  -m treinamento_visual.train.check_dataset
+make build-dataset
+make check-dataset
 ```
 
 O build cria separações por documento em:
@@ -83,8 +112,7 @@ da revisão humana:
 O exportador não ignora esses campos. Ele também exige `PUBLICAR_DATASET=1`.
 
 ```bash
-PUBLICAR_DATASET=1 PYTHONPATH=src .venv/bin/python \
-  -m treinamento_visual.train.export_public_dataset
+make export-dataset
 ```
 
 Saída:
@@ -106,17 +134,55 @@ como artefato de Actions. Não faz commit automático de pesos nem dados.
 
 ## 4. Treino manual
 
-No Codespace com ambiente MLX, execute:
+No Mac, execute o treino local curto com:
 
 ```bash
-.venv-treinamento/bin/mlx_vlm.train \
-  --task vlm --algorithm sft --model models/base-smol \
-  --data data/treinamento/dataset \
-  --train-split train --validation-split valid \
-  --train-type lora --lora-rank 16 --lora-alpha 32 \
-  --batch-size 1 --max-seq-length 2048 --iters 24 \
-  --output-path models/adapters/smolvlm-melhorado/adapters.safetensors
+make train-mac
 ```
 
-Compare o adaptador no conjunto `test` antes de ativar
-`LOCAL_VLM_MODEL` ou `LOCAL_VLM_ADAPTER` na aplicação.
+Compare o adaptador no conjunto `test`, gere o relatório de aprovação e execute
+`make evaluate-adapter`, `make approve-adapter` e `make convert`.
+O adaptador só é ativado no Codespaces quando `modelo_aprovado.json` contém
+`aprovado=true`.
+
+## 5. Novo ciclo com mais documentos
+
+Quando quiser melhorar o modelo:
+
+1. Coloque PDFs ou imagens em `data/treinamento/entrada/`.
+2. Execute `make ingest`.
+3. Abra o Label Studio com `make label-studio`.
+4. Rotule os novos documentos e revise visualmente todos os rótulos.
+5. Execute `make build-dataset`.
+6. Execute `make check-dataset`.
+7. Treine novamente com `make train-mac` ou pelo workflow GitHub.
+8. Execute `make evaluate-adapter`.
+9. Execute `make approve-adapter`.
+10. Se o relatório aprovar, marque manualmente o estado aprovado.
+11. Execute `make convert`.
+12. Reinicie o Codespace. O assistente ativa o GGUF aprovado automaticamente.
+
+### Aprovar o adaptador
+
+Edite `json/training/visual/modelo_aprovado.json` somente depois de revisar o
+relatório de avaliação:
+
+```json
+{
+  "aprovado": true,
+  "documentos_testados": 10,
+  "base_taxa_acerto": 0.40,
+  "adaptado_taxa_acerto": 0.75,
+  "ganho": 0.35
+}
+```
+
+Números apenas ilustrativos. O adaptador deve melhorar a taxa reservada, reduzir
+alucinações e manter JSON válido. Não marque aprovado por aparência da interface
+ou pela loss do treino.
+### Resultado atual conhecido
+
+O modelo 256M base foi convertido para GGUF Q4_K_M e o servidor multimodal
+llama.cpp respondeu com HTTP 200. O LoRA privado de 12 iterações foi convertido
+para GGUF e testado junto da base no documento reservado, mas não produziu JSON
+útil. Por isso `modelo_aprovado.json` permanece `aprovado=false`.

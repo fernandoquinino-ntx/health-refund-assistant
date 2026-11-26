@@ -6,6 +6,7 @@ Saídas: caminhos e dados das exportações ou erros de importação.
 """
 
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
@@ -28,14 +29,19 @@ def import_plan_export(name: str, content: bytes) -> Path:
     validar_periodo_exportacao(exportacao, safe_name)
 
     PLAN_EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%Y%m%d-%H%M%S")
+    imported_at = datetime.now(ZoneInfo("America/Sao_Paulo"))
+    timestamp = imported_at.strftime("%Y%m%d-%H%M%S")
+    exportacao["importado_em"] = imported_at.isoformat()
+    stored_content = (
+        json.dumps(exportacao, ensure_ascii=False, indent=2).encode("utf-8")
+    )
     destination = PLAN_EXPORTS_DIR / f"{timestamp}_{safe_name}"
     sequence = 1
     while destination.exists():
         destination = PLAN_EXPORTS_DIR / f"{timestamp}_{sequence}_{safe_name}"
         sequence += 1
     temporary = destination.with_suffix(".json.tmp")
-    temporary.write_bytes(content)
+    temporary.write_bytes(stored_content)
     temporary.replace(destination)
     return destination
 
@@ -53,6 +59,11 @@ def load_selected_exports(paths: List[Path]) -> List[Dict[str, Any]]:
             )
         validar_periodo_exportacao(data, path.name)
         data["_nome_arquivo"] = path.name
+        match = re.match(r"^(\d{4})(\d{2})(\d{2})-", path.name)
+        if match and not data.get("importado_em"):
+            data["_importado_em"] = (
+                f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
+            )
         exports.append(data)
     return exports
 

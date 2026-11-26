@@ -26,8 +26,10 @@ Atualizado em 26/11/2026.
   `modelo_aprovado.json` está aprovado e os arquivos GGUF/mmproj existem.
 - Nenhum adaptador treinado foi aprovado atualmente. Os testes anteriores não
   comprovaram melhoria suficiente e mostraram risco de alucinação.
-- A aplicação usa 30 dias como prazo **simulado**. D-2 e 365 dias são campos
-  opcionais ativados somente por configuração com regras confirmadas. A elegibilidade
+- A aplicação usa 30 dias como prazo **simulado**. D-2 usa a data da importação
+  da exportação e só confirma ausência para notas de pelo menos dois dias,
+  cobertas pelo período exportado. 365 dias impede novo pedido sem candidato
+  localizado quando a nota excede um ano. A elegibilidade
   contratual é indeterminada, pois as regras do plano não foram verificadas.
 - A disponibilidade de `gpt-6-luna` pela API e a execução real no Codespaces
   precisam ser verificadas com o provedor e o ambiente do grupo.

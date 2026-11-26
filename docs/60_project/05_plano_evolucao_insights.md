@@ -4,10 +4,10 @@ Atualizado em 26/11/2026.
 
 ## Status da implementação
 
-Os itens deste plano foram implementados na versão `0.4.0`, salvo a confirmação
-exterior da Care Plus e a ativação real das regras D-2/365 no arquivo
-`json/config/prazos_reembolso.json`. Os recursos de segurança locais são
-apropriados para testes, não para produção.
+Os itens deste plano foram implementados na versão `0.4.1`, incluindo as regras
+D-2/365 no arquivo `json/config/prazos_reembolso.json`. A confirmação exterior
+da Care Plus ainda é necessária para tratar esses prazos como garantia contratual.
+Os recursos de segurança locais são apropriados para testes, não para produção.
 
 ## Objetivo
 
@@ -40,8 +40,9 @@ explícitos, revisão humana e regras determinísticas em Python.
 - 30 dias é uma regra **simulada**, configurável na interface.
 - Cinco dias úteis é uma estimativa informada pelo usuário, não confirmada pela
   Care Plus e não considera feriados.
-- D-2 e 365 dias aparecem em documentos históricos, mas não estão implementados
-  no fluxo atual.
+- D-2 só confirma ausência para notas emitidas pelo menos dois dias antes da
+  importação e cobertas pelo período exportado. Nota de hoje ou ontem continua
+  incerta. 365 dias impede novo pedido sem candidato localizado.
 - A elegibilidade continua como “não é possível avaliar” sem regras verificadas.
 
 ## Lacunas confirmadas

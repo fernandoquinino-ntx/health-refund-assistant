@@ -35,9 +35,13 @@ domingos, mas não feriados; não é garantia de pagamento. Data futura ou ausen
 status inadequado, erros de coleta e correspondência incerta impedem a estimativa.
 Registros conflitantes de um mesmo pedido também a impedem. Análises salvas antes
 da verificação desses conflitos exigem reenviar o PDF e selecionar as exportações.
-A regra de 365 dias e o corte D-2, mencionados em
-documentos anteriores, ainda não estão implementados neste fluxo. Sem regras
-contratuais verificadas, a elegibilidade é **não é possível avaliar**.
+A regra D-2 considera confirmado o corte de dois dias: em uma exportação
+importada hoje, uma nota de dois dias ou mais atrás só pode ser declarada
+ausente se o período exportado cobrir a data da nota e não houver candidato.
+Nota de hoje ou de ontem continua incerta. A regra de 365 dias impede apresentar
+um novo pedido elegível quando a data da nota tem mais de um ano e não existe
+pedido localizado na exportação. Sem regras contratuais verificadas, a elegibilidade
+é **não é possível avaliar**.
 
 ## Tarefas, entradas, saídas e conferência
 
@@ -126,6 +130,12 @@ hash PBKDF2. O arquivo `json/config/usuarios_locais.json` e as memórias em
 `json/documents/state/usuarios/` são ignorados pelo Git. Cada usuário autenticado
 recebe seu próprio arquivo de conversa e trilha de eventos. A autenticação local
 não substitui identidade segura ou controle de produção.
+
+Na primeira inicialização o usuário padrão de teste é criado no arquivo:
+`fernando-pimenta-quinino`, nome exibido `Fernando Pimenta Quinino` e PIN
+`123456`. Troque o PIN imediatamente após o primeiro uso. Este login usa o mesmo
+modelo de credenciais usuário/PIN usado pela tela; não é credencial HTTP segura
+para internet pública.
 
 O PDF não é salvo na memória; campos extraídos, perguntas e respostas podem conter
 dados sensíveis. O botão **Apagar conversa local** remove somente o arquivo do

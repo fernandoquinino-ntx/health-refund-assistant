@@ -9,11 +9,32 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from health_refund_assistant.auth.local_auth import add_local_user, validate_local_user
+from health_refund_assistant.auth.local_auth import (
+    DEFAULT_TEST_NAME,
+    DEFAULT_TEST_PIN,
+    DEFAULT_TEST_USER,
+    add_local_user,
+    ensure_default_test_user,
+    validate_local_user,
+)
 from health_refund_assistant.core.trace import append_trace_event, load_trace_events
 
 
 class LocalAuthTraceTests(unittest.TestCase):
+    def test_default_test_user_is_created_in_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "usuarios.json"
+            normalized = ensure_default_test_user(path)
+            self.assertEqual(normalized, DEFAULT_TEST_USER)
+            self.assertEqual(
+                validate_local_user(DEFAULT_TEST_USER, DEFAULT_TEST_PIN, path),
+                DEFAULT_TEST_USER,
+            )
+            data = __import__("json").loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                data["users"][DEFAULT_TEST_USER]["display_name"],
+                DEFAULT_TEST_NAME,
+            )
     def test_pin_correto_autoriza_pin_incorreto_rejeita(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "usuarios.json"

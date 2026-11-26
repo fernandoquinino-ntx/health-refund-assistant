@@ -26,7 +26,13 @@ from ..conversation.assistant import (
 from ..plan.assessment import DEADLINE_DAYS, ExportPeriodError
 from ..conversation.conversation_memory import clear_conversation, load_conversation, save_conversation
 from ..conversation.conversation_memory import conversation_path_for_user
-from ..auth.local_auth import add_local_user, validate_local_user
+from ..auth.local_auth import (
+    DEFAULT_TEST_PIN,
+    DEFAULT_TEST_USER,
+    add_local_user,
+    ensure_default_test_user,
+    validate_local_user,
+)
 from ..core.trace import append_trace_event, load_trace_events, text_hash
 from ..conversation.agent import handle_agent_turn
 from ..core.paths import INCOMING_DIR, PROMPTS_DIR
@@ -163,11 +169,15 @@ def reset_agent_session(session_state: dict) -> None:
 
 def local_user_login() -> str | None:
     """Autentica ou cria um usuário local antes de carregar dados privados."""
+    ensure_default_test_user()
     authenticated = st.session_state.get("authenticated_user")
     if isinstance(authenticated, str):
         return authenticated
 
     st.sidebar.subheader("Identidade local")
+    st.sidebar.caption(
+        f"Usuário padrão de teste: {DEFAULT_TEST_USER} / PIN {DEFAULT_TEST_PIN}"
+    )
     create, login = st.sidebar.tabs(["Entrar", "Criar usuário"])
     with create:
         user_id = st.text_input("Usuário", key="create_local_user")

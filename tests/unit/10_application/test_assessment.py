@@ -214,9 +214,52 @@ class AssessmentTests(unittest.TestCase):
                 )
             self.assertTrue(result["regras_prazo_confirmadas"])
             self.assertTrue(result["corte_d2"]["ativo"])
-            self.assertEqual(result["corte_d2"]["corte_exportacao"], "2026-03-29")
+            self.assertEqual(result["corte_d2"]["corte_exportacao"], "2026-03-30")
             self.assertTrue(result["prazo_365"]["ativo"])
-            self.assertEqual(result["prazo_365"]["situacao"], "dentro_do_prazo_confirmado")
+            self.assertEqual(result["prazo_365"]["situacao"], "dentro_do_prazo_para_novo_pedido")
+
+    def test_d2_only_confirms_absence_two_days_after_import(self):
+        export = {
+            **self.export,
+            "_importado_em": "2026-03-20",
+        }
+        recent_document = {**self.document, "data_atendimento": "2026-03-19"}
+        recent = avaliar_documento(
+            recent_document,
+            [export],
+            self.mapping,
+            date(2026, 3, 20),
+        )
+        self.assertNotEqual(
+            recent["corte_d2"]["situacao"],
+            "ausencia_confirmada_na_exportacao",
+        )
+
+        old_document = {**self.document, "data_atendimento": "2026-03-16"}
+        old = avaliar_documento(
+            old_document,
+            [export],
+            self.mapping,
+            date(2026, 3, 20),
+        )
+        self.assertEqual(
+            old["corte_d2"]["situacao"],
+            "ausencia_confirmada_na_exportacao",
+        )
+
+    def test_365_days_blocks_only_new_request_without_candidate(self):
+        old_document = {**self.document, "data_atendimento": "2025-01-01"}
+        no_candidate = avaliar_documento(
+            old_document,
+            [self.export],
+            self.mapping,
+            date(2026, 3, 20),
+        )
+        self.assertEqual(
+            no_candidate["prazo_365"]["situacao"],
+            "prazo_expirado_sem_pedido",
+        )
+        self.assertFalse(no_candidate["pode_abrir_novo_pedido"])
 
 
 if __name__ == "__main__":

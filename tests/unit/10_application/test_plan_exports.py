@@ -41,7 +41,9 @@ class PlanExportsTests(unittest.TestCase):
 
             self.assertEqual(saved.parent, Path(directory))
             self.assertTrue(saved.name.endswith("_plano.json"))
-            self.assertEqual(saved.read_bytes(), content)
+            saved_data = json.loads(saved.read_text(encoding="utf-8"))
+            self.assertEqual(saved_data["reembolsos"], [])
+            self.assertIn("importado_em", saved_data)
 
     def test_import_rejects_non_object_reimbursement_records(self):
         export = {

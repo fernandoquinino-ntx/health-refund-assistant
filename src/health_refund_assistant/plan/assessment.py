@@ -215,6 +215,17 @@ def avaliar_documento(
                 situacao_prazo = "dentro_do_prazo_simulado"
 
     regras_prazo = carregar_regras_prazo_confirmadas()
+    datas_importacao = [
+        parse_date(
+            exportacao.get("importado_em")[:10]
+            if isinstance(exportacao.get("importado_em"), str)
+            else exportacao.get("_importado_em")
+        )
+        for exportacao in exportacoes_lista
+    ]
+    datas_importacao_validas = [valor for valor in datas_importacao if valor is not None]
+    data_importacao = max(datas_importacao_validas) if datas_importacao_validas else data_referencia
+
     d2 = {
         "ativo": False,
         "situacao": "desativado",
@@ -226,17 +237,27 @@ def avaliar_documento(
         and periodos
     ):
         dias_d2 = int(regras_prazo["d2"]["dias"])
-        corte_d2 = max(fim for _, fim in periodos) - timedelta(days=dias_d2)
+        corte_d2 = data_importacao - timedelta(days=dias_d2)
+        if candidatos:
+            situacao_d2 = "pedido_localizado"
+        elif data_prazo is None:
+            situacao_d2 = "data_documento_indeterminada"
+        elif data_prazo > corte_d2:
+            situacao_d2 = "aguardando_completude_d2"
+        elif cobertura_periodo is not True:
+            situacao_d2 = "exportacao_nao_cobre_documento"
+        else:
+            situacao_d2 = "ausencia_confirmada_na_exportacao"
         d2 = {
             "ativo": True,
             "dias": dias_d2,
             "corte_exportacao": corte_d2.isoformat(),
-            "situacao": (
-                "dentro_do_corte_confirmado"
-                if data_referencia <= corte_d2
-                else "apos_o_corte_confirmado"
+            "data_importacao": data_importacao.isoformat(),
+            "situacao": situacao_d2,
+            "aviso": (
+                "D-2 confirmado: documentos desta data ou anteriores podem ser "
+                "considerados ausentes somente quando cobertos pelo período exportado."
             ),
-            "aviso": "Data de corte D-2 baseada na configuração contratual confirmada.",
         }
 
     prazo_365 = {
@@ -252,16 +273,18 @@ def avaliar_documento(
         dias_365 = int(regras_prazo["365"]["dias"])
         prazo_final = data_prazo + timedelta(days=dias_365)
         dias_restantes = (prazo_final - data_referencia).days
+        if candidatos:
+            situacao_365 = "pedido_localizado_regra_nao_bloqueia"
+        elif dias_restantes < 0:
+            situacao_365 = "prazo_expirado_sem_pedido"
+        else:
+            situacao_365 = "dentro_do_prazo_para_novo_pedido"
         prazo_365 = {
             "ativo": True,
             "dias": dias_365,
             "prazo_final": prazo_final.isoformat(),
             "dias_restantes": max(dias_restantes, 0),
-            "situacao": (
-                "dentro_do_prazo_confirmado"
-                if dias_restantes >= 0
-                else "fora_do_prazo_confirmado"
-            ),
+            "situacao": situacao_365,
             "aviso": "Prazo de 365 dias baseado na configuração contratual confirmada.",
         }
 
@@ -270,6 +293,11 @@ def avaliar_documento(
         "regras_prazo_confirmadas": regras_prazo["regras_confirmadas"],
         "corte_d2": d2,
         "prazo_365": prazo_365,
+        "pode_abrir_novo_pedido": (
+            False
+            if prazo_365["situacao"] == "prazo_expirado_sem_pedido"
+            else None
+        ),
         "prazo_simulado_dias": dias_prazo if not candidatos else None,
         "data_base_prazo": data_prazo.isoformat() if data_prazo else None,
         "origem_data_base_prazo": origem_data_prazo,

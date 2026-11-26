@@ -19,6 +19,9 @@ from ..core.paths import USER_AUTH_PATH
 
 USER_ID_PATTERN = re.compile(r"[a-zA-Z0-9_-]{3,32}")
 PBKDF2_ITERATIONS = 120_000
+DEFAULT_TEST_USER = "fernando-pimenta-quinino"
+DEFAULT_TEST_NAME = "Fernando Pimenta Quinino"
+DEFAULT_TEST_PIN = "123456"
 
 
 def _normalize_user_id(user_id: str) -> str:
@@ -55,6 +58,7 @@ def add_local_user(
     user_id: str,
     pin: str,
     path: Path = USER_AUTH_PATH,
+    display_name: str | None = None,
 ) -> str:
     """Cria ou atualiza um usuário local com PIN protegido por hash."""
     normalized = _normalize_user_id(user_id)
@@ -67,6 +71,7 @@ def add_local_user(
         "salt": salt.hex(),
         "pin_hash": digest.hex(),
         "iterations": PBKDF2_ITERATIONS,
+        "display_name": display_name or normalized,
     }
     _save_users(path, data)
     return normalized
@@ -98,3 +103,16 @@ def validate_local_user(
     if not hmac.compare_digest(actual, expected):
         return None
     return normalized
+
+
+def ensure_default_test_user(path: Path = USER_AUTH_PATH) -> str:
+    """Cria o usuário sintético padrão se o arquivo local ainda não existir."""
+    data = _load_users(path)
+    if DEFAULT_TEST_USER not in data["users"]:
+        add_local_user(
+            DEFAULT_TEST_USER,
+            DEFAULT_TEST_PIN,
+            path,
+            display_name=DEFAULT_TEST_NAME,
+        )
+    return DEFAULT_TEST_USER

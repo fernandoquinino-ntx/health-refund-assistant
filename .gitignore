@@ -45,7 +45,6 @@ data/sinteticos/resultados/**
 *.gguf
 *.safetensors
 /models/
-!/models/
 !/models/README.md
 /tools/llama.cpp/
 

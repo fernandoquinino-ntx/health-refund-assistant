@@ -7,6 +7,12 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.3.7**: consolidação do plano de evolução baseado nos insights do projeto.
+  Os itens foram confirmados ou identificados como pendentes; este registro não
+  afirma implementação de autenticação, rastreamento, D-2/365, isolamento ou
+  exportação de dados. Os critérios de aceite e os grupos mínimos de testes ficam
+  em `docs/60_project/05_plano_evolucao_insights.md`.
+
 - **0.3.6**: correções finais de distribuição e observabilidade. O workflow de
   extensão passa a observar os caminhos Python atuais, o Label Studio usa
   telemetria somente por opt-in explícito e o repositório ganha validação
@@ -41,6 +47,11 @@ detalhes de cada commit.
   pipelines de extensão/treinamento visual.
 
 ### Adicionado
+
+- Plano de evolução consolidado em
+  `docs/60_project/05_plano_evolucao_insights.md`, com confirmações do estado
+  atual, fases de implementação, critérios de aceite, guardrails e matriz mínima
+  de cinco casos por grupo.
 
 - Workflow `containers.yml` para validar o JSON do devcontainer e iniciar a UI
   Streamlit em modo headless em um runner Linux durante pushes e pull requests.
@@ -145,7 +156,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.3.6` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.3.7` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

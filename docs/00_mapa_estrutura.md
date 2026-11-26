@@ -7,6 +7,7 @@
 - [Prompts versionados](../prompts/prompt_library.md).
 - [Vocabulário técnico](00_vocabulario.md).
 - [Changelog e política SemVer](60_project/04_changelog_projeto.md).
+- [Plano de evolução dos insights do projeto](60_project/05_plano_evolucao_insights.md).
 - [Anotação de PDFs para dataset visual](40_testing/04_anotacao_documentos.md).
 - [Pipeline visual no Codespaces e GitHub](40_testing/05_pipeline_treinamento_visual.md).
 - [Agente conversacional](20_process/02_agente_conversacional.md).

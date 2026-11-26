@@ -7,6 +7,11 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.4.3**: a esteira de treinamento respeita o gate de consentimento sem
+  bloquear o CI. Quando o consentimento está pendente, o workflow registra o
+  motivo e pula treino, avaliação e conversão; dados privados só são processados
+  após aprovação explícita.
+
 - **0.4.2**: correções da esteira GitHub Actions e da toolbox. A operação
   `build_extension` recebe corretamente nenhum argumento quando chamada pelo
   CLI, o workflow de treino usa `PYTHONPATH=src` e foi adicionado teste de
@@ -182,7 +187,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.4.2` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.4.3` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

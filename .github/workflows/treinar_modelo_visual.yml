@@ -28,14 +28,24 @@ jobs:
       - name: Instalar dependencias do treinamento
         run: python -m pip install -r requirements/treinamento-ci.txt
       - name: Confirmar consentimento e treino
-        run: PYTHONPATH=src python -m treinamento_visual.train.train_huggingface --dry-run
+        id: consentimento
+        run: |
+          aprovado=$(python -c 'import json; print(str(json.load(open("json/training/visual/consentimento_publicacao.json")).get("aprovado") is True).lower())')
+          echo "aprovado=$aprovado" >> "$GITHUB_OUTPUT"
+          if [ "$aprovado" = "true" ]; then
+            PYTHONPATH=src python -m treinamento_visual.train.train_huggingface --dry-run
+          else
+            echo "Treino visual não executado: consentimento ainda não aprovado."
+          fi
       - name: Executar treino LoRA curto
+        if: steps.consentimento.outputs.aprovado == 'true'
         run: |
           PYTHONPATH=src python -m treinamento_visual.train.train_huggingface \
             --dataset-root json/training/visual/dataset \
             --images-root json/training/visual/images \
             --output models/adapters/smolvlm_ci
       - name: Avaliar adaptador no conjunto reservado
+        if: steps.consentimento.outputs.aprovado == 'true'
         run: |
           PYTHONPATH=src python -m treinamento_visual.train.evaluate_huggingface_adapter \
             --dataset json/training/visual/dataset \
@@ -44,11 +54,13 @@ jobs:
             --adapter models/adapters/smolvlm_ci \
             --report json/training/visual/avaliacao_adaptador.json
       - name: Aprovar adaptador somente com ganho comprovado
+        if: steps.consentimento.outputs.aprovado == 'true'
         run: |
           PYTHONPATH=src python -m treinamento_visual.train.approve_adapter \
             --report json/training/visual/avaliacao_adaptador.json \
             --output json/training/visual/modelo_aprovado.json || true
       - name: Instalar conversor GGUF
+        if: steps.consentimento.outputs.aprovado == 'true'
         run: |
           python -m venv .venv-conversao
           .venv-conversao/bin/python -m pip install -r requirements/conversao.txt
@@ -58,6 +70,7 @@ jobs:
           cmake -S tools/llama.cpp -B tools/llama.cpp/build -DLLAMA_CURL=OFF -DGGML_NATIVE=OFF
           cmake --build tools/llama.cpp/build -j"$(nproc)" --target llama-server llama-quantize
       - name: Converter adaptador aprovado para GGUF
+        if: steps.consentimento.outputs.aprovado == 'true'
         run: |
           if python -c 'import json; raise SystemExit(0 if json.load(open("json/training/visual/modelo_aprovado.json")).get("aprovado") else 1)'; then
             PYTHONPATH=src python -m toolbox converter_modelo

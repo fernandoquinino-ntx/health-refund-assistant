@@ -16,6 +16,7 @@
 
 - [Roteiro de execução e avaliação](08_roteiro_avaliacao.md).
 - [Rastreamento de testes](../20_process/01_rastreamento_testes.md).
+- [Auditoria de qualidade](13_auditoria_qualidade.md).
 - [Agente conversacional](../20_process/02_agente_conversacional.md).
 - [Verificação no Codespaces](../40_testing/03_verificacao_codespaces_ui.md).
 - [Anotação de PDFs para dataset visual](../40_testing/04_anotacao_documentos.md).

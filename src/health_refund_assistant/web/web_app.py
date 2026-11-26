@@ -125,6 +125,18 @@ def _show_assessment(assessment: dict) -> None:
         )
 
 
+def reset_agent_session(session_state: dict) -> None:
+    """Limpa conversa e anexos pendentes ao iniciar uma nova tarefa."""
+    session_state["conversation"] = {
+        "messages": [],
+        "evidence": None,
+        "agent": None,
+    }
+    session_state.pop("pending_pdf", None)
+    session_state.pop("pending_image", None)
+    session_state.pop("pending_export_paths", None)
+
+
 def main() -> None:
     st.set_page_config(
         page_title="Assistente de reembolsos",
@@ -169,13 +181,8 @@ def main() -> None:
             except OSError as error:
                 st.error(f"Não foi possível apagar a conversa: {error}")
             else:
-                st.session_state["conversation"] = {
-                    "messages": [],
-                    "evidence": None,
-                    "agent": None,
-                }
-                st.session_state.pop("pending_pdf", None)
-                st.session_state.pop("pending_image", None)
+                reset_agent_session(st.session_state)
+                st.session_state.pop("pending_export_paths", None)
                 st.rerun()
         with st.expander("Configurações avançadas"):
             reference_date = st.date_input(

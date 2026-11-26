@@ -4,4 +4,4 @@ Entradas: nenhuma na importação. Processamento: inicializa o pacote.
 Saídas: disponibiliza seus módulos e a versão declarada.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.3.3"

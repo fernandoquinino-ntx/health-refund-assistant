@@ -19,16 +19,6 @@ def create_assistant_answer(
     history: Sequence[dict[str, str]] = (),
 ) -> str:
     prompt, _ = carregar_prompt("reembolso_assistente", prompt_version)
-    prompt += (
-        "\nPara prazo de processamento ou recebimento, use apenas os campos de "
-        "estimativa_pagamento. Se estiver indeterminada, informe o motivo e não "
-        "invente previsão. Se estiver disponível, inclua data de referência, "
-        "data estimada e dias úteis restantes ou de atraso. Diga que cinco dias "
-        "úteis foram informados pelo usuário e não verificados com o plano, "
-        "que feriados não foram considerados, que o status exportado pode estar "
-        "desatualizado e que a estimativa não garante nem confirma pagamento. "
-        "Em pedido localizado não avalie prazo de envio da nota."
-    )
     if prompt_version == "v1.2":
         content = json.dumps(
             {

@@ -1,5 +1,9 @@
 # 🎖️ Conferência Final — Trabalho Final Opção A
 
+> **Documento histórico:** este relatório não é evidência de status atual.
+> Comandos e resultados antigos podem estar desatualizados. Consulte o
+> [status atual](../00_status_auditoria.md) e use o [Makefile](../../Makefile).
+
 > **Atenção:** este relatório histórico não comprova execução real ou prontidão
 > para entrega. O antigo `case_evaluation_v3.py` produzia afirmações fixas sem
 > chamar a API. Os comandos abaixo também estão desatualizados; use o

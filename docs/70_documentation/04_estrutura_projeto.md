@@ -54,9 +54,9 @@ real do VLM com gabaritos sintéticos e grava um relatório local. O nome histó
 gerava afirmações fixas, não resultados observados.
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python -m toolbox --help
-.venv/bin/python -m toolbox avaliar --help
+make test
+make test-agent
+make build-extension
 ```
 
 O benchmark exige configuração e acesso ao modelo e pode gerar custos. Testes

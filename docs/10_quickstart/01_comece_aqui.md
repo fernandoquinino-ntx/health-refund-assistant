@@ -22,9 +22,9 @@ make test
 make run
 ```
 
-Abra a porta 8501. Selecione uma exportação do plano, anexe um PDF e faça uma
-pergunta. Testes automatizados não comprovam a disponibilidade da API nem uma
-execução real no Codespaces.
+Abra a porta 8501. Converse com o agente e anexe os documentos quando ele solicitar.
+Teste com dados sintéticos. Testes automatizados não comprovam a disponibilidade
+da API nem uma execução real no Codespaces.
 
 O [dev container](../../.devcontainer/devcontainer.json) configura dependências,
 fixtures e encaminhamento da porta, mas a execução no Codespaces deve ser

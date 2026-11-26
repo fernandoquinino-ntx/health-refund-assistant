@@ -44,7 +44,7 @@ os dados de referência ficam em JSON separado e nunca são enviados ao modelo.
 Rode a suíte determinística; os testes usam token fictício e não fazem chamadas à API:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
+make test
 ```
 
 Ela cobre parsing, conciliação, processamento de PDFs, contrato JSON, fallback da
@@ -77,13 +77,13 @@ Para processar documentos próprios, crie as pastas locais e coloque PDFs novos 
 
 ```bash
 mkdir -p data/incoming data/processed data/failed json/plan/imports json/documents/state json/evaluation/reports json/reconciliation/reports
-.venv/bin/python -m health_refund_assistant.documents.pdf_processing
+make process-pdfs
 ```
 
 - Sucesso: o PDF é movido para `data/processed/`, renomeado com data, número e
   sufixo único, e registrado em `json/documents/state/notas_extraidas.json`.
 - Falha: o PDF vai para `data/failed/`; para tentar novamente, rode
-  `.venv/bin/python -m health_refund_assistant.documents.pdf_processing --reprocessar-falhas`.
+  Use `make process-pdfs`; a opção de reprocessamento fica no módulo operacional.
 - SHA-256 identifica cópias idênticas sem nova chamada ao VLM. Depois da extração,
   CNPJ/CPF do prestador mais número do documento também sinalizam possível duplicata.
   Essas cópias são preservadas em `data/processed/duplicatas/`.
@@ -95,7 +95,7 @@ o arquivo pela interface para validar o período; no modo CLI, informe a exporta
 importada e as notas:
 
 ```bash
-.venv/bin/python -m health_refund_assistant.plan.reconciliation \
+make reconcile
   --notas json/documents/state/notas_extraidas.json \
   --exportacao json/plan/imports/arquivo.json \
   --saida json/reconciliation/reports/conciliacao.json
@@ -111,7 +111,7 @@ estiver ausente ou inválido.
 Na raiz do repositório, gere os PDFs, manifesto, gabarito e exportação fictícia:
 
 ```bash
-.venv/bin/python -m toolbox gerar_fixtures
+make fixtures
 ```
 
 O comando cria:
@@ -158,20 +158,13 @@ Com os fixtures gerados e `OPENAPI_TOKEN` configurado, execute cada versão usan
 mesmos PDFs e o mesmo gabarito. Cada imagem será enviada à API OpenAI:
 
 ```bash
-.venv/bin/python -m toolbox avaliar --prompt-version v1.0 \
-  --saida json/evaluation/reports/v1.0.json
-.venv/bin/python -m toolbox avaliar --prompt-version v1.1 \
-  --saida json/evaluation/reports/v1.1.json
-.venv/bin/python -m toolbox avaliar --prompt-version v2.0 \
-  --saida json/evaluation/reports/v2.0.json
-.venv/bin/python -m toolbox avaliar --prompt-version v3.0 \
-  --saida json/evaluation/reports/v3.0.json
-.venv/bin/python -m toolbox avaliar --prompt-version v4.0 \
-  --saida json/evaluation/reports/v4.0.json
-.venv/bin/python -m toolbox avaliar --prompt-version v4.1 \
-  --saida json/evaluation/reports/v4.1.json
-.venv/bin/python -m toolbox avaliar --prompt-version v4.2 \
-  --saida json/evaluation/reports/v4.2.json
+make evaluate PROMPT=v1.0 SAIDA=json/evaluation/reports/v1.0.json
+make evaluate PROMPT=v1.1 SAIDA=json/evaluation/reports/v1.1.json
+make evaluate PROMPT=v2.0 SAIDA=json/evaluation/reports/v2.0.json
+make evaluate PROMPT=v3.0 SAIDA=json/evaluation/reports/v3.0.json
+make evaluate PROMPT=v4.0 SAIDA=json/evaluation/reports/v4.0.json
+make evaluate PROMPT=v4.1 SAIDA=json/evaluation/reports/v4.1.json
+make evaluate PROMPT=v4.2 SAIDA=json/evaluation/reports/v4.2.json
 ```
 
 O avaliador usa por padrão os JSONs em `json/tests/synthetic/` e os PDFs em
@@ -247,7 +240,7 @@ campos incompletos, existência de candidatos e evidência de pagamento. Não ch
 OpenAI:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -p "test_synthetic_scenarios.py" -v
+make test-synthetic
 ```
 
 O caso sem datas fica com prazo indeterminado e sem conclusão sobre pedido; a ausência
@@ -261,13 +254,13 @@ O avaliador de prompts não substitui `notas_extraidas.json`.
 Para testar o pipeline com documentos sintéticos mantendo os originais:
 
 ```bash
-.venv/bin/python -m health_refund_assistant.documents.pdf_processing \
+make process-pdfs
   --entrada data/sinteticos/documentos \
   --saida json/documents/state/notas_sinteticas.json \
   --prompt-version v4.0 \
   --manter-originais
 
-.venv/bin/python -m health_refund_assistant.plan.reconciliation \
+make reconcile
   --notas json/documents/state/notas_sinteticas.json \
   --exportacao json/tests/synthetic/exportacao_ficticia.json \
   --saida json/reconciliation/reports/conciliacao-sintetica.json
@@ -317,9 +310,7 @@ Os testes determinísticos de fronteira, fallback de data, informação ausente,
 exportação antiga e os 15 cenários completos ficam em `tests/`:
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -p "test_assessment.py" -v
-.venv/bin/python -m unittest discover -s tests -p "test_synthetic_scenarios.py" -v
-.venv/bin/python -m unittest discover -s tests -p "test_estimativa_pagamento.py" -v
+make test
 ```
 
 O benchmark C01–C15 mede extração visual; os testes determinísticos cobrem prazo,

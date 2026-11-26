@@ -6,24 +6,15 @@ concierge e os pedidos são atualizados posteriormente no portal.
 
 ## Como funciona
 
-1. Importe uma exportação JSON do plano, com o período consultado.
-2. Na conversa, anexe um PDF e escreva sua pergunta. Apenas a primeira página do
-   PDF é processada.
-3. O VLM extrai campos conforme o schema JSON; a aplicação valida a estrutura.
-   Na versão v4.2, também retorna trechos para revisão visual humana; esses
-   trechos são gerados pela IA e não comprovam que correspondam à imagem.
-4. Código Python compara os dados com a exportação e identifica campos ausentes.
-   Para pedidos não localizados, calcula um prazo de envio **simulado**.
-   Uma tarefa de IA revisa a imagem e os dados extraídos,
-   identifica dúvidas e gera uma saída JSON validada.
-5. Para um pedido único com correspondência forte, data válida e status adequado,
-   uma tarefa de IA estima cinco dias úteis de processamento após a submissão;
-   o código confere o cálculo. Outra tarefa de IA explica as evidências. As respostas
-   e a revisão são consultivas e podem conter erros.
-6. Faça perguntas adicionais sem reenviar o PDF. Elas usam a última análise salva,
-   cujo status pode estar desatualizado. A estimativa usa a data de referência
-   escolhida na barra lateral; para atualizar o status, reenvie o PDF e selecione
-   uma exportação recente.
+1. Converse com o assistente em linguagem natural.
+2. O agente interpreta a tarefa e solicita somente os anexos faltantes.
+3. Envie uma nota PDF/imagem e, quando necessário, uma exportação JSON do plano.
+4. GPT-6 Luna interpreta o pedido e sintetiza a resposta.
+5. O modelo visual local ou remoto extrai campos estruturados da imagem.
+6. Código determinístico concilia o documento, identifica campos e calcula prazo.
+7. Uma tarefa separada revisa evidências e inconsistências visuais.
+8. A interface apresenta o resultado resumido e mantém evidências detalhadas
+   disponíveis em uma área recolhida.
 
 Uma ausência na exportação não prova que o pedido nunca foi enviado. Confirme
 resultados, exigências e prazos com o plano. A aplicação não envia pedidos.
@@ -76,7 +67,7 @@ dependências e encaminha a porta 8501. Para instalação local:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements/base.txt
+make setup
 ```
 
 Configure `OPENAPI_TOKEN` no ambiente ou como segredo do Codespaces. O código
@@ -229,8 +220,8 @@ O fluxo completo de Codespaces, publicação autorizada e treino no GitHub está
 O benchmark da extração fica fora do núcleo da aplicação:
 
 ```bash
-.venv/bin/python -m toolbox --help
-.venv/bin/python -m toolbox avaliar --help
+make toolbox-help
+make evaluate PROMPT=v4.2
 ```
 
 Uma avaliação real usa a API configurada e gera um relatório local. O antigo

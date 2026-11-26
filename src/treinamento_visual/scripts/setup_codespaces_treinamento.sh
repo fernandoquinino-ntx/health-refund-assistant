@@ -32,7 +32,7 @@ if [[ ! -d tools/llama.cpp/.git ]]; then
 fi
 git -C tools/llama.cpp checkout --detach a8ad690ca9239ea35db4de47e00cf632d01895fd
 
-if [[ ! -f tools/llama.cpp/build/bin/llama-cli ]]; then
+if [[ ! -f tools/llama.cpp/build/bin/llama-server ]]; then
   cmake -S tools/llama.cpp -B tools/llama.cpp/build -DLLAMA_CURL=OFF -DGGML_NATIVE=OFF
-  cmake --build tools/llama.cpp/build -j"$(nproc)"
+  cmake --build tools/llama.cpp/build -j"$(nproc)" --target llama-server llama-quantize
 fi

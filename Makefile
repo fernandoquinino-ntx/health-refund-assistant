@@ -1,4 +1,4 @@
-.PHONY: help setup setup-app setup-training setup-conversion setup-label setup-codespace download-vlm run test test-agent ingest prepare-tasks label-studio build-dataset check-dataset export-dataset train-mac train-ci evaluate-adapter approve-adapter start-vlm convert build-extension clean
+.PHONY: help setup setup-app setup-training setup-conversion setup-label setup-codespace download-vlm run test test-agent test-synthetic fixtures toolbox-help process-pdfs reconcile evaluate track ingest prepare-tasks prepare-pages verify-annotations mark-no-fields label-studio build-dataset check-dataset export-dataset train-mac train-ci evaluate-adapter approve-adapter start-vlm convert build-extension clean
 
 PYTHON_APP=.venv/bin/python
 PYTHON_TRAIN=.venv-treinamento/bin/python
@@ -12,6 +12,12 @@ help:
 	@printf "  make run               Inicia o assistente Streamlit na porta 8501\n"
 	@printf "  make test              Executa toda a bateria unittest\n"
 	@printf "  make test-agent        Executa testes do agente conversacional\n"
+	@printf "  make test-synthetic    Executa os cenários sintéticos\n"
+	@printf "  make fixtures          Gera PDFs sintéticos e gabaritos\n"
+	@printf "  make process-pdfs      Processa PDFs em data/incoming\n"
+	@printf "  make reconcile         Executa conciliação local\n"
+	@printf "  make evaluate          Avalia um prompt (PROMPT=v4.2)\n"
+	@printf "  make track             Rastreia a bateria unittest\n"
 	@printf "  make ingest            Processa PDFs/imagens privadas\n"
 	@printf "  make prepare-tasks     Prepara tarefas para o Label Studio\n"
 	@printf "  make prepare-pages     Renderiza PDFs/imagens para anotação\n"
@@ -69,6 +75,23 @@ test-synthetic:
 
 fixtures:
 	PYTHONPATH=src $(PYTHON_APP) -m toolbox gerar_fixtures
+
+toolbox-help:
+	PYTHONPATH=src $(PYTHON_APP) -m toolbox --help
+
+process-pdfs:
+	PYTHONPATH=src $(PYTHON_APP) -m health_refund_assistant.documents.pdf_processing
+
+reconcile:
+	PYTHONPATH=src $(PYTHON_APP) -m health_refund_assistant.plan.reconciliation
+
+evaluate:
+	PYTHONPATH=src $(PYTHON_APP) -m toolbox avaliar \
+		--prompt-version $(or $(PROMPT),v4.2) \
+		--saida $(or $(SAIDA),json/evaluation/reports/$(or $(PROMPT),v4.2).json)
+
+track:
+	PYTHONPATH=src $(PYTHON_APP) -m toolbox rastrear --mode run --verbose
 
 ingest:
 	PYTHONPATH=src $(PYTHON_TRAIN) -m treinamento_visual.ingest

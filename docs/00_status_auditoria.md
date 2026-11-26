@@ -14,7 +14,8 @@ Atualizado em 26/11/2026.
   humana e podem conter erros.
 - Memória persistente **local e individual** das últimas 50 mensagens e da última
   análise. Perguntas posteriores usam as evidências armazenadas, sem atualizar o
-  status automaticamente. A barra lateral permite apagar a memória.
+  status automaticamente. “Nova conversa” remove mensagens, evidências e anexos
+  pendentes da sessão local.
 
 ## Limitações e pendências
 

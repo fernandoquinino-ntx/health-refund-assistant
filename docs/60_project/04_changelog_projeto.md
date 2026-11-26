@@ -7,6 +7,19 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.3.3**: auditoria documental e de prompts concluída; estado pendente
+  isolado em nova conversa, prompts ativos padronizados e documentação operacional
+  centralizada no Makefile.
+
+- **0.3.2**: correções de auditoria; exportação pendente removida em nova
+  conversa, prompts ativos padronizados com entrada/tarefa/saída/guardrails,
+  registro básico de ferramentas do agente e comandos Makefile documentados
+  nas guias operacionais.
+
+- **0.3.1**: correções de consistência documental, Makefile principal,
+  padronização dos prompts ativos, limpeza de estado pendente e registro
+  explícito de ferramentas do agente.
+
 - **0.3.0**: separação correta entre GPT-6 Luna para tarefas textuais e
   modelo SmolVLM GGUF para visão, runtime llama.cpp no Codespaces, avaliação
   reservada de adaptadores e ativação automática somente após aprovação.
@@ -105,7 +118,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.3.0` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.3.3` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

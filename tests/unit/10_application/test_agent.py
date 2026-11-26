@@ -15,9 +15,24 @@ from health_refund_assistant.conversation.agent import (
     handle_agent_turn,
     identificar_tarefa,
 )
+from health_refund_assistant.web.web_app import reset_agent_session
 
 
 class AgentTaskTests(unittest.TestCase):
+    def test_reset_limpa_exportacao_pendente(self):
+        state = {
+            "conversation": {"messages": ["antiga"], "evidence": {"x": 1}},
+            "pending_pdf": b"pdf",
+            "pending_image": b"imagem",
+            "pending_export_paths": ["exportacao.json"],
+        }
+        reset_agent_session(state)
+        self.assertEqual(state["conversation"]["messages"], [])
+        self.assertIsNone(state["conversation"]["evidence"])
+        self.assertNotIn("pending_pdf", state)
+        self.assertNotIn("pending_image", state)
+        self.assertNotIn("pending_export_paths", state)
+
     def test_classifica_pagamento_recebido(self):
         self.assertEqual(
             identificar_tarefa("Já recebi o reembolso da nota 1049"),

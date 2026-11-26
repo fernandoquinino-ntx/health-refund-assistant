@@ -6,10 +6,8 @@ Saídas: resposta, estado da tarefa e evidências atualizadas.
 """
 
 import re
-from datetime import date
-import os
 from pathlib import Path
-from typing import Any, Dict, Iterable, Sequence
+from typing import Any, Sequence
 
 from ..plan.plan_exports import load_selected_exports
 from .assistant import AssistantRequest, handle_request, atualizar_estimativa
@@ -26,6 +24,48 @@ TASK_STATES = {
     "aguardando_revisao",
     "concluido",
 }
+
+TASK_DEFINITIONS = {
+    "analisar_documento": {
+        "entrada": ("documento", "exportacao_do_plano"),
+        "resultado": "evidencias_documento_status_prazo",
+    },
+    "consultar_status": {
+        "entrada": ("documento", "exportacao_do_plano"),
+        "resultado": "status_pedido",
+    },
+    "confirmar_pagamento": {
+        "entrada": ("numero_nota", "exportacao_do_plano"),
+        "resultado": "confirmacao_pagamento",
+    },
+    "verificar_prazo": {
+        "entrada": ("documento", "data_referencia"),
+        "resultado": "prazo_simulado",
+    },
+    "revisar_completude": {
+        "entrada": ("documento",),
+        "resultado": "campos_faltantes",
+    },
+}
+
+
+def executar_ferramenta(nome: str, **kwargs: Any) -> Any:
+    """Registra ferramentas simples usadas pelo agente."""
+    if nome == "extrair_e_conciliar":
+        return handle_request(kwargs["request"])
+    if nome == "consultar_exportacao":
+        return buscar_nota_em_exportacoes(
+            kwargs["referencia"],
+            kwargs["export_paths"],
+        )
+    if nome == "responder_sobre_evidencias":
+        return create_assistant_answer(
+            kwargs["message"],
+            kwargs["evidence"],
+            "v1.2",
+            kwargs.get("history", []),
+        )
+    raise ValueError(f"Ferramenta não registrada: {nome}")
 
 
 def identificar_tarefa(texto: str) -> str:
@@ -171,7 +211,11 @@ def handle_agent_turn(
     )
     task = interpretacao.get("task") or state.get("task", "analisar_documento")
     state["task"] = task
-    note_reference = interpretacao.get("note_reference") or extrair_referencia_nota(message) or state.get("note_reference")
+    note_reference = (
+        interpretacao.get("note_reference")
+        or extrair_referencia_nota(message)
+        or state.get("note_reference")
+    )
     state["note_reference"] = note_reference
 
     if pdf_bytes or image_bytes:
@@ -197,7 +241,7 @@ def handle_agent_turn(
             reference_date=reference_date,
             deadline_days=deadline_days,
         )
-        result = handle_request(request)
+        result = executar_ferramenta("extrair_e_conciliar", request=request)
         evidence = {
             "documento": result.document_fields,
             "conciliacao": result.assessment,
@@ -210,9 +254,10 @@ def handle_agent_turn(
 
     if export_paths and not (pdf_bytes or image_bytes):
         if task == "confirmar_pagamento" or note_reference:
-            resultado = buscar_nota_em_exportacoes(
-                note_reference or "nota",
-                export_paths,
+            resultado = executar_ferramenta(
+                "consultar_exportacao",
+                referencia=note_reference or "nota",
+                export_paths=export_paths,
             )
             if resultado and note_reference:
                 status = resultado.get("status") or "não informado"
@@ -250,11 +295,11 @@ def handle_agent_turn(
                 "v1.0",
             )
         evidence["conciliacao"] = assessment
-        answer = create_assistant_answer(
-            message,
-            evidence,
-            "v1.2",
-            [],
+        answer = executar_ferramenta(
+            "responder_sobre_evidencias",
+            message=message,
+            evidence=evidence,
+            history=[],
         )
         state["status"] = "concluido"
         state["missing"] = []

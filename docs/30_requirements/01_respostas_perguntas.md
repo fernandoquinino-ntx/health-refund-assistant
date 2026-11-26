@@ -1,5 +1,10 @@
 # 📋 Respostas Às Suas Perguntas Específicas
 
+> **Documento histórico:** este arquivo registra respostas anteriores e não
+> substitui o [status atual](../00_status_auditoria.md), o
+> [README](../../README.md) ou os testes atuais. Os comandos antigos podem não
+> existir; use o [Makefile](../../Makefile) e o [índice atual](../70_documentation/01_index.md).
+
 > **Histórico não verificado:** os resultados e comandos abaixo não comprovam
 > execução real. O antigo avaliador gerava afirmações fixas. Para fluxo, limites
 > e testes atuais, consulte o [README](../../README.md).

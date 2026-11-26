@@ -7,6 +7,11 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.3.6**: correções finais de distribuição e observabilidade. O workflow de
+  extensão passa a observar os caminhos Python atuais, o Label Studio usa
+  telemetria somente por opt-in explícito e o repositório ganha validação
+  automática de smoke da aplicação em ambiente Linux.
+
 - **0.3.5**: auditoria final, Makefile sem duplicatas, scripts Shell removidos,
   prompts ativos validados e operação centralizada na toolbox Python.
 
@@ -36,6 +41,12 @@ detalhes de cada commit.
   pipelines de extensão/treinamento visual.
 
 ### Adicionado
+
+- Workflow `containers.yml` para validar o JSON do devcontainer e iniciar a UI
+  Streamlit em modo headless em um runner Linux durante pushes e pull requests.
+
+- Configuração opcional de telemetria do Label Studio no `.env.example`, com
+  ativação separada por `LABEL_STUDIO_TELEMETRIA=true` e DSNs explícitos.
 
 - Dependências organizadas em `requirements/` por ambiente e `Makefile` com
   comandos para setup, testes, ingestão, labels, treino, conversão, extensão e limpeza.
@@ -87,6 +98,15 @@ detalhes de cada commit.
 
 ### Alterado
 
+- O iniciador do Label Studio aceita telemetria apenas após opt-in; sem a
+  configuração explícita, Sentry e analytics ficam desativados por padrão.
+
+- O workflow da extensão Chrome passou a detectar mudanças na toolbox Python,
+  sem referências aos scripts Shell removidos do treinamento visual.
+
+- O vocabulário operacional passou a explicar que Sentry é externo e opcional,
+  sem coletar dados privados por configuração automática.
+
 - Label Studio isolado usa Sentry compatível; o iniciador local desativa Sentry
   e analytics, usa sandbox de rede do macOS e mantém o banco e os dados em
   `data/treinamento/`. O navegador ainda não está isolado.
@@ -125,7 +145,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.3.5` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.3.6` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

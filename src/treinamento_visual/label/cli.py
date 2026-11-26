@@ -77,15 +77,16 @@ def main() -> int:
     if arguments == ["preparar"]:
         return preparar(config.PAGINAS, config.OCR, data_dir / "tarefas.json")
     if sys.platform != "darwin" or not Path(SANDBOX).is_file():
-        print("O Label Studio exige o sandbox de rede do macOS.", file=sys.stderr)
+        print("O Label Studio local usa sandbox de rede somente no macOS.", file=sys.stderr)
         return 1
     environment = os.environ.copy()
     for nome in ("http_proxy", "https_proxy", "all_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"):
         environment.pop(nome, None)
+    telemetria_ativada = os.environ.get("LABEL_STUDIO_TELEMETRIA", "").strip().lower() == "true"
     environment.update(
-        LABEL_STUDIO_SENTRY_DSN="",
-        LABEL_STUDIO_FRONTEND_SENTRY_DSN="",
-        LABEL_STUDIO_COLLECT_ANALYTICS="false",
+        LABEL_STUDIO_SENTRY_DSN=os.environ.get("LABEL_STUDIO_SENTRY_DSN", "") if telemetria_ativada else "",
+        LABEL_STUDIO_FRONTEND_SENTRY_DSN=os.environ.get("LABEL_STUDIO_FRONTEND_SENTRY_DSN", "") if telemetria_ativada else "",
+        LABEL_STUDIO_COLLECT_ANALYTICS="true" if telemetria_ativada else "false",
         LABEL_STUDIO_FEATURE_FLAGS_OFFLINE="true",
         LABEL_STUDIO_LATEST_VERSION_CHECK="false",
         LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED="true",

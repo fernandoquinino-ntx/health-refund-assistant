@@ -28,7 +28,8 @@
 - **OpenAI SDK:** comunicação com API compatível com GPT-6 Luna.
 - **Requests:** chamadas HTTP ao servidor local ou APIs.
 - **Sentry:** ferramenta de monitoramento e telemetria. Neste projeto ela é
-  desativada no Label Studio local por privacidade.
+  desativada por padrão no Label Studio local por privacidade. Para ativar,
+  defina `LABEL_STUDIO_TELEMETRIA=true` e informe explicitamente os DSNs.
 - **Make:** executor simples de tarefas, usando o Makefile.
 - **Dev Container/Codespaces:** ambiente Linux reproduzível para o projeto.
 

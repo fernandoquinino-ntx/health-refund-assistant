@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "src/extension/**"
-      - "src/treinamento_visual/scripts/build_extension.sh"
+      - "src/toolbox/operacoes.py"
       - ".github/workflows/build_extension.yml"
   pull_request:
   workflow_dispatch:

@@ -76,7 +76,7 @@ dependências e encaminha a porta 8501. Para instalação local:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements/base.txt
 ```
 
 Configure `OPENAPI_TOKEN` no ambiente ou como segredo do Codespaces. O código
@@ -86,14 +86,32 @@ do provedor configurado. O nome de um modelo usado no Copilot não garante acess
 ao mesmo identificador pela API.
 
 ```bash
-.venv/bin/streamlit run app.py
+make run
 ```
 
-Abra a porta 8501 no navegador. Selecione uma exportação, anexe um PDF e envie uma
-pergunta no chat. As opções de prompts e data de referência ficam na barra lateral.
-Os [prompts Markdown versionados](prompts/prompt_library.md) podem ser escolhidos
-separadamente para extração, revisão, estimativa e resposta. As versões selecionadas
-ficam nas evidências da última análise, não em um histórico de execução de testes.
+Abra a porta 8501 no navegador. Converse normalmente e anexe uma nota PDF/imagem
+e, quando necessário, uma exportação JSON do plano.
+
+Comandos resumidos:
+
+```bash
+make help
+make setup
+make test
+make test-agent
+make ingest
+make prepare-tasks
+make label-studio
+make build-dataset
+make check-dataset
+make train-mac
+make convert
+make build-extension
+make clean
+```
+
+Os grupos de dependências ficam em [`requirements/`](requirements/). O Makefile
+centraliza ambientes, testes, OCR, Label Studio, treinamento, conversão e build.
 
 ## Memória e privacidade
 
@@ -128,7 +146,7 @@ montagem do dataset, validação, treino LoRA no Mac e pipeline de GitHub Action
 Os dados privados ficam em `data/treinamento/` e modelos em `models/`; ambos
 são ignorados pelo Git.
 
-Com as dependências de `requirements-treinamento.txt` instaladas no ambiente
+Com as dependências de `requirements/treinamento.txt` instaladas no ambiente
 isolado Python 3.12, coloque seus PDFs ou imagens JPG/PNG em
 `data/treinamento/entrada/` e execute:
 
@@ -176,7 +194,7 @@ páginas, não suas imagens. O iniciador configura o serviço local de arquivos
 com a raiz `data/treinamento/paginas/`.
 
 O conversor GGUF usa o ambiente Python 3.12 separado `.venv-conversao/`,
-com dependências fixadas em `requirements-conversao.txt`. O clone ignorado
+com dependências fixadas em `requirements/conversao.txt`. O clone ignorado
 `tools/llama.cpp/` está na revisão
 `a8ad690ca9239ea35db4de47e00cf632d01895fd`; use essa revisão ao recriá-lo.
 Para verificar a ajuda do conversor a partir da raiz do projeto:

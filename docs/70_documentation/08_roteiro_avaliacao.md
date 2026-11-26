@@ -11,7 +11,7 @@ os dados de referência ficam em JSON separado e nunca são enviados ao modelo.
   ```bash
   python3 -m venv .venv
   source .venv/bin/activate
-  python -m pip install -r requirements.txt
+  python -m pip install -r requirements/base.txt
   ```
 
 - O processamento VLM usa por padrão o identificador `gpt-6-luna`, cuja

@@ -124,7 +124,7 @@ Para reproduzir estes testes:
 
 ```bash
 # Instalar dependências
-pip install -r requirements.txt
+pip install -r requirements/base.txt
 
 # Executar fixtures sintéticas (gera C01–C15)
 python scripts/gerar_fixtures_sinteticas.py

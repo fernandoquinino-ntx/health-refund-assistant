@@ -116,7 +116,7 @@ python3 -m venv venv
 source venv/bin/activate  # macOS/Linux
 # ou: venv\Scripts\activate  # Windows
 
-pip install -r requirements.txt
+pip install -r requirements/base.txt
 ```
 
 ### 4. Gerar Fixtures Sintéticas (opcional, já incluídas)

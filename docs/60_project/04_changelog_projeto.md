@@ -13,6 +13,9 @@ detalhes de cada commit.
 
 ### Adicionado
 
+- Dependências organizadas em `requirements/` por ambiente e `Makefile` com
+  comandos para setup, testes, ingestão, labels, treino, conversão, extensão e limpeza.
+
 - UI conversacional do assistente com estados da tarefa, anexos naturais,
   solicitação progressiva de documento/exportação e documentação dos casos de uso.
 

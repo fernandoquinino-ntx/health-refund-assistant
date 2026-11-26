@@ -112,7 +112,7 @@
 #### 5.3 Codespaces Pronto
 - [x] `.devcontainer/devcontainer.json` configurado
 - [x] Python 3.12 + GPT-6 Luna + extensões Copilot
-- [x] Post-create automático: `pip install -r requirements.txt && python scripts/gerar_fixtures_sinteticas.py`
+- [x] Post-create automático: `make setup-codespace`
 - [x] Forward port 8501 (Streamlit)
 
 #### 5.4 Sistema de Rastreamento de Testes
@@ -173,7 +173,7 @@ health-refund-assistant-entrega.zip (202 KB)
 ├── .devcontainer/
 │   └── devcontainer.json (Codespaces pronto)
 ├── .env.example
-├── requirements.txt
+├── requirements/
 └── .gitignore (Atualizado)
 ```
 

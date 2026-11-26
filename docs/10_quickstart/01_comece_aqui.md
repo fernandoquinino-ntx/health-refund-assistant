@@ -8,7 +8,7 @@ Na raiz do repositório, com Python 3.10 ou superior:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements/base.txt
 ```
 
 Configure `OPENAPI_TOKEN` no ambiente ou como segredo do Codespaces, sem

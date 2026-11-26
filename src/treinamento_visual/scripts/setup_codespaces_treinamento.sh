@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
 
 python -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements/base.txt
 
 python -m venv .venv-treinamento
-.venv-treinamento/bin/python -m pip install -r requirements-treinamento.txt
+.venv-treinamento/bin/python -m pip install -r requirements/treinamento.txt
 
 mkdir -p models
 if [[ ! -f models/base-smol/config.json ]]; then
@@ -24,7 +24,7 @@ fi
 
 if [[ ! -x .venv-conversao/bin/python ]]; then
   python -m venv .venv-conversao
-  .venv-conversao/bin/python -m pip install -r requirements-conversao.txt
+  .venv-conversao/bin/python -m pip install -r requirements/conversao.txt
 fi
 
 if [[ ! -d tools/llama.cpp/.git ]]; then

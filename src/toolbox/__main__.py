@@ -54,7 +54,20 @@ def main() -> int:
         from .operacoes import converter_modelo as executar
     else:
         from .operacoes import start_assistant as executar
-    resultado = executar(args.argumentos)
+    if args.comando in {
+        "setup_app",
+        "setup_training",
+        "setup_conversion",
+        "setup_label",
+        "setup_codespace",
+        "build_extension",
+        "start_local_vlm",
+        "start_assistant",
+        "converter_modelo",
+    }:
+        resultado = executar()
+    else:
+        resultado = executar(args.argumentos)
     return resultado if resultado is not None else 0
 
 

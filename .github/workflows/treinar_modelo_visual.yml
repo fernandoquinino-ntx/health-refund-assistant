@@ -28,7 +28,7 @@ jobs:
       - name: Instalar dependencias do treinamento
         run: python -m pip install -r requirements/treinamento-ci.txt
       - name: Confirmar consentimento e treino
-        run: python -m treinamento_visual.train.train_huggingface --dry-run
+        run: PYTHONPATH=src python -m treinamento_visual.train.train_huggingface --dry-run
       - name: Executar treino LoRA curto
         run: |
           PYTHONPATH=src python -m treinamento_visual.train.train_huggingface \

@@ -7,6 +7,11 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.4.2**: correções da esteira GitHub Actions e da toolbox. A operação
+  `build_extension` recebe corretamente nenhum argumento quando chamada pelo
+  CLI, o workflow de treino usa `PYTHONPATH=src` e foi adicionado teste de
+  regressão para o dispatch. Todos os 139 testes locais passaram.
+
 - **0.4.1**: autenticação local baseada em arquivo com usuário padrão de teste
   `Fernando Pimenta Quinino` e regras D-2/365 ativadas conforme a definição
   operacional acordada. D-2 exige D-2 dias em relação à importação e cobertura
@@ -177,7 +182,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.4.1` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.4.2` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

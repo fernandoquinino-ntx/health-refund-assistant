@@ -149,24 +149,11 @@ feature/usuario_nome/descricao_trabalho
   └── feature/maria/documentacao_seguranca
 ```
 
-### Changelog Automático
-Cada branch deve ter `CHANGELOG_BRANCH.md`:
-```markdown
-# Changelog - feature/usuario_nome/descricao
-
-## 2026-11-25
-- Criado branch às 19:30
-- Trabalho: Implementar sistema X
-
-## 2026-11-26
-- 10:30 - Iniciado desenvolvimento
-- 15:00 - Teste C01 passando
-- 18:00 - Code review iniciado
-
-## 2026-11-27
-- 09:00 - Ajustes conforme feedback
-- 11:00 - Merge com main
-```
+### Changelog e versões
+Registre alterações relevantes em
+[`docs/60_project/04_changelog_projeto.md`](./docs/60_project/04_changelog_projeto.md),
+na seção **Não lançado**, e siga a política SemVer documentada. Não há changelog
+por branch criado automaticamente; não invente releases, tags ou resultados.
 
 ### Rastreamento de Testes
 Criar `TEST_EXECUTION_LOG.csv`:
@@ -241,7 +228,7 @@ grep -r "C0" docs/ | grep -v "C01\|C02\|C03\|C04\|C05\|C06\|C07\|C08\|C09\|C10\|
 
 ### Ao Iniciar Trabalho
 1. Criar branch com seu nome: `feature/nome_usuario/descricao`
-2. Criar `CHANGELOG_BRANCH.md` no raiz da branch
+2. Registrar mudanças relevantes no changelog do projeto em **Não lançado**
 3. Criar `TEST_EXECUTION_LOG.csv` conforme executa testes
 4. Manter `docs/index.md` atualizado com suas mudanças
 
@@ -254,7 +241,7 @@ grep -r "C0" docs/ | grep -v "C01\|C02\|C03\|C04\|C05\|C06\|C07\|C08\|C09\|C10\|
 
 ### Comunicação com Grupo
 - Atualizar `TEST_EXECUTION_LOG.csv` DURANTE o trabalho (não depois)
-- Postar updates em `CHANGELOG_BRANCH.md` diariamente
+- Manter o changelog do projeto atualizado conforme mudanças relevantes
 - Gerar `REPORT_FASE_X.md` ao finalizar fase
 
 ---

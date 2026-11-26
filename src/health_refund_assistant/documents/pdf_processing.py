@@ -9,8 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from ..json_contracts import validar_contrato_json
-from ..paths import (
+from ..core.json_contracts import validar_contrato_json
+from ..core.paths import (
     FAILED_DIR,
     INCOMING_DIR,
     NOTES_STATE_PATH,

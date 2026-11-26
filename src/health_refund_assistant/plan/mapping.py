@@ -9,10 +9,10 @@ from urllib.parse import urlparse
 
 from openai import OpenAI
 
-from ..json_contracts import contexto_schema_para_prompt, validar_contrato_json
+from ..core.json_contracts import contexto_schema_para_prompt, validar_contrato_json
 from ..documents.vlm_extractor import OPENAI_TOKEN_ENV
 from .plan_exports import load_selected_exports
-from ..paths import CONFIG_DIR, PROMPTS_DIR
+from ..core.paths import CONFIG_DIR, PROMPTS_DIR
 from .reconciliation import (
     DEFAULT_MAPPING,
     DEFAULT_NOTES,
@@ -24,7 +24,7 @@ from .reconciliation import (
 )
 
 
-DEFAULT_PROMPT = PROMPTS_DIR / "reembolso_status" / "v1.0.md"
+DEFAULT_PROMPT = PROMPTS_DIR / "reembolso_status" / "v1.1.md"
 DEFAULT_PROPOSAL = CONFIG_DIR / "mapeamento_reembolsos.proposta.json"
 DEFAULT_BASE_URL = "https://api.openai.com/v1"
 DEFAULT_MODEL = "gpt-6-luna"
@@ -167,6 +167,7 @@ def build_proposal(
     model: str,
     base_url: str,
     timeout: float,
+    prompt_version: str | None = None,
 ) -> Dict[str, Any]:
     schemas = extract_schemas(notes_document, portal_document, active_mapping)
     token = os.getenv(OPENAI_TOKEN_ENV)
@@ -191,11 +192,6 @@ def build_proposal(
                 "role": "system",
                 "content": (
                     f"{prompt_com_schema}\n\n"
-                    "Retorne este contrato JSON: "
-                    '{"notes":{"fields":{...}},"portal":{"fields":{...}},'
-                    '"caveats":["..."]}. Use exatamente estas chaves canônicas: '
-                    f"notes={list(REQUIRED_FIELDS['notes'])}; "
-                    f"portal={list(REQUIRED_FIELDS['portal'])}. "
                     "Cada valor de campo deve ser um caminho de campo existente "
                     "no respectivo schema, uma lista de caminhos candidatos ou null. "
                     "Os caminhos são relativos ao objeto de resultado da nota ou "
@@ -229,7 +225,7 @@ def build_proposal(
     result["mapping_method"] = {
         "type": "local_model_proposal",
         "model": model,
-        "prompt_version": "v1.0",
+        "prompt_version": prompt_version,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "human_review_required": True,
     }
@@ -266,6 +262,7 @@ def main() -> None:
         args.model,
         args.base_url,
         args.timeout,
+        prompt_version=args.prompt.stem if re.fullmatch(r"v\d+\.\d+", args.prompt.stem) else None,
     )
     write_json(args.saida, proposal)
     print(f"Proposta validada salva em {args.saida}; revise antes de ativá-la.")

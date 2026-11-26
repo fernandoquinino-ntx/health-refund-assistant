@@ -149,29 +149,29 @@ class AvaliarCasosTests(unittest.TestCase):
                 )
             gold_path.write_text(json.dumps(gold), encoding="utf-8")
             extractor = self._mock_extractor([100.0 + index for index in range(15)])
-            extractor.prompt_version = "v4.0"
-            extractor.extrair_dados_nf_visual.side_effect = outputs
-
-            with (
-                patch("scripts.case_evaluation.VLMExtractor", return_value=extractor),
-                patch(
-                    "scripts.case_evaluation.converter_primeira_pagina_pdf_base64",
-                    return_value="imagem",
-                ),
-            ):
-                report = executar_avaliacao(
-                    cases_path,
-                    gold_path,
-                    documents,
-                    report_path,
-                    prompt_version="v4.0",
-                )
-
-        self.assertTrue(report["resumo"]["aprovado"])
-        self.assertEqual(
-            set(report["resultados"][0]["campos"]),
-            {"valor_total", "data_atendimento", "nome_profissional"},
-        )
+            for version in ("v4.0", "v4.1"):
+                with self.subTest(version=version):
+                    extractor.prompt_version = version
+                    extractor.extrair_dados_nf_visual.side_effect = outputs
+                    with (
+                        patch("scripts.case_evaluation.VLMExtractor", return_value=extractor),
+                        patch(
+                            "scripts.case_evaluation.converter_primeira_pagina_pdf_base64",
+                            return_value="imagem",
+                        ),
+                    ):
+                        report = executar_avaliacao(
+                            cases_path,
+                            gold_path,
+                            documents,
+                            report_path,
+                            prompt_version=version,
+                        )
+                    self.assertTrue(report["resumo"]["aprovado"])
+                    self.assertEqual(
+                        set(report["resultados"][0]["campos"]),
+                        {"valor_total", "data_atendimento", "nome_profissional"},
+                    )
 
     def test_suite_with_fifteen_successful_cases_can_pass(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -8,7 +8,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Dict, Iterable, Tuple
 
-from ..json_contracts import validar_contrato_json
+from ..core.json_contracts import validar_contrato_json
 from .reconciliation import load_claims, parse_date, reconcile
 
 

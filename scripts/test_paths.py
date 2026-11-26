@@ -1,6 +1,6 @@
 """Caminhos dos dados, contratos e relatórios usados nas avaliações."""
 
-from health_refund_assistant.paths import DATA_DIR, JSON_ROOT
+from health_refund_assistant.core.paths import DATA_DIR, JSON_ROOT
 
 TEST_FIXTURES_DIR = JSON_ROOT / "tests" / "templates"
 SYNTHETIC_DATA_DIR = JSON_ROOT / "tests" / "synthetic"

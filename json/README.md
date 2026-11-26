@@ -2,7 +2,7 @@
 
 Todos os JSONs mantidos pela aplicação ficam centralizados aqui, separados por
 processo. Os caminhos são definidos em
-[`src/health_refund_assistant/paths.py`](../src/health_refund_assistant/paths.py).
+[`src/health_refund_assistant/core/paths.py`](../src/health_refund_assistant/core/paths.py).
 
 ## Estrutura
 
@@ -40,10 +40,10 @@ json/
    - `evaluation/schemas/` → Avaliação de modelos
    - `tests/schemas/` → Dados de teste
 
-2. **Código carrega dinamicamente** via `paths.py`:
+2. **Código carrega dinamicamente** via `core/paths.py`:
    ```python
-   from health_refund_assistant.paths import resolve_schema
-   from health_refund_assistant.json_contracts import carregar_schema_json
+   from health_refund_assistant.core.paths import resolve_schema
+   from health_refund_assistant.core.json_contracts import carregar_schema_json
    
    schema = carregar_schema_json("vlm_extraction.schema.json")
    # Mapeia automaticamente para json/extraction/schemas/vlm_extraction.schema.json

@@ -28,7 +28,7 @@ Consulte [payment_estimate.schema.md](./payment_estimate.schema.md); o código
 confere os valores antes de usá-los.
 
 ```python
-from health_refund_assistant.json_contracts import carregar_schema_json, validar_contrato_json
+from health_refund_assistant.core.json_contracts import carregar_schema_json, validar_contrato_json
 
 # Carregar schema
 schema = carregar_schema_json("plan_export.schema.json")

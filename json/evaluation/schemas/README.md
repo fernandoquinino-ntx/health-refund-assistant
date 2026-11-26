@@ -20,7 +20,7 @@ Contrato para relatório de desempenho do modelo na extração de dados.
 ## Integração com Código
 
 ```python
-from health_refund_assistant.json_contracts import carregar_schema_json
+from health_refund_assistant.core.json_contracts import carregar_schema_json
 
 # Carregar schema para validação
 schema = carregar_schema_json("vlm_evaluation_report.schema.json")

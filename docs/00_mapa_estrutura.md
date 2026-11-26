@@ -8,6 +8,9 @@
 
 ## 🎯 Ordem de Leitura Recomendada
 
+Para alterações e versões, consulte o
+[changelog do projeto](60_project/04_changelog_projeto.md).
+
 ### Para NOVO USUÁRIO (15 min)
 1. **[01_leia_primeiro.md](/01_leia_primeiro.md)** — Bem-vindo ao projeto
 2. **[docs/10_quickstart/01_comece_aqui.md](/docs/10_quickstart/01_comece_aqui.md)** — Setup rápido
@@ -70,7 +73,8 @@ health-refund-assistant/
     ├── 60_project/
     │   ├── 01_caderno_projeto.md     # Projeto formal (R1-R5)
     │   ├── 02_apresentacao_grupo.md  # Apresentação 09/12
-    │   └── 03_roadmap_ai_agent.md    # Roadmap Fase 1-3
+    │   ├── 03_roadmap_ai_agent.md    # Roadmap Fase 1-3
+    │   └── 04_changelog_projeto.md   # Alterações e versões
     │
     └── 70_documentation/
         ├── 01_index.md               # Hub central

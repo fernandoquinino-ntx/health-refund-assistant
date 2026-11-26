@@ -7,7 +7,7 @@ from typing import Any
 from openai import OpenAI
 
 from ..documents.vlm_extractor import DEFAULT_MODEL, DEFAULT_OPENAI_BASE_URL, OPENAI_BASE_URL_ENV, OPENAI_TOKEN_ENV
-from ..json_contracts import carregar_schema_json, validar_contrato_json
+from ..core.json_contracts import carregar_schema_json, contexto_schema_para_prompt, validar_contrato_json
 
 
 def request_structured_json(
@@ -29,7 +29,10 @@ def request_structured_json(
     response = client.chat.completions.create(
         model=DEFAULT_MODEL,
         messages=[
-            {"role": "system", "content": prompt},
+            {
+                "role": "system",
+                "content": f"{prompt.rstrip()}\n\n{contexto_schema_para_prompt(schema_name)}",
+            },
             {"role": "user", "content": content},
         ],
         response_format={

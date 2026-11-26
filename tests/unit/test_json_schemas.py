@@ -5,10 +5,11 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from health_refund_assistant.json_contracts import validar_contrato_json
-from health_refund_assistant.paths import (
+from health_refund_assistant.core.json_contracts import validar_contrato_json
+from health_refund_assistant.core.paths import (
     CONFIG_DIR,
     JSON_ROOT,
+    PROJECT_ROOT,
     SCHEMA_LOCATIONS,
 )
 from health_refund_assistant.plan.reconciliation import DEFAULT_MAPPING, load_mapping
@@ -16,6 +17,9 @@ from scripts.test_paths import SYNTHETIC_DATA_DIR, TEST_FIXTURES_DIR, TEST_SCHEM
 
 
 class JsonSchemasTests(unittest.TestCase):
+    def test_project_root_resolves_correctly_from_core(self):
+        self.assertEqual(PROJECT_ROOT, Path(__file__).resolve().parents[2])
+
     def test_all_project_json_schemas_are_valid_draft_2020_12(self):
         schemas = []
         for schema_path in (*SCHEMA_LOCATIONS.values(), *TEST_SCHEMAS.values()):

@@ -1,4 +1,4 @@
-"""Localiza e carrega versões de prompts Markdown."""
+"""Localiza e carrega as versões de prompts Markdown das tarefas."""
 
 import re
 from pathlib import Path

@@ -9,11 +9,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from health_refund_assistant.documents.pdf_converter import converter_primeira_pagina_pdf_base64
-from health_refund_assistant.json_contracts import validar_contrato_json
+from health_refund_assistant.core.json_contracts import validar_contrato_json
 from health_refund_assistant.documents.vlm_extractor import (
     DEFAULT_MODEL,
     EXTRACTION_FIELDS as EXTRACTION_FIELDS_V3,
     EXTRACTION_FIELDS_V4,
+    VERSOES_SCHEMA_V4,
     VLMExtractor,
 )
 
@@ -257,7 +258,7 @@ def executar_avaliacao(
             obtido = extrator.extrair_dados_nf_visual(imagem)
             meta = obtido.get("_meta", {})
             esperado = gabarito[caso_id]["campos"]
-            if extrator.prompt_version != "v4.0":
+            if extrator.prompt_version not in VERSOES_SCHEMA_V4:
                 esperado = {
                     campo: valor
                     for campo, valor in esperado.items()

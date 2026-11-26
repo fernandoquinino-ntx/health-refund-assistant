@@ -273,7 +273,7 @@ class ConciliarReembolsosTests(unittest.TestCase):
 
         with patch("health_refund_assistant.plan.mapping.OpenAI") as openai_client:
             openai_client.return_value.chat.completions.create.return_value = response
-            build_proposal(
+            result = build_proposal(
                 notes,
                 portal,
                 self.mapping,
@@ -281,8 +281,10 @@ class ConciliarReembolsosTests(unittest.TestCase):
                 "modelo-teste",
                 "http://localhost/v1",
                 10.0,
+                prompt_version="v1.1",
             )
 
+        self.assertEqual(result["mapping_method"]["prompt_version"], "v1.1")
         system_prompt = openai_client.return_value.chat.completions.create.call_args.kwargs[
             "messages"
         ][0]["content"]
@@ -293,6 +295,7 @@ class ConciliarReembolsosTests(unittest.TestCase):
         self.assertIn('"$defs"', system_prompt)
         self.assertIn("Template JSON correspondente", system_prompt)
         self.assertIn('"provider": null', system_prompt)
+        self.assertNotIn('{"notes":{"fields":{...}}', system_prompt)
 
     def test_remote_mapping_requires_explicit_api_credential(self):
         notes = {"pdfs": {"nota.pdf": {"resultado": {"prestador": "Clínica"}}}}

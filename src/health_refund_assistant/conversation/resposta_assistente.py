@@ -3,7 +3,7 @@
 import json
 from typing import Any, Sequence
 
-from ..prompt_library import carregar_prompt
+from ..core.prompt_library import carregar_prompt
 from .structured_ai import request_structured_json
 
 

@@ -156,6 +156,16 @@ class VLMExtractorTests(unittest.TestCase):
         self.assertIsNone(normalized["data_atendimento"])
         self.assertIsNone(normalized["nome_profissional"])
 
+    def test_v41_loads_schema_from_json_without_embedded_format(self):
+        with patch.dict(os.environ, {"OPENAPI_TOKEN": "test-token"}):
+            extractor = VLMExtractor(prompt_version="v4.1")
+        extractor.client = Mock()
+        extractor._solicitar_resposta("abc", "image/jpeg", 0.0)
+        call = extractor.client.chat.completions.create.call_args.kwargs
+        self.assertNotIn('"numero_documento":', extractor.system_prompt)
+        self.assertIn('"numero_documento": null', call["messages"][0]["content"])
+        self.assertEqual(call["response_format"]["json_schema"]["schema"], EXTRACTION_SCHEMA_V4)
+
     def test_schema_unsupported_falls_back_once_and_caches_capability(self):
         response = Mock()
         unsupported = BadRequestError(

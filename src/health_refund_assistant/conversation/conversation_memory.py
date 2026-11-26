@@ -6,8 +6,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from ..paths import CONVERSATION_STATE_PATH
-from ..json_contracts import validar_contrato_json
+from ..core.paths import CONVERSATION_STATE_PATH
+from ..core.json_contracts import validar_contrato_json
 
 
 MAX_MESSAGES = 50

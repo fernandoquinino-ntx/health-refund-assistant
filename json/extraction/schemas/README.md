@@ -26,8 +26,9 @@ Contrato para extração de dados com 11 campos (versão 4.0+).
 **Campos:** 11 campos, incluindo `data_atendimento` adicional para melhor rastreamento.
 
 **Usado por:**
-- [vlm_extractor.py](/src/health_refund_assistant/vlm_extractor.py) (prompt v4.0)
+- [vlm_extractor.py](/src/health_refund_assistant/documents/vlm_extractor.py) (prompts v4.0 e v4.1)
 - [prompts/vlm_extractor/v4.0.md](/prompts/vlm_extractor/v4.0.md)
+- [prompts/vlm_extractor/v4.1.md](/prompts/vlm_extractor/v4.1.md)
 
 **Referência de documentação:** [vlm_extraction_v4.schema.md](/json/extraction/schemas/vlm_extraction_v4.schema.md)
 
@@ -38,8 +39,8 @@ Contrato para extração de dados com 11 campos (versão 4.0+).
 Esquemas são carregados dinamicamente em `paths.py` via `resolve_schema(nome)`:
 
 ```python
-from health_refund_assistant.paths import resolve_schema
-from health_refund_assistant.json_contracts import carregar_schema_json
+from health_refund_assistant.core.paths import resolve_schema
+from health_refund_assistant.core.json_contracts import carregar_schema_json
 
 schema = carregar_schema_json("vlm_extraction.schema.json")
 # Carregamento: JSON_ROOT / "extraction" / "schemas" / "vlm_extraction.schema.json"
@@ -48,7 +49,7 @@ schema = carregar_schema_json("vlm_extraction.schema.json")
 Contexto completo é incluído na mensagem ao modelo:
 
 ```python
-from health_refund_assistant.json_contracts import contexto_schema_para_prompt
+from health_refund_assistant.core.json_contracts import contexto_schema_para_prompt
 
 contexto = contexto_schema_para_prompt("vlm_extraction.schema.json")
 # Retorna: descrição, schema completo, e template JSON de exemplo

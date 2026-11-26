@@ -13,15 +13,47 @@ Este arquivo define as regras que **TODO o Copilot DEVE seguir** automaticamente
 
 ---
 
+## Organização e manutenção contínua
+
+- Mantenha este arquivo e `.github/copilot-instructions.md` alinhados quando o
+  usuário estabelecer ou alterar padrões para este repositório. Atualize também
+  os índices e a documentação diretamente afetada por mudanças de estrutura.
+- Mantenha `docs/60_project/04_changelog_projeto.md` atualizado em cada alteração
+  relevante, inicialmente em **Não lançado**. Siga a política SemVer registrada
+  ali; não invente releases, tags, datas ou resultados de testes.
+- Mantenha a aplicação em `src/health_refund_assistant/`: módulos compartilhados
+  em `core/`, tarefas em `conversation/`, documentos em `documents/`, plano em
+  `plan/` e interface em `web/`. `app.py` é o ponto de entrada; testes ficam em
+  `tests/` e ferramentas de avaliação em `scripts/`, não no núcleo.
+- Inicie cada arquivo de código com uma descrição breve do que faz e da etapa do
+  processo, usando a forma apropriada da linguagem, como docstring em Python.
+- JSONs ficam em `json/` por processo; registre caminhos em `core/paths.py` e
+  documente contratos ao lado dos schemas. Os prompts versionados ficam em
+  `prompts/`: não sobrescreva versões históricas. O Python carrega o prompt e o
+  schema correspondente, gera o modelo JSON e valida a resposta.
+- Defina tarefas de IA com entrada, saída, guardrails e conferência. Não trate
+  validação de schema como prova de verdade, segurança, pagamento ou elegibilidade.
+- Não afirme que API, modelo, Codespaces, testes ou resultados reais foram
+  verificados sem executá-los. Nunca invente saídas, relatórios ou logs de testes.
+  Não versione credenciais, exportações pessoais ou memória de conversas.
+- A extensão carregável está em `extension/`; `src/extension/` ainda precisa de
+  ajustes antes de substituir a versão carregável. Não apague nenhuma das duas
+  sem validar a substituta e preservar o comportamento.
+
+---
+
 ## 1️⃣ PADRÃO DE NOMENCLATURA
 
 ### Arquivos e Pastas
 - **OBRIGATÓRIO:** `snake_case` (nomes_compostos_minusculos)
-- **OBRIGATÓRIO:** Números ordinais (NN_) para ordenação
-  - Raiz: `01_`, `02_`, etc.
+- **DOCUMENTAÇÃO:** Números ordinais (NN_) para ordenação
+  - Documentos gerais ficam em `docs/`, por categoria, com índice e ordem de leitura.
   - Categorias: `10_quickstart/`, `20_process/`, etc.
   - Dentro de categorias: `01_`, `02_`, `03_`, etc.
-- **NUNCA:** MAIÚSCULA, camelCase, PascalCase, espaços em nomes
+- **PYTHON:** `snake_case` sem prefixos numéricos em módulos e pacotes.
+- **EXCEÇÕES:** `README.md`, arquivos de instrução do agente e nomes exigidos por
+  ferramentas, como `.github/copilot-instructions.md` e `manifest.json`.
+- **NUNCA:** camelCase, PascalCase ou espaços nos demais nomes
 - **NUNCA:** Arquivos como `LEIA_PRIMEIRO.md`, `INDEX.md`, `README_ARQUIVO.md`
 
 ### Exemplo Correto
@@ -55,8 +87,10 @@ Documentação:         temperature=0.4, top_p=0.85   (clareza + estrutura)
 ```
 
 ### Validação
-- [ ] Verificar se está usando `GPT-6 Luna` em TODOS os documentos
+- [ ] Identificar o modelo configurado sem alterar registros históricos de outros modelos
 - [ ] Verificar se temperatura/top_p correspondem à tarefa
+- Os parâmetros dependem da API e da tarefa; consulte o código e a compatibilidade
+  do modelo antes de afirmar que estão ativos. Eles não garantem privacidade.
 - Comando: `grep -r "gpt-4o-mini" docs/ && echo "⚠️ ATUALIZAR"`
 
 ---
@@ -132,11 +166,11 @@ Exemplo: `feature/fernando/ai-agent-memory-isolation`
 
 ### Checklist Pré-Merge
 - [ ] Nome segue padrão: `feature/nome/descricao`
-- [ ] CHANGELOG_BRANCH.md preenchido
+- [ ] Changelog do projeto atualizado
 - [ ] TEST_EXECUTION_LOG.csv atualizado
 - [ ] Arquivos em snake_case + ordinais
 - [ ] Modelos LLM = "GPT-6 Luna"
-- [ ] Testes passam: `pytest -v`
+- [ ] Testes passam: `.venv/bin/python -m unittest discover -s tests -v`
 - [ ] Sem .pyc, cache, .DS_Store
 
 ---
@@ -144,26 +178,18 @@ Exemplo: `feature/fernando/ai-agent-memory-isolation`
 ## 6️⃣ RASTREAMENTO DE TESTES (Grupo)
 
 ### Arquivo: TEST_EXECUTION_LOG.csv
+Exemplo de formato, não resultados reais:
 ```csv
 data,hora,usuario,teste,metodo,resultado,tempo_segundos
 2026-11-25,19:50,fernando,test_vlm_extractor,pytest,PASS,2.3
 2026-11-25,19:51,fernando,test_assessment,pytest,PASS,1.8
 ```
 
-### Arquivo: CHANGELOG_BRANCH.md (cada branch)
-```
-# CHANGELOG - feature/fernando/ai-agent
+### Changelog do projeto
 
-## 2026-11-25 19:50 - Fernando
-- Implementar memory isolation no AI Agent
-- Status: IN_PROGRESS
-- Testes: test_memory_isolation.py PASS
-
-## 2026-11-25 20:00 - Fernando
-- Finalizar documentação
-- Status: READY_FOR_REVIEW
-- Testes: 11/11 PASS
-```
+Registre alterações em `docs/60_project/04_changelog_projeto.md`, na seção
+**Não lançado**, e siga sua política SemVer. Um registro por branch não é
+criado automaticamente.
 
 ---
 
@@ -208,7 +234,7 @@ grep -r "gpt-6-luna" docs/ && echo "⚠️ USE 'GPT-6 Luna' em docs"
 find . -name "__pycache__" -o -name "*.pyc" -o -name ".pytest_cache"
 
 # 5. Testes
-pytest -v
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
 ---
@@ -245,7 +271,7 @@ pytest -v
 2. ✅ Use SEMPRE: `snake_case` + `NN_ordinais`
 3. ✅ Use SEMPRE: `"GPT-6 Luna"` (nunca gpt-4o-mini)
 4. ✅ Coloque markdown em: `docs/NN_categoria/MM_nome.md`
-5. ✅ Execute: `pytest -v` antes de commit
+5. ✅ Execute: `.venv/bin/python -m unittest discover -s tests -v` antes de commit
 6. ✅ Valide: `grep -r "gpt-4o-mini" docs/` (deve estar vazio)
 7. ✅ Commit: `git commit -m "type: description"` (Conventional)
 8. ✅ Branch: `feature/nome/descricao`
@@ -257,4 +283,4 @@ pytest -v
 ---
 
 **Última atualização:** 2026-11-25  
-**Vigente até:** 2026-12-31 (próxima revisão esperada)
+**Revisão:** atualizar quando as preferências ou a estrutura do projeto mudarem.

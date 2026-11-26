@@ -22,7 +22,7 @@ class WebAppTests(unittest.TestCase):
 
         self.assertEqual(
             extraction_versions,
-            ["v1.0", "v1.1", "v2.0", "v3.0", "v4.0"],
+            ["v1.0", "v1.1", "v2.0", "v3.0", "v4.0", "v4.1"],
         )
         self.assertEqual(assistant_versions, ["v1.0", "v1.1"])
 
@@ -65,6 +65,7 @@ class WebAppTests(unittest.TestCase):
                 app.chat_input[0].set_value("Este pedido foi pago?").run()
                 self.assertFalse(app.exception)
                 self.assertEqual(handler.call_args.args[0].pdf_bytes, b"%PDF-test")
+                self.assertEqual(handler.call_args.args[0].extraction_prompt_version, "v4.1")
                 self.assertEqual(load_conversation(path)["evidence"]["documento"]["valor_total"], 100)
                 self.assertEqual(load_conversation(path)["messages"][-1]["content"], "Não localizado.")
 

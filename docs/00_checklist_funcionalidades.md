@@ -184,8 +184,8 @@
 - `logs/TEST_EXECUTION_LOG.csv` (criado ao executar) ✅
 
 ### 5.2 Rastreamento de Versões
-- [x] CHANGELOG.md ✅
-- [x] CHANGELOG_BRANCH.md (padrão para branches) ✅
+- [x] [Changelog do projeto e política SemVer](60_project/04_changelog_projeto.md)
+- [ ] Registro individual por branch: não implementado automaticamente
 - [x] Git commit com versionamento (Conventional Commits) ✅
 
 ---

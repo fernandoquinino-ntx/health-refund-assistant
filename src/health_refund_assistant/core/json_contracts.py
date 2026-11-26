@@ -1,3 +1,5 @@
+"""Carrega, apresenta e valida contratos JSON usados pelas tarefas."""
+
 import json
 from functools import lru_cache
 from pathlib import Path
@@ -94,18 +96,17 @@ def carregar_schema_json(nome_schema: str | Path) -> dict[str, Any]:
 def contexto_schema_para_prompt(nome_schema: str) -> str:
     schema = carregar_schema_json(nome_schema)
     template = _template_do_schema(schema, schema)
-    
-    # Encontra o diretório relativo para documentação
+
     schema_path = resolve_schema(nome_schema)
-    relative_path = schema_path.relative_to(resolve_schema(nome_schema).parents[2])
-    
+    relative_path = schema_path.relative_to(schema_path.parents[2])
+
     return (
         f"Contrato carregado pela aplicação de `{relative_path}` "
         "(não dependa de acessar esse caminho):\n"
         "Schema JSON completo:\n"
         f"```json\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n```\n"
-        "Template JSON correspondente. Substitua os valores de exemplo pelos "
-        "dados encontrados e preserve as chaves:\n"
+        "Template JSON correspondente. Os valores são exemplos de formato, "
+        "não fatos; substitua-os pelos dados encontrados e preserve as chaves:\n"
         f"```json\n{json.dumps(template, ensure_ascii=False, indent=2)}\n```"
     )
 

@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from typing import Any
 
 from ..plan.reconciliation import parse_date
-from ..prompt_library import carregar_prompt
+from ..core.prompt_library import carregar_prompt
 from .structured_ai import request_structured_json
 
 

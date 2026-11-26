@@ -2,12 +2,11 @@
 
 ```text
 src/health_refund_assistant/
+├── core/          # caminhos, contratos JSON e biblioteca de prompts compartilhados
 ├── conversation/  # orquestração do assistente e memória individual
 ├── documents/     # PDF, processamento e extração VLM
 ├── plan/          # importação da extensão, avaliação e conciliação
-├── web/           # interface Streamlit
-├── json_contracts.py
-└── paths.py
+└── web/           # interface Streamlit
 scripts/           # avaliação real, geração de fixtures e rastreamento
 tests/
 ├── unit/          # testes unitários
@@ -16,6 +15,10 @@ tests/
 
 Os pacotes Python usam nomes descritivos em `snake_case`, sem prefixos numéricos:
 isso permite imports comuns e execução com `python -m`.
+Os módulos compartilhados ficam em `core/`; por exemplo,
+`health_refund_assistant.core.json_contracts` e
+`health_refund_assistant.core.paths`. Os antigos caminhos de importação desses
+módulos não são mantidos.
 
 ## Fluxo principal
 

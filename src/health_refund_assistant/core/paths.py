@@ -1,7 +1,9 @@
+"""Define caminhos do projeto e a localização dos contratos JSON."""
+
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 JSON_ROOT = PROJECT_ROOT / "json"
 CONFIG_DIR = JSON_ROOT / "config"
 DATA_DIR = PROJECT_ROOT / "data"

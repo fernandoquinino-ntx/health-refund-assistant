@@ -58,6 +58,11 @@ contratuais verificadas, a elegibilidade é **não é possível avaliar**.
 | Proposta de mapeamento | Estrutura dos dados, sem seus valores | Proposta JSON | Schema e caminhos existentes; revisão humana |
 | Avaliação sintética | PDFs, casos e gabarito | Relatório e estado por caso | Validação de entrada e relatório; compara extração, não elegibilidade |
 
+Em cada chamada de IA, o Python combina o prompt da tarefa com o schema JSON do
+diretório correspondente em `json/` e um modelo gerado a partir dele. Na extração e
+nas tarefas do chat, o schema também é enviado no `response_format`, quando
+suportado; a resposta é validada localmente. Exemplos do modelo não são dados reais.
+
 Falha de API ou saída inválida interrompe a resposta do chat; não é apresentada
 como sucesso. Processamentos em lote e avaliações registram o estado por arquivo
 ou caso. Uma conversa salva antes da revisão por IA precisa de novo PDF.
@@ -111,6 +116,7 @@ Codespace tenha sido iniciado, nem que as respostas reais estejam corretas.
 
 - [Status e limitações](docs/00_status_auditoria.md)
 - [Organização do código e dos testes](docs/70_documentation/04_estrutura_projeto.md)
+- [Changelog e política de versões](docs/60_project/04_changelog_projeto.md)
 - [Arquitetura do agente](docs/50_architecture/02_ai_agent_architecture.md)
 - [Casos propostos para memória e isolamento](docs/70_documentation/06_casos_teste_memory.md)
 - [Contratos e dados JSON](json/README.md)

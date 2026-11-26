@@ -48,8 +48,8 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from ..json_contracts import validar_contrato_json
-from ..paths import (
+from ..core.json_contracts import validar_contrato_json
+from ..core.paths import (
     MAPPING_CONFIG_PATH,
     NOTES_STATE_PATH,
     PLAN_EXPORTS_DIR,

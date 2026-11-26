@@ -36,7 +36,7 @@ Contrato para gabarito (ground truth).
 ## Integração com Código
 
 ```python
-from health_refund_assistant.json_contracts import carregar_schema_json, validar_contrato_json
+from health_refund_assistant.core.json_contracts import carregar_schema_json, validar_contrato_json
 
 # Carregar schemas
 test_cases = carregar_schema_json("test_cases.schema.json")

@@ -6,6 +6,9 @@
 
 ## ⚠️ DIRETRIZES & PADRÕES (Obrigatório Ler Primeiro)
 
+👉 **[Changelog e política de versões](../60_project/04_changelog_projeto.md)**
+- Alterações ainda não lançadas e regras SemVer da aplicação.
+
 👉 **[../.copilot-guidelines.md](../.copilot-guidelines.md)** ⭐⭐⭐
 - Padrões de nomenclatura (snake_case)
 - Configuração de modelos LLM (temperatura, top_p)

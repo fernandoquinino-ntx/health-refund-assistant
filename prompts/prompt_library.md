@@ -10,12 +10,14 @@ prompts/
 │   ├── v1.1.md
 │   ├── v2.0.md
 │   ├── v3.0.md
-│   └── v4.0.md
+│   ├── v4.0.md
+│   └── v4.1.md
 ├── reembolso_assistente/
 │   ├── v1.0.md
 │   └── v1.1.md
 ├── reembolso_status/
-│   └── v1.0.md
+│   ├── v1.0.md
+│   └── v1.1.md
 ├── revisao_documental/
 │   └── v1.0.md
 └── estimativa_pagamento/
@@ -26,9 +28,17 @@ prompts/
 
 - Uma pasta por código ou componente.
 - Cada arquivo usa `vMAIOR.MENOR.md`.
-- O código carrega a maior versão numérica por padrão.
-- Uma versão específica pode ser selecionada pelo argumento `prompt_version`.
+- O extrator e a interface selecionam a maior versão numérica por padrão; o
+  mapeamento usa uma versão padrão definida no código.
+- Uma versão específica pode ser selecionada pela interface ou pelos argumentos
+  apropriados de cada comando.
 - Nunca sobrescrever uma versão publicada; criar uma nova versão para alterações.
+- O código acrescenta o schema e um modelo gerado do JSON correspondente em
+  `json/`. Os valores do modelo são ilustrativos; não devem ser tratados como fatos.
+  Versões históricas podem conter formatos ou exemplos escritos no próprio prompt
+  para preservar seu conteúdo. Para reproduzir uma comparação anterior, fixe também
+  o commit do código, pois o texto de contexto do schema é acrescentado em tempo
+  de execução e pode mudar entre commits.
 
 ## `vlm_extractor`
 
@@ -39,6 +49,7 @@ prompts/
 | v2.0 | [vlm_extractor/v2.0.md](./vlm_extractor/v2.0.md) | Dois exemplos Few-Shot completos, critérios mensuráveis de legibilidade e observação visual curta. |
 | v3.0 | [vlm_extractor/v3.0.md](./vlm_extractor/v3.0.md) | Regras compactas para modelo 7B e delimitação de conteúdo visual não confiável contra prompt injection. |
 | v4.0 | [vlm_extractor/v4.0.md](./vlm_extractor/v4.0.md) | Acrescenta data de atendimento e nome do profissional, mantendo os campos anteriores. |
+| v4.1 | [vlm_extractor/v4.1.md](./vlm_extractor/v4.1.md) | Mantém as instruções da v4.0 sem repetir o objeto JSON; o código fornece o contrato. |
 
 As versões v1.0 e v1.1 são preservadas sem edição. O extrator seleciona a versão
 mais recente por padrão, mas as comparações acadêmicas devem fixar explicitamente
@@ -56,13 +67,15 @@ cada versão para manter a mesma bateria.
   conteúdo adversarial no documento sem prejudicar a extração normal.
 - **v3.0 → v4.0:** extração explícita da data de atendimento e do nome do profissional
   deve permitir avaliar prazo e campos incompletos sem confundir emissão e atendimento.
+- **v4.0 → v4.1:** hipótese de que fornecer o formato somente pelo código mantenha
+  a extração com menos duplicação. Ainda não há resultado medido para a v4.1.
 
 ### Contrato de saída
 
 As versões v1.0 a v3.0 retornam exatamente nove campos: `numero_documento`, `prestador`,
 `cnpj_cpf_prestador`, `valor_total`, `data_emissao`, `descricao_servico`,
 `registro_profissional`, `imagem_legivel` e `observacao_visual`. A saída é validada
-no código mesmo quando a API rejeita `json_schema`. A v4.0 acrescenta
+no código mesmo quando a API rejeita `json_schema`. As versões v4.0 e v4.1 acrescentam
 `data_atendimento` e `nome_profissional`, mantendo todos os outros campos. O
 processamento usa `GPT-6 Luna` pela API OpenAI e envia a imagem do documento para esse
 serviço; não execute com dados reais sem revisar os requisitos de privacidade
@@ -70,7 +83,7 @@ aplicáveis.
 
 Os prompts v1.0–v3.0 declaram o contrato
 [`json/extraction/schemas/vlm_extraction.schema.json`](../json/extraction/schemas/vlm_extraction.schema.json);
-v4.0 declara
+v4.0 e v4.1 usam
 [`json/extraction/schemas/vlm_extraction_v4.schema.json`](../json/extraction/schemas/vlm_extraction_v4.schema.json).
 Cada documentação Markdown do schema referencia de volta as versões de prompt que o
 utilizam. O extrator carrega o arquivo correspondente pela versão, inclui o schema e
@@ -92,7 +105,7 @@ após configurar `OPENAPI_TOKEN`. Não use placares hipotéticos como evidência
 
 Os relatórios históricos do Qwen são registros de execuções anteriores e não fazem
 parte do dataset versionado. Novas execuções com OpenAI devem ser salvas em
-`json/evaluation/reports/v1.0.json` até `json/evaluation/reports/v4.0.json`. A v3.0 histórica ficou abaixo
+`json/evaluation/reports/v1.0.json` até `json/evaluation/reports/v4.1.json`. A v3.0 histórica ficou abaixo
 do limiar inicial de 85%; as execuções atuais devem ser medidas novamente com o
 modelo OpenAI.
 
@@ -112,13 +125,14 @@ quando aparecem explicitamente na imagem.
 
 | Versão | Arquivo | Status |
 |---|---|---|
-| v1.0 | [reembolso_status/v1.0.md](./reembolso_status/v1.0.md) | Atual |
+| v1.0 | [reembolso_status/v1.0.md](./reembolso_status/v1.0.md) | Histórico |
+| v1.1 | [reembolso_status/v1.1.md](./reembolso_status/v1.1.md) | Padrão; formato fornecido pelo código. |
 
 Prompt para propor o mapa entre schemas uma única vez. A entrada deve conter apenas
 nomes de campos, caminhos e tipos, sem valores dos registros.
 O comando `python -m health_refund_assistant.plan.mapping` valida os caminhos propostos e salva um
 arquivo de proposta separado; ele nunca substitui o mapeamento ativo.
-O prompt declara como contrato de resposta
+O código usa como contrato de resposta
 [`json/reconciliation/schemas/mapping_proposal.schema.json`](../json/reconciliation/schemas/mapping_proposal.schema.json);
 o código carrega e inclui o schema e um template JSON na mensagem enviada ao modelo.
 O schema e sua documentação apontam de volta para este prompt. Após validar os
@@ -135,6 +149,8 @@ caminhos, o código mescla a proposta na configuração definida por
 O assistente de resposta é independente do extrator. A interface permite escolher a
 versão de cada componente separadamente e fornece ao prompt conversacional os campos
 extraídos e os resultados calculados; não envia o gabarito do benchmark.
+Para revisão, estimativa e resposta, o Python também acrescenta ao prompt o schema
+completo e o modelo gerado, além de enviá-lo como formato de saída à API.
 Como guardrail fixo, a aplicação acrescenta a qualquer versão da resposta uma
 instrução para usar somente a estimativa validada e não analisar prazo de envio
 para pedido localizado. A versão histórica do arquivo permanece inalterada.

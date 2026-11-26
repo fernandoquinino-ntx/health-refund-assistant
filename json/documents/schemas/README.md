@@ -20,7 +20,7 @@ Contrato para armazenamento do estado de cada nota processada.
 ## Integração com Código
 
 ```python
-from health_refund_assistant.json_contracts import validar_contrato_json
+from health_refund_assistant.core.json_contracts import validar_contrato_json
 
 # Salvar estado de processamento
 dados_nota = {

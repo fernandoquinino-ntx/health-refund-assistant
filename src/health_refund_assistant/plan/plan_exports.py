@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 from zoneinfo import ZoneInfo
 
 from .assessment import ExportPeriodError, validar_periodo_exportacao
-from ..paths import PLAN_EXPORTS_DIR
+from ..core.paths import PLAN_EXPORTS_DIR
 
 
 def import_plan_export(name: str, content: bytes) -> Path:

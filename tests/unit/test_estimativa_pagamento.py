@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from health_refund_assistant.conversation.assistant import atualizar_estimativa
 from health_refund_assistant.conversation.estimativa_pagamento import estimar_pagamento
-from health_refund_assistant.json_contracts import validar_contrato_json
+from health_refund_assistant.core.json_contracts import validar_contrato_json
 
 
 def assessment(**candidate_changes):

@@ -64,8 +64,8 @@ from ..conversation.assistant import (
 )
 from ..plan.assessment import DEADLINE_DAYS, ExportPeriodError
 from ..conversation.conversation_memory import clear_conversation, load_conversation, save_conversation
-from ..paths import INCOMING_DIR, PROMPTS_DIR
-from ..prompt_library import prompt_versions
+from ..core.paths import INCOMING_DIR, PROMPTS_DIR
+from ..core.prompt_library import prompt_versions
 from ..plan.plan_exports import available_plan_exports, import_plan_export
 
 
@@ -212,9 +212,7 @@ def main() -> None:
         extraction_version = st.selectbox(
             "Prompt de extração",
             extraction_versions,
-            index=extraction_versions.index("v4.0")
-            if "v4.0" in extraction_versions
-            else len(extraction_versions) - 1,
+            index=len(extraction_versions) - 1,
         )
         assistant_version = st.selectbox(
             "Prompt do assistente",

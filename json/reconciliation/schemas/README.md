@@ -21,11 +21,11 @@ Contrato para configuração versionada de mapeamento de campos.
 ### `mapping_proposal.schema.json`
 Contrato para proposta de mapeamento automática gerada pelo modelo.
 
-**Propósito:** Estrutura de saída do prompt de proposta de mapeamento (reembolso_status/v1.0.md).
+**Propósito:** Estrutura de saída do prompt de proposta de mapeamento (reembolso_status/v1.1.md).
 
 **Usado por:**
 - [mapping.py](/src/health_refund_assistant/mapping.py) `build_proposal()`
-- [prompts/reembolso_status/v1.0.md](/prompts/reembolso_status/v1.0.md)
+- [prompts/reembolso_status/v1.1.md](/prompts/reembolso_status/v1.1.md)
 
 **Referência de documentação:** [mapping_proposal.schema.md](/json/reconciliation/schemas/mapping_proposal.schema.md)
 
@@ -49,7 +49,7 @@ Contrato para relatório final de conciliação.
 Esquemas são carregados dinamicamente:
 
 ```python
-from health_refund_assistant.json_contracts import carregar_schema_json, contexto_schema_para_prompt
+from health_refund_assistant.core.json_contracts import carregar_schema_json, contexto_schema_para_prompt
 
 config = carregar_schema_json("mapping_config.schema.json")
 proposal = carregar_schema_json("mapping_proposal.schema.json")

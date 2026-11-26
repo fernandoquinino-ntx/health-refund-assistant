@@ -41,14 +41,15 @@ import time
 from typing import Any, Dict, Optional
 from openai import APIConnectionError, APITimeoutError, BadRequestError, OpenAI
 
-from ..json_contracts import carregar_schema_json, contexto_schema_para_prompt, validar_contrato_json
-from ..prompt_library import carregar_prompt
+from ..core.json_contracts import carregar_schema_json, contexto_schema_para_prompt, validar_contrato_json
+from ..core.prompt_library import carregar_prompt
 
 OPENAI_TOKEN_ENV = "OPENAPI_TOKEN"
 OPENAI_BASE_URL_ENV = "OPENAI_BASE_URL"
 DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
 DEFAULT_MODEL = "gpt-6-luna"
 PROMPT_COMPONENT = "vlm_extractor"
+VERSOES_SCHEMA_V4 = frozenset({"v4.0", "v4.1"})
 
 
 def _schema_api_corpo(nome_schema: str) -> Dict[str, Any]:
@@ -230,17 +231,17 @@ class VLMExtractor:
         return resposta
 
     def _campos_prompt_atual(self) -> tuple[str, ...]:
-        if self.prompt_version == "v4.0":
+        if self.prompt_version in VERSOES_SCHEMA_V4:
             return EXTRACTION_FIELDS_V4
         return EXTRACTION_FIELDS
 
     def _schema_prompt_atual(self) -> Dict[str, Any]:
-        if self.prompt_version == "v4.0":
+        if self.prompt_version in VERSOES_SCHEMA_V4:
             return EXTRACTION_SCHEMA_V4
         return EXTRACTION_SCHEMA
 
     def _schema_nome_prompt_atual(self) -> str:
-        if self.prompt_version == "v4.0":
+        if self.prompt_version in VERSOES_SCHEMA_V4:
             return "vlm_extraction_v4.schema.json"
         return "vlm_extraction.schema.json"
 

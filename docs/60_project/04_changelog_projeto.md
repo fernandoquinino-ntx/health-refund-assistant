@@ -7,6 +7,13 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.3.5**: auditoria final, Makefile sem duplicatas, scripts Shell removidos,
+  prompts ativos validados e operação centralizada na toolbox Python.
+
+- **0.3.4**: auditoria DRY/KISS concluída, prompts ativos estruturados,
+  reset seguro de anexos pendentes, operações movidas para `src/toolbox/`,
+  shell scripts operacionais removidos e Makefile como fluxo principal.
+
 - **0.3.3**: auditoria documental e de prompts concluída; estado pendente
   isolado em nova conversa, prompts ativos padronizados e documentação operacional
   centralizada no Makefile.
@@ -118,7 +125,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.3.3` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.3.5` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

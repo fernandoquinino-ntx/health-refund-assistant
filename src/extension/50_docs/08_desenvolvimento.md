@@ -99,7 +99,7 @@ chrome://extensions → Habilitar "Modo Desenvolvedor"
 ### 3. Edite arquivo
 
 Edite os arquivos diretamente em `src/extension/`. Execute
-`bash src/treinamento_visual/scripts/build_extension.sh` para gerar
+`make build-extension` para gerar
 `build/extension/` para testes ou empacotamento.
 
 ### 4. Recarregue

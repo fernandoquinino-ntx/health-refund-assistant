@@ -23,5 +23,10 @@ usuário alterar padrões do projeto.
 - Registre alterações relevantes em `docs/60_project/04_changelog_projeto.md`;
   siga sua política SemVer e não crie releases ou tags fictícias.
 - Use somente dados sintéticos nos testes e não versione segredos ou dados de saúde.
+- Use o Makefile como interface principal. Prompts ativos devem conter
+  `Tarefa`, `Entrada esperada`, `Saída esperada` e `Guardrails`; não deixe
+  instruções de IA fixas no Python. Operações novas vão para `src/toolbox/`,
+  não para scripts Shell. Dependências da aplicação ficam no `pyproject.toml`;
+  requisitos adicionais ficam em `requirements/`.
 - Rode os testes relevantes; a suíte existente é
   `.venv/bin/python -m unittest discover -s tests -v`.

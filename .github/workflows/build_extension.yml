@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validar JSON e montar pacote
-        run: bash src/treinamento_visual/scripts/build_extension.sh
+        run: PYTHONPATH=src python -m toolbox build_extension
       - name: Publicar pacote da extensão
         uses: actions/upload-artifact@v4
         with:

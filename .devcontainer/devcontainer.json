@@ -4,8 +4,8 @@
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "postCreateCommand": "bash src/treinamento_visual/scripts/setup_codespaces_treinamento.sh",
-  "postStartCommand": "bash src/treinamento_visual/scripts/start_codespaces_assistant.sh",
+  "postCreateCommand": "PYTHONPATH=${containerWorkspaceFolder}/src python -m toolbox setup_codespace",
+  "postStartCommand": "PYTHONPATH=${containerWorkspaceFolder}/src python -m toolbox start_assistant",
   "remoteEnv": {
     "PYTHONPATH": "${containerWorkspaceFolder}/src:${containerWorkspaceFolder}",
     "MODEL_PREFERENCE": "gpt-6-luna"

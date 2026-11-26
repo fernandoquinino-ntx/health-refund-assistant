@@ -36,7 +36,7 @@ resposta da IA. A importação do JSON é feita por
 
 `src/extension/` é a única fonte da extensão Chrome. `manifest.json` fica na
 raiz dessa pasta e o código é organizado em categorias. O script
-`src/treinamento_visual/scripts/build_extension.sh` gera uma cópia plana em
+`make build-extension` gera uma cópia plana em
 `build/extension/` sem duplicar o código fonte.
 
 O programa [anotacao_documentos](../../src/anotacao_documentos/) prepara e

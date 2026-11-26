@@ -66,7 +66,8 @@ def evaluate(dataset: Path, images: Path, base: Path, adapter: Path, report: Pat
     base_hits = tuned_hits = 0
     exemplos = []
 
-    prompt = "Retorne exclusivamente um objeto JSON com numero_documento, prestador, cnpj_cpf_prestador, valor_total, data_emissao, data_atendimento, nome_profissional, descricao_servico e registro_profissional."
+    from health_refund_assistant.core.prompt_library import carregar_prompt
+    prompt, _ = carregar_prompt("avaliacao_visual", "v1.0")
 
     for row in rows:
         expected = json.loads(row["messages"][2]["content"])

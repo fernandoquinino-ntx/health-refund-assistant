@@ -7,6 +7,7 @@
   e [guia de leitura por perfil](02_guia_leitura_recomendado.md).
 - [Extensão de navegador](../10_quickstart/03_comece_aqui_extension.md).
 - [Estrutura do projeto](04_estrutura_projeto.md) e [catálogo JSON](05_json_catalogo.md).
+- [Vocabulário técnico](../00_vocabulario.md).
 - [Biblioteca de prompts](../../prompts/prompt_library.md).
 - [Instruções do projeto](../../agents.md) e
   [instruções do Copilot](../../.github/copilot-instructions.md).

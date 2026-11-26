@@ -1,7 +1,7 @@
 # Care Plus – Coletor de Reembolsos
 
 > Esta é a única fonte da extensão Chrome. Use `manifest.json` para carregá-la
-> diretamente ou execute `bash src/treinamento_visual/scripts/build_extension.sh`
+> diretamente ou execute `make build-extension`
 > para gerar `build/extension/`.
 
 **Chrome Extension Manifest V3** para coletar automaticamente dados de sinistros/reembolsos do portal Care Plus e exportar em JSON.

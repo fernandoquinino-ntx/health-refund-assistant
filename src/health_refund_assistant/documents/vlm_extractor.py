@@ -61,7 +61,7 @@ class LocalVLMExtractor:
             "--image",
             str(image_path),
             "--prompt",
-            f"{self.system_prompt}\nRetorne exclusivamente um objeto JSON.",
+            self.system_prompt,
             "--max-tokens",
             "1024",
             "--temperature",
@@ -153,7 +153,6 @@ class LocalGGUFExtractor:
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "Extraia os campos desta imagem."},
                         {
                             "type": "image_url",
                             "image_url": {

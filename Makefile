@@ -1,5 +1,19 @@
 .PHONY: help setup setup-app setup-training setup-conversion setup-label setup-codespace download-vlm run test test-agent test-synthetic fixtures toolbox-help process-pdfs reconcile evaluate track ingest prepare-tasks prepare-pages verify-annotations mark-no-fields label-studio build-dataset check-dataset export-dataset train-mac train-ci evaluate-adapter approve-adapter start-vlm convert build-extension clean
 
+# Fluxo recomendado do projeto:
+#   1. make setup-codespace       prepara os ambientes e ferramentas
+#   2. make ingest                processa PDFs/imagens privadas
+#   3. make prepare-tasks         cria tarefas no Label Studio
+#   4. make label-studio          abre a interface de rotulagem
+#   5. make build-dataset         monta os JSONL após labels revisados
+#   6. make check-dataset         valida o dataset antes do treino
+#   7. make train-ci              inicia o treino Linux no GitHub/CI
+#   8. make evaluate-adapter      compara base e adaptador no teste reservado
+#   9. make approve-adapter       gera o gate de aprovação
+#  10. make convert              gera GGUF/mmproj para o runtime local
+#  11. make start-vlm             inicia o modelo visual aprovado
+#  12. make run                   inicia o assistente conversacional
+
 PYTHON_APP=.venv/bin/python
 PYTHON_TRAIN=.venv-treinamento/bin/python
 PYTHON_CONVERT=.venv-conversao/bin/python
@@ -40,11 +54,11 @@ setup: setup-app setup-training setup-conversion setup-label
 
 setup-app:
 	python3 -m venv .venv
-	$(PYTHON_APP) -m pip install -r requirements/base.txt
+	$(PYTHON_APP) -m pip install -e .
 
 setup-training:
 	python3 -m venv .venv-treinamento
-	$(PYTHON_TRAIN) -m pip install -r requirements/treinamento.txt
+	$(PYTHON_TRAIN) -m pip install -e ".[training]"
 
 setup-conversion:
 	python3 -m venv .venv-conversao
@@ -55,7 +69,7 @@ setup-label:
 	$(CURDIR)/.venv-label-studio/bin/python -m pip install -r requirements/label-studio.txt
 
 setup-codespace:
-	bash src/treinamento_visual/scripts/setup_codespaces_treinamento.sh
+	PYTHONPATH=src python -m toolbox setup_codespace
 
 download-vlm:
 	.venv-conversao/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='HuggingFaceTB/SmolVLM-256M-Instruct', local_dir='models/smolvlm-hf', local_dir_use_symlinks=False, allow_patterns=['*.json','*.txt','*.jinja','*.model','*.safetensors','*.index.json'])"
@@ -143,13 +157,13 @@ approve-adapter:
 	PYTHONPATH=src $(PYTHON_APP) -m treinamento_visual.train.approve_adapter
 
 start-vlm:
-	bash src/treinamento_visual/scripts/start_local_vlm.sh
+	PYTHONPATH=src .venv/bin/python -m toolbox start_local_vlm
 
 convert:
-	bash src/treinamento_visual/scripts/converter_modelo_smolvlm.sh
+	PYTHONPATH=src .venv/bin/python -m toolbox converter_modelo
 
 build-extension:
-	bash src/treinamento_visual/scripts/build_extension.sh
+	PYTHONPATH=src .venv/bin/python -m toolbox build_extension
 
 clean:
 	find src tests -type f -name '*.pyc' -delete

@@ -60,7 +60,7 @@ jobs:
       - name: Converter adaptador aprovado para GGUF
         run: |
           if python -c 'import json; raise SystemExit(0 if json.load(open("json/training/visual/modelo_aprovado.json")).get("aprovado") else 1)'; then
-            bash src/treinamento_visual/scripts/converter_modelo_smolvlm.sh
+            PYTHONPATH=src python -m toolbox converter_modelo
           else
             echo "Adaptador não aprovado; conversão GGUF não executada."
           fi

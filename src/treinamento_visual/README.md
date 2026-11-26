@@ -5,7 +5,7 @@
 - `ingest/`: OCR, renderização 300 DPI e manifestos privados.
 - `label/`: configuração e iniciador isolado do Label Studio.
 - `train/`: build do dataset, validação, exportação pública e treino.
-- `scripts/`: inicialização do Codespace, conversão GGUF e build da extensão.
+- Operações equivalentes ficam em `src/toolbox/operacoes.py` e no Makefile.
 - `eval/`: pacote reservado para avaliação futura.
 
 Fluxo privado:

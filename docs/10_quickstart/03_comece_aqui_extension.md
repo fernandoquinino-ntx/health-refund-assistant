@@ -12,5 +12,5 @@ exportado pode conter dados de saúde.
 
 O código é organizado em `10_popup/`, `20_background/`, `30_content/`,
 `40_collector/`, `50_docs/` e `60_schemas/`. O script
-`src/treinamento_visual/scripts/build_extension.sh` gera uma cópia plana em
+`make build-extension` gera uma cópia plana em
 `build/extension/` sem manter uma segunda implementação fonte.

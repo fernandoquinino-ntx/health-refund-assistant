@@ -27,6 +27,17 @@ Este arquivo define as regras que **TODO o Copilot DEVE seguir** automaticamente
   anotações fica em `src/anotacao_documentos/`; seus dados privados ficam em
   `data/treinamento/`. `app.py` é o ponto de entrada do assistente; testes
   ficam em `tests/` e ferramentas operacionais independentes em `src/toolbox/`.
+- Use `Makefile` como interface pública de operações: setup, testes, ingestão,
+  Label Studio, treinamento, conversão, servidor visual e build da extensão.
+  Não crie novos scripts Shell para operações que podem ser implementadas em Python.
+- Dependências da aplicação ficam em `pyproject.toml`. Arquivos em
+  `requirements/` são conjuntos adicionais ou travados para treino, conversão,
+  Label Studio e CI. Use `pip install -e .` como instalação editável da aplicação.
+- Prompts ativos ficam em `prompts/<componente>/vMAIOR.MENOR.md` e devem usar
+  `Tarefa`, `Entrada esperada`, `Saída esperada` e `Guardrails`. Não coloque
+  comandos de API, dados fixos ou textos de endpoint diretamente no Python.
+- GPT-6 Luna atende intenção, revisão textual e síntese. A visão usa o runtime
+  local GGUF/llama.cpp somente quando aprovado por teste reservado.
 - Inicie cada arquivo Python com uma docstring que descreva objetivo, entradas,
   processamento e saídas. Para outros arquivos de código, descreva brevemente
   sua função e etapa na forma apropriada da linguagem.

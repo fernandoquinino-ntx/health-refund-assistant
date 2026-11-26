@@ -16,9 +16,26 @@ from health_refund_assistant.conversation.agent import (
     identificar_tarefa,
 )
 from health_refund_assistant.web.web_app import reset_agent_session
+from health_refund_assistant.core.prompt_library import (
+    analisar_secoes_prompt,
+    validar_prompt_padrao,
+)
 
 
 class AgentTaskTests(unittest.TestCase):
+    def test_prompt_ativo_tem_entrada_tarefa_saida_guardrails(self):
+        from pathlib import Path
+        texto = (
+            Path(__file__).resolve().parents[3]
+            / "prompts/agente_conversacional/v1.0.md"
+        ).read_text(encoding="utf-8")
+        secoes = analisar_secoes_prompt(texto)
+        self.assertEqual(
+            set(secoes),
+            {"Tarefa", "Entrada esperada", "Saída esperada", "Guardrails"},
+        )
+        self.assertTrue(validar_prompt_padrao(texto))
+
     def test_reset_limpa_exportacao_pendente(self):
         state = {
             "conversation": {"messages": ["antiga"], "evidence": {"x": 1}},

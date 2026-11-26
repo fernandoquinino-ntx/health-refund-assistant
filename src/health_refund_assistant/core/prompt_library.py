@@ -36,4 +36,58 @@ def carregar_prompt(component: str, versao: str | None = None) -> tuple[str, str
     path = directory / f"{versao}.md"
     if not path.is_file():
         raise FileNotFoundError(f"Prompt não encontrado: {path}")
-    return path.read_text(encoding="utf-8").strip(), versao
+    texto = path.read_text(encoding="utf-8").strip()
+    componentes_estruturados = {
+        ("agente_conversacional", "v1.0"),
+        ("reembolso_assistente", "v1.2"),
+        ("reembolso_status", "v1.2"),
+        ("revisao_documental", "v1.1"),
+        ("estimativa_pagamento", "v1.0"),
+        ("vlm_extractor", "v4.2"),
+        ("avaliacao_visual", "v1.0"),
+    }
+    if (component, versao) in componentes_estruturados and not validar_prompt_padrao(texto):
+        raise ValueError(
+            f"Prompt não segue o padrão Tarefa/Entrada/Saída/Guardrails: {path}"
+        )
+    return texto, versao
+
+
+def analisar_secoes_prompt(texto: str) -> dict[str, str]:
+    """Separa um prompt versionado nas seções markdown simples."""
+    secoes: dict[str, str] = {}
+    secoes_abertas: list[str] = []
+    atual: list[str] = []
+    for linha in texto.splitlines():
+        if linha.startswith("# Tarefa"):
+            titulo = linha.removeprefix("# Tarefa").strip(" :")
+            secoes["Tarefa"] = titulo
+            secoes_abertas = ["Tarefa"]
+            atual = secoes_abertas
+        elif linha.startswith("## Entrada esperada"):
+            secoes["Entrada esperada"] = ""
+            secoes_abertas = ["Entrada esperada"]
+            atual = secoes_abertas
+        elif linha.startswith("## Saída esperada"):
+            secoes["Saída esperada"] = ""
+            secoes_abertas = ["Saída esperada"]
+            atual = secoes_abertas
+        elif linha.startswith("## Guardrails"):
+            secoes["Guardrails"] = ""
+            secoes_abertas = ["Guardrails"]
+            atual = secoes_abertas
+        elif atual:
+            nome = atual[0]
+            secoes[nome] = (secoes[nome] + ("\n" if secoes[nome] else "") + linha).strip()
+    return secoes
+
+
+def validar_prompt_padrao(texto: str) -> bool:
+    """Confere somente os quatro blocos usados pelos prompts ativos."""
+    secoes = analisar_secoes_prompt(texto)
+    return all(nome in secoes and secoes[nome].strip() for nome in (
+        "Tarefa",
+        "Entrada esperada",
+        "Saída esperada",
+        "Guardrails",
+    ))

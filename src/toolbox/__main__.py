@@ -24,6 +24,7 @@ def main() -> int:
             "build_extension",
             "start_local_vlm",
             "start_assistant",
+            "restart_assistant",
             "converter_modelo",
         ),
     )
@@ -50,10 +51,14 @@ def main() -> int:
         from .operacoes import build_extension as executar
     elif args.comando == "start_local_vlm":
         from .operacoes import start_local_vlm as executar
+    elif args.comando == "start_assistant":
+        from .operacoes import start_assistant as executar
+    elif args.comando == "restart_assistant":
+        from .operacoes import restart_assistant as executar
     elif args.comando == "converter_modelo":
         from .operacoes import converter_modelo as executar
     else:
-        from .operacoes import start_assistant as executar
+        raise SystemExit(2)
     if args.comando in {
         "setup_app",
         "setup_training",
@@ -63,6 +68,7 @@ def main() -> int:
         "build_extension",
         "start_local_vlm",
         "start_assistant",
+        "restart_assistant",
         "converter_modelo",
     }:
         resultado = executar()

@@ -5,7 +5,7 @@
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "postCreateCommand": "sudo apt-get update && sudo apt-get install -y make cmake build-essential git curl && make setup-codespace",
-  "postStartCommand": "make start-vlm && make run",
+  "postStartCommand": "make start-vlm && make restart",
   "remoteEnv": {
     "PYTHONPATH": "${containerWorkspaceFolder}/src:${containerWorkspaceFolder}",
     "MODEL_PREFERENCE": "gpt-6-luna"

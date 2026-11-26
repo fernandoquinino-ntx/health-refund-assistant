@@ -20,6 +20,14 @@ from toolbox.test_tracker import main
 
 
 class ToolboxTrackerTests(unittest.TestCase):
+    def test_toolbox_restart_assistant_calls_restart_operation(self):
+        with (
+            patch("sys.argv", ["toolbox", "restart_assistant"]),
+            patch("toolbox.operacoes.restart_assistant", return_value=0) as executar,
+        ):
+            self.assertEqual(toolbox_main(), 0)
+            executar.assert_called_once_with()
+
     def test_toolbox_build_extension_calls_operation_without_arguments(self):
         with (
             patch("sys.argv", ["toolbox", "build_extension"]),

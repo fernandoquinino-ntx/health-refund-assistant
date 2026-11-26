@@ -1,4 +1,4 @@
-.PHONY: help setup setup-app setup-training setup-conversion setup-label setup-codespace download-vlm run test test-agent test-synthetic fixtures toolbox-help process-pdfs reconcile evaluate track ingest prepare-tasks prepare-pages verify-annotations mark-no-fields label-studio build-dataset check-dataset export-dataset train-mac train-ci evaluate-adapter approve-adapter start-vlm convert build-extension clean
+.PHONY: help setup setup-app setup-training setup-conversion setup-label setup-codespace download-vlm run restart test test-agent test-synthetic fixtures toolbox-help process-pdfs reconcile evaluate track ingest prepare-tasks prepare-pages verify-annotations mark-no-fields label-studio build-dataset check-dataset export-dataset train-mac train-ci evaluate-adapter approve-adapter start-vlm convert build-extension clean
 
 # Fluxo recomendado do projeto:
 #   1. make setup-codespace       prepara os ambientes e ferramentas
@@ -77,6 +77,9 @@ download-vlm:
 run:
 	PYTHONPATH=src STREAMLIT_BROWSER_GATHER_USAGE_STATS=false \
 		$(PYTHON_APP) -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501 --server.headless true
+
+restart:
+	PYTHONPATH=src $(PYTHON_APP) -m toolbox restart_assistant
 
 test:
 	PYTHONPATH=src $(PYTHON_APP) -m unittest discover -s tests -v

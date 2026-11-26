@@ -10,6 +10,8 @@ import shutil
 import subprocess
 import sys
 import os
+import signal
+import time
 from pathlib import Path
 
 
@@ -155,6 +157,7 @@ def start_local_vlm() -> int:
 
 
 def start_assistant() -> int:
+    stop_assistant_process()
     python = ROOT / ".venv" / "bin" / "python"
     if not python.is_file():
         return setup_app()
@@ -184,6 +187,38 @@ def start_assistant() -> int:
     )
     print("Assistente iniciado na porta 8501.")
     return 0
+
+
+def stop_assistant_process() -> int:
+    """Stop only a prior Streamlit process for this application's app.py."""
+    result = executar(["ps", "-eo", "pid=,args="], verificar=False)
+    stopped = 0
+    for line in result.stdout.splitlines():
+        fields = line.strip().split(maxsplit=1)
+        if len(fields) != 2:
+            continue
+        pid_text, command = fields
+        if "streamlit" not in command or "app.py" not in command:
+            continue
+        if "--server.port" not in command or "8501" not in command:
+            continue
+        if str(ROOT) not in command and str(ROOT / "app.py") not in command:
+            continue
+        try:
+            os.kill(int(pid_text), signal.SIGTERM)
+            stopped += 1
+        except (ProcessLookupError, PermissionError, ValueError):
+            continue
+    if stopped:
+        time.sleep(1)
+        print(f"Processos anteriores do assistente encerrados: {stopped}.")
+    return stopped
+
+
+def restart_assistant() -> int:
+    """Restart the application from the current checkout and its latest code."""
+    stop_assistant_process()
+    return start_assistant()
 
 
 def converter_modelo() -> int:

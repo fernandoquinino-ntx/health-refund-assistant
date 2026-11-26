@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Health Refund: Executar assistente",
+      "type": "shell",
+      "command": "make run",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Health Refund: Executar bateria",
+      "type": "shell",
+      "command": "make test",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Health Refund: Testar agente",
+      "type": "shell",
+      "command": "make test-agent",
+      "problemMatcher": []
+    },
+    {
+      "label": "Health Refund: Construir extensão",
+      "type": "shell",
+      "command": "make build-extension",
+      "problemMatcher": []
+    },
+    {
+      "label": "Health Refund: Validar dataset",
+      "type": "shell",
+      "command": "make check-dataset",
+      "problemMatcher": []
+    }
+  ]
+}

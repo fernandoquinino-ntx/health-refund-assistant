@@ -4,7 +4,7 @@
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "postCreateCommand": "python -m venv .venv && .venv/bin/python -m pip install -r requirements.txt && python scripts/gerar_fixtures_sinteticas.py",
+  "postCreateCommand": "python -m venv .venv && .venv/bin/python -m pip install -r requirements.txt && .venv/bin/python scripts/gerar_fixtures_sinteticas.py",
   "remoteEnv": {
     "PYTHONPATH": "${containerWorkspaceFolder}/src:${containerWorkspaceFolder}",
     "MODEL_PREFERENCE": "gpt-6-luna"
@@ -30,7 +30,7 @@
       "settings": {
         "python.linting.enabled": true,
         "python.linting.ruffEnabled": true,
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
         "python.testing.pytestEnabled": true,
         "[python]": {
           "editor.formatOnSave": true,

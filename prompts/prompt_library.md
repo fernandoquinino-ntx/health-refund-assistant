@@ -6,21 +6,26 @@ Os prompts são armazenados por componente e separados por versão.
 prompts/
 ├── prompt_library.md
 ├── vlm_extractor/
-│   ├── v1.0.txt
-│   ├── v1.1.txt
-│   ├── v2.0.txt
-│   ├── v3.0.txt
-│   └── v4.0.txt
+│   ├── v1.0.md
+│   ├── v1.1.md
+│   ├── v2.0.md
+│   ├── v3.0.md
+│   └── v4.0.md
 ├── reembolso_assistente/
-│   └── v1.0.txt
+│   ├── v1.0.md
+│   └── v1.1.md
 ├── reembolso_status/
-│   └── v1.0.txt
+│   └── v1.0.md
+├── revisao_documental/
+│   └── v1.0.md
+└── estimativa_pagamento/
+    └── v1.0.md
 ```
 
 ## Convenção
 
 - Uma pasta por código ou componente.
-- Cada arquivo usa `vMAIOR.MENOR.txt`.
+- Cada arquivo usa `vMAIOR.MENOR.md`.
 - O código carrega a maior versão numérica por padrão.
 - Uma versão específica pode ser selecionada pelo argumento `prompt_version`.
 - Nunca sobrescrever uma versão publicada; criar uma nova versão para alterações.
@@ -29,11 +34,11 @@ prompts/
 
 | Versão | Arquivo | Hipótese / evolução |
 |---|---|---|
-| v1.0 | [vlm_extractor/v1.0.txt](./vlm_extractor/v1.0.txt) | Baseline: extrair os campos fiscais originalmente previstos. |
-| v1.1 | [vlm_extractor/v1.1.txt](./vlm_extractor/v1.1.txt) | Descrição do serviço e CRM/CRN explícito; `null` para ausência e sem inferências. |
-| v2.0 | [vlm_extractor/v2.0.txt](./vlm_extractor/v2.0.txt) | Dois exemplos Few-Shot completos, critérios mensuráveis de legibilidade e observação visual curta. |
-| v3.0 | [vlm_extractor/v3.0.txt](./vlm_extractor/v3.0.txt) | Regras compactas para modelo 7B e delimitação de conteúdo visual não confiável contra prompt injection. |
-| v4.0 | [vlm_extractor/v4.0.txt](./vlm_extractor/v4.0.txt) | Acrescenta data de atendimento e nome do profissional, mantendo os campos anteriores. |
+| v1.0 | [vlm_extractor/v1.0.md](./vlm_extractor/v1.0.md) | Baseline: extrair os campos fiscais originalmente previstos. |
+| v1.1 | [vlm_extractor/v1.1.md](./vlm_extractor/v1.1.md) | Descrição do serviço e CRM/CRN explícito; `null` para ausência e sem inferências. |
+| v2.0 | [vlm_extractor/v2.0.md](./vlm_extractor/v2.0.md) | Dois exemplos Few-Shot completos, critérios mensuráveis de legibilidade e observação visual curta. |
+| v3.0 | [vlm_extractor/v3.0.md](./vlm_extractor/v3.0.md) | Regras compactas para modelo 7B e delimitação de conteúdo visual não confiável contra prompt injection. |
+| v4.0 | [vlm_extractor/v4.0.md](./vlm_extractor/v4.0.md) | Acrescenta data de atendimento e nome do profissional, mantendo os campos anteriores. |
 
 As versões v1.0 e v1.1 são preservadas sem edição. O extrator seleciona a versão
 mais recente por padrão, mas as comparações acadêmicas devem fixar explicitamente
@@ -107,11 +112,11 @@ quando aparecem explicitamente na imagem.
 
 | Versão | Arquivo | Status |
 |---|---|---|
-| v1.0 | [reembolso_status/v1.0.txt](./reembolso_status/v1.0.txt) | Atual |
+| v1.0 | [reembolso_status/v1.0.md](./reembolso_status/v1.0.md) | Atual |
 
 Prompt para propor o mapa entre schemas uma única vez. A entrada deve conter apenas
 nomes de campos, caminhos e tipos, sem valores dos registros.
-O comando `python -m health_refund_assistant.mapping` valida os caminhos propostos e salva um
+O comando `python -m health_refund_assistant.plan.mapping` valida os caminhos propostos e salva um
 arquivo de proposta separado; ele nunca substitui o mapeamento ativo.
 O prompt declara como contrato de resposta
 [`json/reconciliation/schemas/mapping_proposal.schema.json`](../json/reconciliation/schemas/mapping_proposal.schema.json);
@@ -124,8 +129,27 @@ caminhos, o código mescla a proposta na configuração definida por
 
 | Versão | Arquivo | Hipótese / finalidade |
 |---|---|---|
-| v1.0 | [reembolso_assistente/v1.0.txt](./reembolso_assistente/v1.0.txt) | Responder à pergunta do usuário usando apenas evidências determinísticas; não inferir pagamento, cobertura ou ausência de pedido fora do período exportado. |
+| v1.0 | [reembolso_assistente/v1.0.md](./reembolso_assistente/v1.0.md) | Responder à pergunta do usuário usando apenas evidências determinísticas; não inferir pagamento, cobertura ou ausência de pedido fora do período exportado. |
+| v1.1 | [reembolso_assistente/v1.1.md](./reembolso_assistente/v1.1.md) | Considerar a estimativa validada de processamento e distinguir do prazo de envio simulado. |
 
 O assistente de resposta é independente do extrator. A interface permite escolher a
 versão de cada componente separadamente e fornece ao prompt conversacional os campos
 extraídos e os resultados calculados; não envia o gabarito do benchmark.
+Como guardrail fixo, a aplicação acrescenta a qualquer versão da resposta uma
+instrução para usar somente a estimativa validada e não analisar prazo de envio
+para pedido localizado. A versão histórica do arquivo permanece inalterada.
+
+## `revisao_documental`
+
+O [v1.0](./revisao_documental/v1.0.md) orienta a revisão consultiva da imagem
+e dos dados extraídos. A saída segue o
+[contrato de revisão](../json/reconciliation/schemas/document_review.schema.md).
+
+## `estimativa_pagamento`
+
+O [v1.0](./estimativa_pagamento/v1.0.md) recebe data de submissão e referência e
+retorna o [contrato de estimativa](../json/plan/schemas/payment_estimate.schema.md).
+O cálculo é conferido em Python; somente pedidos com correspondência forte e
+status adequado são considerados. Fins de semana são excluídos, feriados não.
+A estimativa de cinco dias foi informada pelo usuário e não foi verificada com
+o plano. Uma falha ou divergência interrompe a resposta.

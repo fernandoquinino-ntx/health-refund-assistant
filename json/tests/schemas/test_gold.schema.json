@@ -118,6 +118,7 @@
           "enum": [
             "dentro_do_prazo_simulado",
             "fora_do_prazo_simulado",
+            "nao_aplicavel_pedido_localizado",
             "data_futura",
             "indeterminado"
           ]

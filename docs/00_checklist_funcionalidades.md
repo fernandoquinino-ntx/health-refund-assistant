@@ -19,10 +19,10 @@
   - [x] Fallback em caso de erro (retorna None ou {})
 
 **Prompts Versionados:**
-- `prompts/vlm_extractor/v1.0.txt` ✅
-- `prompts/vlm_extractor/v2.0.txt` ✅
-- `prompts/vlm_extractor/v3.0.txt` ✅
-- `prompts/vlm_extractor/v4.0.txt` ✅ (ATUAL)
+- `prompts/vlm_extractor/v1.0.md` ✅
+- `prompts/vlm_extractor/v2.0.md` ✅
+- `prompts/vlm_extractor/v3.0.md` ✅
+- `prompts/vlm_extractor/v4.0.md` ✅ (ATUAL)
 
 **Testes:**
 - `tests/test_vlm_extractor.py` — Cobertura completa ✅
@@ -80,7 +80,7 @@
     3. Prontidão pré-envio (posso enviar agora?)
 
 **Prompt:**
-- `prompts/reembolso_assistente/v1.0.txt` ✅
+- `prompts/reembolso_assistente/v1.0.md` ✅
 
 **Testes:**
 - `tests/test_assistant.py` ✅

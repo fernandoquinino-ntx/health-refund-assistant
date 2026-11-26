@@ -4,18 +4,15 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 JSON_ROOT = PROJECT_ROOT / "json"
 CONFIG_DIR = JSON_ROOT / "config"
-TEST_FIXTURES_DIR = JSON_ROOT / "tests" / "templates"
 DATA_DIR = PROJECT_ROOT / "data"
 INCOMING_DIR = DATA_DIR / "incoming"
 PROCESSED_DIR = DATA_DIR / "processed"
 FAILED_DIR = DATA_DIR / "failed"
 PLAN_EXPORTS_DIR = JSON_ROOT / "plan" / "imports"
 STATE_DIR = JSON_ROOT / "documents" / "state"
-EVALUATION_REPORTS_DIR = JSON_ROOT / "evaluation" / "reports"
 RECONCILIATION_REPORTS_DIR = JSON_ROOT / "reconciliation" / "reports"
-SYNTHETIC_DATA_DIR = JSON_ROOT / "tests" / "synthetic"
-SYNTHETIC_DOCUMENTS_DIR = DATA_DIR / "sinteticos" / "documentos"
 NOTES_STATE_PATH = STATE_DIR / "notas_extraidas.json"
+CONVERSATION_STATE_PATH = STATE_DIR / "conversa_local.json"
 MAPPING_CONFIG_PATH = CONFIG_DIR / "mapeamento_reembolsos.json"
 PROMPTS_DIR = PROJECT_ROOT / "prompts"
 
@@ -27,9 +24,9 @@ SCHEMA_LOCATIONS = {
     "reconciliation_report.schema.json": JSON_ROOT / "reconciliation" / "schemas" / "reconciliation_report.schema.json",
     "plan_export.schema.json": JSON_ROOT / "plan" / "schemas" / "plan_export.schema.json",
     "notes_state.schema.json": JSON_ROOT / "documents" / "schemas" / "notes_state.schema.json",
-    "vlm_evaluation_report.schema.json": JSON_ROOT / "evaluation" / "schemas" / "vlm_evaluation_report.schema.json",
-    "test_cases.schema.json": JSON_ROOT / "tests" / "schemas" / "test_cases.schema.json",
-    "test_gold.schema.json": JSON_ROOT / "tests" / "schemas" / "test_gold.schema.json",
+    "document_review.schema.json": JSON_ROOT / "reconciliation" / "schemas" / "document_review.schema.json",
+    "assistant_answer.schema.json": JSON_ROOT / "documents" / "schemas" / "assistant_answer.schema.json",
+    "payment_estimate.schema.json": JSON_ROOT / "plan" / "schemas" / "payment_estimate.schema.json",
 }
 
 

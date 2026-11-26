@@ -1,5 +1,11 @@
 # Caderno de Projeto — Health Refund Assistant
 
+> Este caderno contém planejamento e afirmações históricas não verificadas. O fluxo
+> atual não implementa 365 dias ou D-2, não confirma elegibilidade e não avalia
+> prazo de envio para pedido localizado. A estimativa de cinco dias úteis foi
+> informada pelo usuário, não foi confirmada com o plano e não considera feriados.
+> Consulte o [README atual](../../README.md) e registre somente testes reais.
+
 **Trabalho Final (Opção A — Código + Documentação)**  
 **Entreg
 
@@ -146,7 +152,7 @@ Expandida além dos 5 obrigatórios para cobrir edge cases:
 ### Comparação Entre Versões (v1.0, v2.0, v3.0, v4.0)
 Executada via `case_evaluation.py`:
 ```bash
-python scripts/case_evaluation.py --models v1.0 v2.0 v3.0 v4.0
+.venv/bin/python scripts/case_evaluation.py --prompt-version v4.0
 ```
 
 Relatórios salvos em `json/evaluation/reports/`:

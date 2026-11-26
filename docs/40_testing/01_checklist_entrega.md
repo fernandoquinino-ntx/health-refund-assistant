@@ -73,7 +73,7 @@ Todos os itens solicitados foram executados e verificados:
 ✓ docs/caderno_projeto.md (10.4 KB)
 ✓ docs/planilha_testes_5_casos.md (9.6 KB)
 ✓ prompts/extraction/ (v1.0, v2.0, v3.0, v4.0)
-✓ prompts/reembolso_assistente/v1.0.txt
+✓ prompts/reembolso_assistente/v1.0.md
 ✓ json/schemas/ (vlm_extraction, plan_export, reconciliation, etc.)
 ✓ json/extraction/, json/plan/, json/reconciliation/, json/tests/
 ✓ json/tests/synthetic/ (gabarito.json, casos_teste.json)
@@ -136,7 +136,7 @@ streamlit run src/health_refund_assistant/web_app.py
 ### 7. Avaliação de Versões (com API key)
 ```bash
 export OPENAI_API_KEY=sk-...
-python3 scripts/case_evaluation.py --models v1.0 v2.0 v3.0 v4.0
+.venv/bin/python scripts/case_evaluation.py --prompt-version v4.0
 # Resultados em: json/evaluation/reports/
 ```
 

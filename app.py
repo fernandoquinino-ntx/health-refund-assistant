@@ -1,4 +1,4 @@
-from health_refund_assistant.web_app import main
+from health_refund_assistant.web.web_app import main
 
 
 if __name__ == "__main__":

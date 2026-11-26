@@ -21,6 +21,12 @@ Contrato para registros de pedidos de reembolso exportados do sistema do plano.
 
 ## Integração com Código
 
+### `payment_estimate.schema.json`
+
+Contrato da saída da tarefa de IA para estimativa de processamento em dias úteis.
+Consulte [payment_estimate.schema.md](./payment_estimate.schema.md); o código
+confere os valores antes de usá-los.
+
 ```python
 from health_refund_assistant.json_contracts import carregar_schema_json, validar_contrato_json
 

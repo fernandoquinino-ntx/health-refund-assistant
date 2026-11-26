@@ -76,13 +76,13 @@ Para processar documentos próprios, crie as pastas locais e coloque PDFs novos 
 
 ```bash
 mkdir -p data/incoming data/processed data/failed json/plan/imports json/documents/state json/evaluation/reports json/reconciliation/reports
-.venv/bin/python -m health_refund_assistant.pdf_processing
+.venv/bin/python -m health_refund_assistant.documents.pdf_processing
 ```
 
 - Sucesso: o PDF é movido para `data/processed/`, renomeado com data, número e
   sufixo único, e registrado em `json/documents/state/notas_extraidas.json`.
 - Falha: o PDF vai para `data/failed/`; para tentar novamente, rode
-  `.venv/bin/python -m health_refund_assistant.pdf_processing --reprocessar-falhas`.
+  `.venv/bin/python -m health_refund_assistant.documents.pdf_processing --reprocessar-falhas`.
 - SHA-256 identifica cópias idênticas sem nova chamada ao VLM. Depois da extração,
   CNPJ/CPF do prestador mais número do documento também sinalizam possível duplicata.
   Essas cópias são preservadas em `data/processed/duplicatas/`.
@@ -94,7 +94,7 @@ o arquivo pela interface para validar o período; no modo CLI, informe a exporta
 importada e as notas:
 
 ```bash
-.venv/bin/python -m health_refund_assistant.reconciliation \
+.venv/bin/python -m health_refund_assistant.plan.reconciliation \
   --notas json/documents/state/notas_extraidas.json \
   --exportacao json/plan/imports/arquivo.json \
   --saida json/reconciliation/reports/conciliacao.json
@@ -156,15 +156,15 @@ Com os fixtures gerados e `OPENAPI_TOKEN` configurado, execute cada versão usan
 mesmos PDFs e o mesmo gabarito. Cada imagem será enviada à API OpenAI:
 
 ```bash
-.venv/bin/python -m health_refund_assistant.case_evaluation --prompt-version v1.0 \
+.venv/bin/python scripts/case_evaluation.py --prompt-version v1.0 \
   --saida json/evaluation/reports/v1.0.json
-.venv/bin/python -m health_refund_assistant.case_evaluation --prompt-version v1.1 \
+.venv/bin/python scripts/case_evaluation.py --prompt-version v1.1 \
   --saida json/evaluation/reports/v1.1.json
-.venv/bin/python -m health_refund_assistant.case_evaluation --prompt-version v2.0 \
+.venv/bin/python scripts/case_evaluation.py --prompt-version v2.0 \
   --saida json/evaluation/reports/v2.0.json
-.venv/bin/python -m health_refund_assistant.case_evaluation --prompt-version v3.0 \
+.venv/bin/python scripts/case_evaluation.py --prompt-version v3.0 \
   --saida json/evaluation/reports/v3.0.json
-.venv/bin/python -m health_refund_assistant.case_evaluation --prompt-version v4.0 \
+.venv/bin/python scripts/case_evaluation.py --prompt-version v4.0 \
   --saida json/evaluation/reports/v4.0.json
 ```
 
@@ -213,7 +213,7 @@ anteriores.
 
 Compare uma versão por vez, mantendo modelo, PDFs, gabarito e parâmetros iguais.
 Registre os resultados observados na tabela de
-[prompt_library.md](../prompts/prompt_library.md). Resultados não medidos ficam como
+[prompt_library.md](../../prompts/prompt_library.md). Resultados não medidos ficam como
 “Pendente”. Os resultados históricos nessa tabela vieram do Qwen local e não são
 comparáveis ao novo modelo `GPT-6 Luna`; os relatórios para OpenAI precisam ser
 gerados novamente.
@@ -250,13 +250,13 @@ O avaliador de prompts não substitui `notas_extraidas.json`.
 Para testar o pipeline com documentos sintéticos mantendo os originais:
 
 ```bash
-.venv/bin/python -m health_refund_assistant.pdf_processing \
+.venv/bin/python -m health_refund_assistant.documents.pdf_processing \
   --entrada data/sinteticos/documentos \
   --saida json/documents/state/notas_sinteticas.json \
   --prompt-version v4.0 \
   --manter-originais
 
-.venv/bin/python -m health_refund_assistant.reconciliation \
+.venv/bin/python -m health_refund_assistant.plan.reconciliation \
   --notas json/documents/state/notas_sinteticas.json \
   --exportacao json/tests/synthetic/exportacao_ficticia.json \
   --saida json/reconciliation/reports/conciliacao-sintetica.json
@@ -285,7 +285,15 @@ A avaliação determinística do assistente usa a data de atendimento e, somente
 fallback, a data de emissão. Sem ambas, o prazo fica indeterminado e a aplicação não
 conclui se o pedido está ausente. O limite de 30 dias é simulado: dia 30 permanece
 dentro da janela e dia 31 fica fora dela. Isso não representa uma regra contratual
-real.
+real. Quando há candidato localizado, não se avalia prazo de envio.
+
+Para pedido único com correspondência forte, status adequado e data de submissão
+válida, a tarefa de IA estima cinco dias úteis, conferidos pelo código. A contagem
+começa depois da submissão, exclui fins de semana e não considera feriados; a regra
+foi informada pelo usuário e não foi verificada com a Care Plus. Não é garantia de
+pagamento. A data de referência da barra lateral é reutilizada na consulta atual e
+o status da exportação pode estar desatualizado. Ambiguidade, pendência, recusa,
+pagamento, data inválida ou erros de coleta impedem a estimativa.
 
 Os campos que geram alerta de incompletude são nome do profissional, registro de
 conselho de saúde, descrição do serviço, data de atendimento, data de emissão,
@@ -300,6 +308,7 @@ exportação antiga e os 15 cenários completos ficam em `tests/`:
 ```bash
 .venv/bin/python -m unittest discover -s tests -p "test_assessment.py" -v
 .venv/bin/python -m unittest discover -s tests -p "test_synthetic_scenarios.py" -v
+.venv/bin/python -m unittest discover -s tests -p "test_estimativa_pagamento.py" -v
 ```
 
 O benchmark C01–C15 mede extração visual; os testes determinísticos cobrem prazo,

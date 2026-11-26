@@ -193,17 +193,17 @@ Como os prompts **evoluem** e são **controlados**:
 ```
 prompts/
 ├── reembolso_assistente/
-│   ├── v1.0.txt             # Initial version
-│   ├── v2.0.txt             # Added memory support
-│   ├── v3.0.txt             # Improved validation
-│   └── v4.0.txt             # Current - with memory + tools
+│   ├── v1.0.md             # Initial version
+│   ├── v2.0.md             # Added memory support
+│   ├── v3.0.md             # Improved validation
+│   └── v4.0.md             # Current - with memory + tools
 ├── vlm_extractor/
-│   ├── v1.0.txt
-│   ├── v2.0.txt
-│   ├── v3.0.txt
-│   └── v4.0.txt
+│   ├── v1.0.md
+│   ├── v2.0.md
+│   ├── v3.0.md
+│   └── v4.0.md
 └── audit_rules/
-    └── v1.0.txt
+    └── v1.0.md
 ```
 
 **Implementação em assistant.py**:

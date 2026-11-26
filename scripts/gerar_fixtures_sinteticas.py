@@ -7,11 +7,10 @@ from typing import Any, Dict, List, Optional
 
 import pymupdf
 
-from health_refund_assistant.paths import (
-    SYNTHETIC_DATA_DIR,
-    SYNTHETIC_DOCUMENTS_DIR,
-    TEST_FIXTURES_DIR,
-)
+if __package__:
+    from .test_paths import SYNTHETIC_DATA_DIR, SYNTHETIC_DOCUMENTS_DIR, TEST_FIXTURES_DIR
+else:
+    from test_paths import SYNTHETIC_DATA_DIR, SYNTHETIC_DOCUMENTS_DIR, TEST_FIXTURES_DIR
 
 SYNTHETIC_DIR = SYNTHETIC_DATA_DIR
 DOCUMENTS_DIR = SYNTHETIC_DOCUMENTS_DIR

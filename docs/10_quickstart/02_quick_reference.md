@@ -28,7 +28,7 @@ streamlit run src/health_refund_assistant/web_app.py
 ## Avalie Versões (com API key)
 ```bash
 export OPENAI_API_KEY=sk-...
-python3 scripts/case_evaluation.py --models v1.0 v2.0 v3.0 v4.0
+.venv/bin/python scripts/case_evaluation.py --prompt-version v4.0
 # Resultados em: json/evaluation/reports/
 ```
 

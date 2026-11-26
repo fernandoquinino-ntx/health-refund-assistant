@@ -1,5 +1,10 @@
 # Auditoria e Verificação Completa
 
+> **Aviso de confiabilidade:** este relatório histórico contém afirmações não
+> verificadas e está desatualizado. Não use seus checklists como comprovação de
+> segurança, funcionamento do modelo, testes ou Codespaces. Consulte o
+> [status atual](../00_status_auditoria.md) e o [README](../../README.md).
+
 **Data**: 2024-12-18  
 **Status**: Em Progresso  
 **Modelo**: GPT-6 Luna  

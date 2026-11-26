@@ -5,7 +5,7 @@
   para gerar candidatos de conciliação.
 - **Consumidores:** assistente, conciliador e ferramenta de proposta de mapeamento.
 - **Contrato:** [mapping_config.schema.json](../schemas/mapping_config.schema.json).
-- **Proposta por modelo:** prompt [reembolso_status/v1.0.txt](../../prompts/reembolso_status/v1.0.txt);
+- **Proposta por modelo:** prompt [reembolso_status/v1.0.md](../../prompts/reembolso_status/v1.0.md);
   saída validada por [mapping_proposal.schema.json](../schemas/mapping_proposal.schema.json).
 - **Privacidade:** não deve receber dados de beneficiários ou registros de sinistro.
 

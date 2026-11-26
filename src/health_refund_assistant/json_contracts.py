@@ -1,5 +1,6 @@
 import json
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
@@ -80,8 +81,8 @@ def _template_do_schema(
 
 
 @lru_cache(maxsize=None)
-def carregar_schema_json(nome_schema: str) -> dict[str, Any]:
-    caminho = resolve_schema(nome_schema)
+def carregar_schema_json(nome_schema: str | Path) -> dict[str, Any]:
+    caminho = nome_schema if isinstance(nome_schema, Path) else resolve_schema(nome_schema)
     with caminho.open("r", encoding="utf-8") as arquivo:
         schema = json.load(arquivo)
     if not isinstance(schema, dict):
@@ -110,13 +111,13 @@ def contexto_schema_para_prompt(nome_schema: str) -> str:
 
 
 @lru_cache(maxsize=None)
-def _carregar_validador(nome_schema: str) -> Draft202012Validator:
+def _carregar_validador(nome_schema: str | Path) -> Draft202012Validator:
     schema = carregar_schema_json(nome_schema)
     return Draft202012Validator(schema)
 
 
 def validar_contrato_json(
-    dados: Any, nome_schema: str, origem: str
+    dados: Any, nome_schema: str | Path, origem: str
 ) -> None:
     validador = _carregar_validador(nome_schema)
     erros = sorted(

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Revisão consultiva do documento",
+  "type": "object",
+  "properties": {
+    "situacao_documental": {
+      "type": "string",
+      "enum": ["sem_inconsistencias_identificadas", "revisao_necessaria", "nao_e_possivel_avaliar"]
+    },
+    "justificativa": {"type": "string", "minLength": 1},
+    "campos_para_revisao": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["numero_documento", "prestador", "cnpj_cpf_prestador", "valor_total", "data_emissao", "data_atendimento", "nome_profissional", "descricao_servico", "registro_profissional", "imagem_legivel", "observacao_visual"]
+      }
+    },
+    "orientacoes": {"type": "array", "items": {"type": "string"}}
+  },
+  "required": ["situacao_documental", "justificativa", "campos_para_revisao", "orientacoes"],
+  "additionalProperties": false
+}

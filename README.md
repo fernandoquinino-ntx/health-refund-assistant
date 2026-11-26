@@ -1,345 +1,128 @@
-# Health Refund Assistant — Rastreabilidade Inteligente de Reembolsos Médicos
+# Assistente de reembolsos de saúde
 
-**Sistema de conciliação e auditoria determinística + assistente LLM para validar notas fiscais e status de reembolso em planos de saúde.**
+Protótipo para consultar notas e recibos médicos diante de exportações do portal do
+plano. O objetivo é apoiar a rastreabilidade quando documentos são enviados a uma
+concierge e os pedidos são atualizados posteriormente no portal.
 
----
+## Como funciona
 
-## 📋 Visão Geral
+1. Importe uma exportação JSON do plano, com o período consultado.
+2. Na conversa, anexe um PDF e escreva sua pergunta. Apenas a primeira página do
+   PDF é processada.
+3. O VLM extrai campos conforme o schema JSON; a aplicação valida a estrutura.
+4. Código Python compara os dados com a exportação e identifica campos ausentes.
+   Para pedidos não localizados, calcula um prazo de envio **simulado**.
+   Uma tarefa de IA revisa a imagem e os dados extraídos,
+   identifica dúvidas e gera uma saída JSON validada.
+5. Para um pedido único com correspondência forte, data válida e status adequado,
+   uma tarefa de IA estima cinco dias úteis de processamento após a submissão;
+   o código confere o cálculo. Outra tarefa de IA explica as evidências. As respostas
+   e a revisão são consultivas e podem conter erros.
+6. Faça perguntas adicionais sem reenviar o PDF. Elas usam a última análise salva,
+   cujo status pode estar desatualizado. A estimativa usa a data de referência
+   escolhida na barra lateral; para atualizar o status, reenvie o PDF e selecione
+   uma exportação recente.
 
-O **Health Refund Assistant** resolve um problema real de rastreabilidade: beneficiários enviam notas fiscais e recibos médicos por e-mail ou WhatsApp para uma concierge que registra os pedidos manualmente no portal do plano de saúde. Como os comprovantes ficam dispersos em pastas ou conversas e as atualizações no portal ocorrem de forma assíncrona (às vezes levando semanas), perde-se a rastreabilidade.
+Uma ausência na exportação não prova que o pedido nunca foi enviado. Confirme
+resultados, exigências e prazos com o plano. A aplicação não envia pedidos.
+O schema, os prompts e as regras reduzem riscos, mas não garantem proteção contra
+instruções maliciosas, respostas incorretas ou vazamento.
+Uma nova análise faz três chamadas à API: extração, revisão e resposta. Uma quarta
+chamada é feita quando a estimativa de processamento pode ser calculada; nas
+perguntas seguintes, a estimativa é calculada novamente nessas condições. A imagem
+da primeira página é enviada na extração e novamente na revisão, com custo e
+implicações de privacidade; use documentos sintéticos nos testes.
 
-O sistema:
-1. **Extrai dados fiscais** de PDFs e imagens usando Vision Language Model (VLM) com schema JSON rigoroso.
-2. **Valida contra exportação** do plano de saúde (exportada para JSON após ingestion).
-3. **Responde 3 perguntas-chave** com fatos, não especulações:
-   - **Rastreabilidade**: "Esta nota já foi submetida ao plano?"
-   - **Status Financeiro**: "O reembolso foi pago, pago parcial/glosado, ou recusado?"
-   - **Prontidão Pré-Envio**: "Esta nota está completa e dentro do prazo para submissão?"
+**Limitações importantes:** o prazo de envio de **30 dias é simulado**, configurável
+na interface e não é analisado quando há pedido localizado. A estimativa de
+processamento de **cinco dias úteis** foi informada pelo usuário e não foi verificada
+com a Care Plus. Começa no primeiro dia útil após a submissão, exclui sábados e
+domingos, mas não feriados; não é garantia de pagamento. Data futura ou ausente,
+status inadequado, erros de coleta e correspondência incerta impedem a estimativa.
+Registros conflitantes de um mesmo pedido também a impedem. Análises salvas antes
+da verificação desses conflitos exigem reenviar o PDF e selecionar as exportações.
+A regra de 365 dias e o corte D-2, mencionados em
+documentos anteriores, ainda não estão implementados neste fluxo. Sem regras
+contratuais verificadas, a elegibilidade é **não é possível avaliar**.
 
----
+## Tarefas, entradas, saídas e conferência
 
-## 🎯 Problema Real e Regras de Elegibilidade
+| Tarefa | Entrada | Saída | Conferência |
+|---|---|---|---|
+| Extração VLM | Primeira página do PDF | Campos JSON | Schema e tipos validados localmente |
+| Importação e conciliação | Exportação JSON e dados extraídos | Período, candidatos e cálculos | Schema, datas e regras determinísticas |
+| Revisão documental por IA | Imagem, pergunta e evidências | [Revisão JSON](json/reconciliation/schemas/document_review.schema.md) | Schema e contradições básicas; revisão humana necessária |
+| Estimativa de processamento por IA | Data de submissão e data de referência | [Estimativa JSON](json/plan/schemas/payment_estimate.schema.md) | Schema e comparação com contagem independente de dias úteis |
+| Resposta por IA | Pergunta, histórico e evidências | [Resposta JSON](json/documents/schemas/assistant_answer.schema.md) | Schema local; não comprova a verdade do texto |
+| Processamento em lote | PDFs | Extrações e erros por arquivo | Mesmo extrator e contrato; não avalia elegibilidade |
+| Proposta de mapeamento | Estrutura dos dados, sem seus valores | Proposta JSON | Schema e caminhos existentes; revisão humana |
+| Avaliação sintética | PDFs, casos e gabarito | Relatório e estado por caso | Validação de entrada e relatório; compara extração, não elegibilidade |
 
-### Contexto: Fluxo Manual Desordenado
-- Beneficiário envia nota fiscal (PDF/imagem) por WhatsApp/e-mail.
-- Concierge registra pedido manualmente no portal do plano (delay de dias/semanas).
-- Beneficiário quer saber: foi submetida? Qual é o status? Pode enviar agora?
-- **Problema**: Faltam dados estruturados, rastreabilidade é manual.
+Falha de API ou saída inválida interrompe a resposta do chat; não é apresentada
+como sucesso. Processamentos em lote e avaliações registram o estado por arquivo
+ou caso. Uma conversa salva antes da revisão por IA precisa de novo PDF.
 
-### Regra D-1 / D-2 (Corte Temporal e Elegibilidade)
-O plano de saúde exporta periodicamente (geralmente diariamente) uma base de dados com pedidos processados até o corte **D-1** (dia anterior).
+## Executar localmente ou em Codespaces
 
-Dentro do sistema, aplicamos uma **janela de elegibilidade em D-2** como margem de segurança:
-- **D-1**: Corte da exportação do plano (últimos pedidos processados).
-- **D-2**: Janela de elegibilidade interna (D-1 menos 1 dia).
-- **Notas com `data_emissao > D-2`**: Recebem status `FORA_DA_JANELA_IMPORTACAO` (não podem ser rastreadas na base importada; recomenda-se aguardar próxima exportação).
+O projeto requer Python 3.10 ou superior. No Codespaces, o dev container instala as
+dependências e encaminha a porta 8501. Para instalação local:
 
-**Justificativa**: Evita falsos negativos quando uma nota é emitida após o corte D-1, impossibilitando que apareça na exportação. A janela D-2 garante que verificamos apenas notas que *poderiam* estar na base.
-
-### Dois Modos de Operação
-
-#### **Modo 1: Conciliação Financeira e Operacional** (Nota ≤ D-2)
-Quando uma nota é submetida e sua `data_emissao` está dentro da janela (≤ D-2), o sistema:
-1. Busca correspondência na exportação do plano.
-2. Se **encontrada**: Retorna o status financeiro real:
-   - `PAGO`: Reembolso pago integralmente.
-   - `PAGO_PARCIAL`: Reembolso pago com glosa/devolução (calcula diferença).
-   - `RECUSADO`: Pedido recusado pelo plano.
-   - `EM_ANALISE`: Pedido ainda sob análise.
-3. Se **não encontrada**: Passa para Auditoria Pré-Envio (veja Modo 2).
-
-#### **Modo 2: Auditoria Pré-Envio** (Nota ≤ D-2 ou > D-2)
-Quando uma nota não está na exportação (ou foi emitida fora da janela), o sistema valida se a nota está pronta para ser submetida:
-1. **Completude Documental**: Verifica se contém todos os campos obrigatórios:
-   - `CRM` ou `CRN` (profissional de saúde).
-   - `descricao_servico` (descrição legível do serviço).
-   - `cnpj_cpf_prestador` (CNPJ/CPF da clínica/profissional).
-   - `data_emissao` (data de emissão da nota).
-   - `valor_total` (valor cobrado).
-2. **Prazo de Elegibilidade**: Verifica se a nota foi emitida dentro de **365 dias (1 ano)** — prazo limite do plano para submissão de pedidos de reembolso.
-3. **Ressalva**: Ausência na exportação não prova isoladamente que o pedido nunca foi aberto (pode estar em processamento, perdido na fila, ou realmente não enviado). A auditoria só confirma que a *documentação* está pronta.
-
----
-
-## 🏗️ Arquitetura do Fluxo
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     FLUXO DE PROCESSAMENTO                           │
-└─────────────────────────────────────────────────────────────────────┘
-
-                        PDF / Imagem
-                             │
-                             ▼
-        ┌────────────────────────────────────┐
-        │  VLM Extractor (GPT-6 Luna)       │
-        │  Schema JSON com validação estrita │
-        │  (CRM, descrição, valor, data)     │
-        └────────────────────────────────────┘
-                             │
-                             ▼
-        ┌────────────────────────────────────┐
-        │  Conciliador & Auditor Determinístico │
-        │  - Calcula D-2 (hoje - 2 dias)    │
-        │  - Busca na Exportação do Plano   │
-        │  - Valida 365 dias e campos       │
-        └────────────────────────────────────┘
-                             │
-                 ┌───────────┴───────────┐
-                 ▼                       ▼
-        ┌──────────────────┐    ┌──────────────────┐
-        │ Encontrado       │    │ Não Encontrado   │
-        │ Modo 1:          │    │ Modo 2:          │
-        │ Retorna Status   │    │ Auditoria        │
-        │ (PAGO, RECUSADO, │    │ Pré-Envio        │
-        │  EM_ANALISE)     │    │ (Completo? 365d?)│
-        └──────────────────┘    └──────────────────┘
-                 │                       │
-                 └───────────┬───────────┘
-                             ▼
-        ┌────────────────────────────────────┐
-        │  Assistente LLM (Chat)             │
-        │  Síntese fundamentada na resposta  │
-        │  (Fatos, sem invenção de status)   │
-        └────────────────────────────────────┘
-                             │
-                             ▼
-                     Resposta ao Usuário
-                     (Rastreabilidade comprovada)
-```
-
----
-
-## 🚀 Guia de Execução
-
-### Pré-requisitos
-- **Python 3.9+**
-- **Variáveis de Ambiente** (`OPENAI_API_KEY` obrigatório; os demais opcionais):
-  ```bash
-  OPENAI_API_KEY=sk-...  # Sua chave OpenAI
-  OPENAI_BASE_URL=https://api.openai.com/v1  # (padrão)
-  VLM_MODEL_NAME=GPT-6 Luna  # (padrão)
-  LM_STUDIO_PORT=1234  # Se usar LM Studio localmente
-  ```
-
-### Configuração Rápida (GitHub Codespaces)
-1. **Clone e abra no Codespaces**:
-   ```bash
-   git clone https://github.com/fernandoquinino-ntx/health-refund-assistant.git
-   cd health-refund-assistant
-   ```
-
-2. **Adicione a API key em Codespaces Secrets**:
-   - Vá para **Settings > Secrets and variables > Codespaces**.
-   - Crie `OPENAI_API_KEY` com sua chave.
-
-3. **Instale dependências**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Gere fixtures sintéticas** (PDFs de teste):
-   ```bash
-   python scripts/gerar_fixtures_sinteticas.py
-   ```
-
-5. **Execute o assistente interativo**:
-   ```bash
-   python src/assistant.py
-   ```
-
-6. **Ou execute a web app**:
-   ```bash
-   python src/web_app.py
-   # Acesse http://localhost:8000
-   ```
-
-### Configuração Local (Máquina)
-1. **Clone o repositório**:
-   ```bash
-   git clone https://github.com/fernandoquinino-ntx/health-refund-assistant.git
-   cd health-refund-assistant
-   ```
-
-2. **Crie um `.env` com suas credenciais**:
-   ```bash
-   cp .env.example .env
-   # Edite .env e adicione sua OPENAI_API_KEY
-   ```
-
-3. **Crie um ambiente virtual**:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # macOS/Linux
-   # ou
-   venv\Scripts\activate  # Windows
-   ```
-
-4. **Instale dependências**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-5. **Execute os mesmos comandos acima** (assistente, web app, fixtures, testes).
-
-### Executar Testes
 ```bash
-# Todos os testes unitários
-pytest -v
-
-# Apenas testes de reconciliação
-pytest tests/test_reconciliation.py -v
-
-# Com cobertura
-pytest --cov=src tests/
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 ```
 
-### Avaliação com Versões de Prompts (se API key disponível)
+Configure `OPENAPI_TOKEN` no ambiente ou como segredo do Codespaces. O código
+não carrega `.env` automaticamente. `OPENAI_BASE_URL` é opcional; o identificador
+padrão do modelo é `gpt-6-luna`, cuja disponibilidade e compatibilidade dependem
+do provedor configurado. O nome de um modelo usado no Copilot não garante acesso
+ao mesmo identificador pela API.
+
 ```bash
-python scripts/case_evaluation.py --models v1.0 v2.0 v3.0
-# Gera relatórios em json/evaluation/reports/
+.venv/bin/streamlit run app.py
 ```
 
----
+Abra a porta 8501 no navegador. Selecione uma exportação, anexe um PDF e envie uma
+pergunta no chat. As opções de prompts e data de referência ficam na barra lateral.
+Os [prompts Markdown versionados](prompts/prompt_library.md) podem ser escolhidos
+separadamente para extração, revisão, estimativa e resposta. As versões selecionadas
+ficam nas evidências da última análise, não em um histórico de execução de testes.
 
-## 🔒 Segurança, LGPD e Limitações Conhecidas
+## Memória e privacidade
 
-### LGPD Compliance (Lei Geral de Proteção de Dados)
-- ✅ **Repositório Git contém apenas dados sintéticos**: 15 PDFs fictícios em `data/sinteticos/documentos/` com nomes, CPFs e valores de teste.
-- ✅ **Arquivos locais protegidos**: `.env` (credenciais) não é versionado; `.env.example` fornece template.
-- ✅ **Sem dados pessoais no Git**: Exportações reais do plano, notas fiscais reais e dados de beneficiários **nunca** são commitados.
-- ✅ **Limpeza**: Pasta `data/processed/` não contém PDFs reais; `json/documents/state/notas_extraidas.json` foi limpo para estrutura vazia válida.
+A memória persistente é **somente para um usuário em ambiente privado**. Não há
+autenticação ou isolamento multiusuário: não compartilhe a aplicação ou a porta
+do Codespace para dados de saúde. A conversa e as últimas evidências são gravadas
+em `json/documents/state/conversa_local.json`, ignorado pelo Git; não há criptografia
+da memória. O botão **Apagar conversa local** remove esse arquivo, mas não remove
+as exportações importadas nem dados enviados ao provedor da API. O PDF não é salvo
+na memória; campos extraídos, perguntas e respostas podem conter dados sensíveis.
 
-### Segurança Contra Prompt Injection
-- **Validação de entrada (VLM + Schema JSON)**: O VLM extrai dados com schema JSON `strict` mode (OpenAI); campos como `descricao_servico` são restringidos a tipos de dados (string, não código).
-- **Teste adversarial (C14, C15)**: Casos de teste verificam defesa contra tentativas de Prompt Injection na descrição do serviço. Esperado: **zero falhas críticas** (a descrição não consegue quebrar a lógica de conciliação).
-- **Tokens & Lógica**: A conciliação é **determinística** (Python puro) — sem chamadas LLM para decisões críticas. Apenas a síntese final é gerada com LLM, e é ancorada nos fatos retornados.
+## Testes
 
-### Limitações Técnicas Conhecidas
-1. **VLM lê apenas 1ª página do PDF**: Notas com múltiplas páginas podem perder dados de páginas subsequentes.
-2. **Janela D-2**: Notas emitidas após D-2 não aparecem na exportação e recebem status `FORA_DA_JANELA_IMPORTACAO` (recomenda-se aguardar próxima exportação).
-3. **Correspondência manual de pedidos**: A correspondência entre nota (VLM extraída) e pedido (exportação) é baseada em campos chave (`data_emissao`, `valor_total`, `cnpj_cpf_prestador`); em caso de múltiplos pedidos com mesmo valor no mesmo dia, pode haver ambiguidade (raro).
-
----
-
-## 📂 Estrutura do Projeto
-
-```
-health-refund-assistant/
-├── README.md                           # Este arquivo
-├── .gitignore                          # Exclui .env, dados reais, cache
-├── .env.example                        # Template de variáveis de ambiente
-├── requirements.txt                    # Dependências (openai, pydantic, etc.)
-│
-├── docs/                               # Documentação oficial
-│   ├── caderno_projeto.md              # Relatório técnico final (R1–R5)
-│   ├── planilha_testes_5_casos.md      # Tabela dos 5 casos de teste obrigatórios
-│   └── ...
-│
-├── src/                                # Código principal
-│   ├── assistant.py                    # CLI interativo (input nota → output rastreabilidade)
-│   ├── web_app.py                      # FastAPI web interface (upload PDF → JSON resposta)
-│   ├── vlm_extractor.py                # Extração VLM com schema JSON (GPT-6 Luna)
-│   ├── reconciliation.py               # Conciliação determinística contra exportação
-│   ├── assessment.py                   # Auditoria pré-envio (completude + 365 dias)
-│   ├── paths.py                        # Configuração centralizada de caminhos
-│   ├── config.py                       # Variáveis de ambiente (OpenAI, LM Studio, etc.)
-│   └── utils.py                        # Funções auxiliares (logging, conversão, etc.)
-│
-├── prompts/                            # Versões de prompts (versionadas)
-│   ├── extraction/
-│   │   ├── v1.0.txt                    # Extração inicial (fields basics)
-│   │   ├── v2.0.txt                    # Versão 2 (few-shot JSON)
-│   │   └── v3.0.txt                    # Versão 3 (schema com validação)
-│   └── reembolso_assistente/
-│       └── v1.0.txt                    # Síntese da resposta ao usuário (ancorada em fatos)
-│
-├── json/                               # Contratos JSON (organizados por tipo/processo)
-│   ├── README.md                       # Índice de tipos JSON
-│   ├── schemas/                        # Definições de estrutura
-│   │   ├── README.md
-│   │   ├── extraction_nota_fiscal.json # Schema para extração de nota fiscal
-│   │   ├── reconciliation_result.json  # Schema para resultado de conciliação
-│   │   └── ...
-│   ├── extraction/                     # Dados extraídos de notas
-│   │   └── README.md
-│   ├── reconciliation/                 # Resultados de conciliação
-│   │   └── README.md
-│   ├── plan/                           # Exportação do plano (ingestion)
-│   │   ├── imports/                    # JSONs importados do portal
-│   │   │   └── exportacao_plano.md     # Documentação da exportação
-│   │   └── processed/                  # Dados processados/normalizados
-│   └── evaluation/                     # Resultados de avaliação
-│       └── reports/                    # Relatórios JSON (versão prompts)
-│
-├── data/                               # Dados (sintéticos no Git, reais locais)
-│   ├── sinteticos/                     # Dados de teste (fixtures)
-│   │   ├── documentos/                 # 15 PDFs sintéticos (C01–C15)
-│   │   └── gabaritos.json              # Ground truth esperado (extração, resultado)
-│   └── processed/                      # Notas processadas (local, não versionado)
-│
-├── tests/                              # Testes unitários
-│   ├── test_vlm_extractor.py           # Testes de extração VLM
-│   ├── test_reconciliation.py          # Testes de conciliação determinística
-│   ├── test_assessment.py              # Testes de auditoria pré-envio
-│   ├── test_integration.py             # Testes de fluxo completo
-│   └── conftest.py                     # Fixtures de teste
-│
-└── scripts/                            # Scripts utilitários
-    ├── gerar_fixtures_sinteticas.py    # Gera 15 PDFs e gabaritos de teste
-    └── case_evaluation.py              # Avaliação das versões de prompts (v1–v3)
+```bash
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
----
+Os testes automatizados não comprovam que o modelo esteja disponível, que o
+Codespace tenha sido iniciado, nem que as respostas reais estejam corretas.
 
-## 📊 5 Casos de Teste Obrigatórios
+## Documentação e código
 
-Todos cobertos pela suíte de testes (`tests/`) e avaliação (`case_evaluation.py`):
+- [Status e limitações](docs/00_status_auditoria.md)
+- [Organização do código e dos testes](docs/70_documentation/04_estrutura_projeto.md)
+- [Arquitetura do agente](docs/50_architecture/02_ai_agent_architecture.md)
+- [Casos propostos para memória e isolamento](docs/70_documentation/06_casos_teste_memory.md)
+- [Contratos e dados JSON](json/README.md)
+- [Aplicação Streamlit](src/health_refund_assistant/web/web_app.py)
+- [Fluxo de extração, avaliação e resposta](src/health_refund_assistant/conversation/assistant.py)
 
-| Caso | Entrada | Modo | Resultado Esperado |
-|------|---------|------|-------------------|
-| **C1: Pago Integralmente** | Nota ≤ D-2, dentro de 1 ano, com CRM e descrição | Conciliação | Status `PAGO` com valor confirmado |
-| **C2: Pago Parcial / Glosa** | Nota ≤ D-2, parcialmente reembolsada | Conciliação | Status `PAGO_PARCIAL`, valor glosa apurado |
-| **C3: Fora da Janela** | Nota > D-2 (emitida após corte) | Auditoria | Status `FORA_DA_JANELA_IMPORTACAO`, recomenda aguardar |
-| **C4: Incompleto / Fora do Prazo** | CRM ausente ou > 365 dias | Auditoria | Rejeição com mensagem de campo faltante ou prazo vencido |
-| **C5: Prompt Injection** | Descrição contém tentativa de manipulação de prompt | Ambos | Zero falhas críticas; extração e conciliação ignoram tentativa |
+O benchmark da extração fica fora do núcleo da aplicação:
 
----
+```bash
+.venv/bin/python scripts/case_evaluation.py --help
+```
 
-## 🛠️ Desenvolvimento
-
-### Adicionar Novo Caso de Teste Sintético
-1. Crie um PDF em `data/sinteticos/documentos/C##_descricao.pdf`.
-2. Adicione gabarito esperado em `data/sinteticos/gabaritos.json`.
-3. Execute `pytest -v` e `case_evaluation.py` para validar.
-
-### Versionar Novo Prompt
-1. Crie `prompts/extraction/v4.0.txt` (ou nova versão).
-2. Atualize `src/vlm_extractor.py` para suportar `prompt_version=v4.0`.
-3. Avalie com `case_evaluation.py --models v3.0 v4.0`.
-4. Documente mudança em `docs/caderno_projeto.md`.
-
-### Integrar Nova Fonte de Dados (Plano)
-1. Exporte dados do portal em JSON (formato padronizado).
-2. Coloque em `json/plan/imports/`.
-3. Registre schema em `json/schemas/`.
-4. Atualize `reconciliation.py` para carregar novo arquivo.
-5. Adicione teste de conciliação em `tests/test_reconciliation.py`.
-
----
-
-## 📞 Contato e Referências
-
-- **Autor**: Fernando Quinnino (fernandoquinino-ntx)
-- **Repositório**: [github.com/fernandoquinino-ntx/health-refund-assistant](https://github.com/fernandoquinino-ntx/health-refund-assistant)
-- **Trabalho Final**: Opção A (Código + Documentação), Entrega: 02/12/2026
-
----
-
-## 📝 Licença
-
-MIT License — Use livremente para fins educacionais e comerciais, mantendo atribuição.
-
----
-
-**Última atualização**: 2025 (Fase 2 — Reescrita Técnica Completa)
+Uma avaliação real usa a API configurada e gera um relatório local. O antigo
+`scripts/case_evaluation_v3.py` gerava resultados fixos sem executar a avaliação;
+seus relatórios anteriores não são evidência de testes reais.

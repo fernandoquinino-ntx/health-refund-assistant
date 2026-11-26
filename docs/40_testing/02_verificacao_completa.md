@@ -1,5 +1,9 @@
 # ✅ Verificação de Entrega Final — Trabalho Final (Opção A)
 
+> **Atenção:** os checklists e resultados abaixo são históricos e não foram
+> verificados nesta reorganização. O antigo `case_evaluation_v3.py` produzia
+> afirmações fixas sem chamar a API; não comprova avaliação real nem entrega pronta.
+
 **Data:** 25 de novembro de 2026  
 **Status:** 🟢 TODAS AS 5 FASES COMPLETAS  
 **Deliverable:** `health-refund-assistant-entrega.zip` (202 KB)
@@ -56,7 +60,7 @@
 - [x] `assessment.py` executando auditoria pré-envio
 - [x] Validação de campos obrigatórios: CRM/CRN, descrição, CNPJ/CPF, valor, data
 - [x] Prazo de 365 dias verificado
-- [x] `prompts/reembolso_assistente/v1.0.txt` gera resposta ancrada em fatos
+- [x] `prompts/reembolso_assistente/v1.0.md` gera resposta ancrada em fatos
 
 **Fluxo confirmado:**
 1. VLM Extractor → JSON Schema

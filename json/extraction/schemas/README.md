@@ -11,10 +11,10 @@ Contrato para extração de dados de nota fiscal em versões 1.0–3.0 do prompt
 
 **Usado por:**
 - [vlm_extractor.py](/src/health_refund_assistant/vlm_extractor.py)
-- [prompts/vlm_extractor/v1.0.txt](/prompts/vlm_extractor/v1.0.txt)
-- [prompts/vlm_extractor/v1.1.txt](/prompts/vlm_extractor/v1.1.txt)
-- [prompts/vlm_extractor/v2.0.txt](/prompts/vlm_extractor/v2.0.txt)
-- [prompts/vlm_extractor/v3.0.txt](/prompts/vlm_extractor/v3.0.txt)
+- [prompts/vlm_extractor/v1.0.md](/prompts/vlm_extractor/v1.0.md)
+- [prompts/vlm_extractor/v1.1.md](/prompts/vlm_extractor/v1.1.md)
+- [prompts/vlm_extractor/v2.0.md](/prompts/vlm_extractor/v2.0.md)
+- [prompts/vlm_extractor/v3.0.md](/prompts/vlm_extractor/v3.0.md)
 
 **Referência de documentação:** [vlm_extraction.schema.md](/json/extraction/schemas/vlm_extraction.schema.md)
 
@@ -27,7 +27,7 @@ Contrato para extração de dados com 11 campos (versão 4.0+).
 
 **Usado por:**
 - [vlm_extractor.py](/src/health_refund_assistant/vlm_extractor.py) (prompt v4.0)
-- [prompts/vlm_extractor/v4.0.txt](/prompts/vlm_extractor/v4.0.txt)
+- [prompts/vlm_extractor/v4.0.md](/prompts/vlm_extractor/v4.0.md)
 
 **Referência de documentação:** [vlm_extraction_v4.schema.md](/json/extraction/schemas/vlm_extraction_v4.schema.md)
 

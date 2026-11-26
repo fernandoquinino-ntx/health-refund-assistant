@@ -109,10 +109,10 @@ pytest tests/test_llm_memory_injection.py -v
 #### Arquivos a Atualizar:
 ```
 prompts/reembolso_assistente/
-├── v1.0.txt (histórico)
-├── v2.0.txt (histórico)
-├── v3.0.txt (histórico)
-└── v4.0.txt (NOVO - com memory + tools + knowledge)
+├── v1.0.md (histórico)
+├── v2.0.md (histórico)
+├── v3.0.md (histórico)
+└── v4.0.md (NOVO - com memory + tools + knowledge)
 ```
 
 #### Prompt v4.0 Template:

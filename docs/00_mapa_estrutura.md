@@ -160,14 +160,14 @@ json/
 
 prompts/
 ├── vlm_extractor/
-│   ├── v1.0.txt
-│   ├── v2.0.txt
-│   ├── v3.0.txt
-│   └── v4.0.txt
+│   ├── v1.0.md
+│   ├── v2.0.md
+│   ├── v3.0.md
+│   └── v4.0.md
 ├── reembolso_assistente/
-│   └── v1.0.txt
+│   └── v1.0.md
 ├── reembolso_status/
-│   └── v1.0.txt
+│   └── v1.0.md
 └── prompt_library.md
 
 data/

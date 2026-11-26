@@ -3,7 +3,7 @@
   "version": "v1.0",
   "mapping_method": {
     "type": "manual_schema_review",
-    "prompt_reference": "prompts/reembolso_status/v1.0.txt",
+    "prompt_reference": "prompts/reembolso_status/v1.0.md",
     "model_output_used": false,
     "note": "Os campos foram mapeados a partir dos schemas. As tentativas locais de geração não produziram um mapa utilizável."
   },

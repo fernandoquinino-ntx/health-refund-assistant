@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "data_submissao": {"type": "string"},
+    "data_referencia": {"type": "string"},
+    "data_estimada": {"type": "string"},
+    "dias_uteis_restantes": {"type": "integer", "minimum": 0},
+    "dias_uteis_atraso": {"type": "integer", "minimum": 0},
+    "situacao": {"type": "string", "enum": ["dentro_do_prazo", "prazo_ultrapassado"]}
+  },
+  "required": ["data_submissao", "data_referencia", "data_estimada", "dias_uteis_restantes", "dias_uteis_atraso", "situacao"]
+}

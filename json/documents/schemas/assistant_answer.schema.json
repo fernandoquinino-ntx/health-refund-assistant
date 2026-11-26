@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resposta do assistente",
+  "type": "object",
+  "properties": {
+    "resposta": {"type": "string", "minLength": 1}
+  },
+  "required": ["resposta"],
+  "additionalProperties": false
+}

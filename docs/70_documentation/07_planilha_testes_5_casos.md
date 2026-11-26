@@ -1,5 +1,13 @@
 # Planilha de Testes — 5 Casos Obrigatórios
 
+> **Atenção:** as afirmações de execução e saídas observadas deste documento não
+> foram comprovadas nesta reorganização. O antigo avaliador `case_evaluation_v3.py`
+> produzia resultados fixos sem chamar a API; não os use como evidência real.
+> O fluxo atual não avalia prazo de envio para pedido localizado e não implementa
+> regra de 365 dias. A estimativa de processamento de cinco dias úteis não considera
+> feriados, não foi confirmada com o plano e não garante pagamento. As afirmações
+> históricas abaixo não substituem resultados reais e atualizados.
+
 **Projeto**: Health Refund Assistant  
 **Data**: 2025  
 **Versão do Documento**: 1.0  
@@ -124,7 +132,7 @@ python scripts/gerar_fixtures_sinteticas.py
 pytest tests/ -v
 
 # Executar avaliação com versões de prompts (requer OPENAI_API_KEY)
-python scripts/case_evaluation.py --models v1.0 v2.0 v3.0 v4.0
+.venv/bin/python scripts/case_evaluation.py --prompt-version v4.0
 
 # Ver relatórios em
 # json/evaluation/reports/v1.0_results.json

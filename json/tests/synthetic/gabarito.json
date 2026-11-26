@@ -17,10 +17,10 @@
         "observacao_visual": null
       },
       "avaliacao": {
-        "data_base_prazo": "2026-03-10",
-        "origem_data_base_prazo": "data_atendimento",
-        "dias_desde_atendimento_ou_emissao": 10,
-        "situacao_prazo": "dentro_do_prazo_simulado",
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "nao_aplicavel_pedido_localizado",
         "situacao_pedido": "localizado",
         "periodo_dos_datasets_cobre_data_base": true,
         "campos_incompletos": [],
@@ -42,10 +42,10 @@
         "observacao_visual": null
       },
       "avaliacao": {
-        "data_base_prazo": "2026-03-11",
-        "origem_data_base_prazo": "data_atendimento",
-        "dias_desde_atendimento_ou_emissao": 9,
-        "situacao_prazo": "dentro_do_prazo_simulado",
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "nao_aplicavel_pedido_localizado",
         "situacao_pedido": "localizado",
         "periodo_dos_datasets_cobre_data_base": true,
         "campos_incompletos": [],
@@ -67,10 +67,10 @@
         "observacao_visual": null
       },
       "avaliacao": {
-        "data_base_prazo": "2026-03-12",
-        "origem_data_base_prazo": "data_atendimento",
-        "dias_desde_atendimento_ou_emissao": 9,
-        "situacao_prazo": "dentro_do_prazo_simulado",
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "nao_aplicavel_pedido_localizado",
         "situacao_pedido": "localizado",
         "periodo_dos_datasets_cobre_data_base": true,
         "campos_incompletos": [],
@@ -92,10 +92,10 @@
         "observacao_visual": null
       },
       "avaliacao": {
-        "data_base_prazo": "2026-03-13",
-        "origem_data_base_prazo": "data_atendimento",
-        "dias_desde_atendimento_ou_emissao": 7,
-        "situacao_prazo": "dentro_do_prazo_simulado",
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "nao_aplicavel_pedido_localizado",
         "situacao_pedido": "localizado",
         "periodo_dos_datasets_cobre_data_base": true,
         "campos_incompletos": [],
@@ -142,10 +142,10 @@
         "observacao_visual": null
       },
       "avaliacao": {
-        "data_base_prazo": "2026-03-01",
-        "origem_data_base_prazo": "data_atendimento",
-        "dias_desde_atendimento_ou_emissao": 31,
-        "situacao_prazo": "fora_do_prazo_simulado",
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "nao_aplicavel_pedido_localizado",
         "situacao_pedido": "localizado",
         "periodo_dos_datasets_cobre_data_base": true,
         "campos_incompletos": [],
@@ -355,10 +355,10 @@
         "observacao_visual": null
       },
       "avaliacao": {
-        "data_base_prazo": "2026-03-23",
-        "origem_data_base_prazo": "data_atendimento",
-        "dias_desde_atendimento_ou_emissao": 1,
-        "situacao_prazo": "dentro_do_prazo_simulado",
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "nao_aplicavel_pedido_localizado",
         "situacao_pedido": "localizado",
         "periodo_dos_datasets_cobre_data_base": true,
         "campos_incompletos": [],
@@ -380,10 +380,10 @@
         "observacao_visual": null
       },
       "avaliacao": {
-        "data_base_prazo": "2026-03-24",
-        "origem_data_base_prazo": "data_atendimento",
-        "dias_desde_atendimento_ou_emissao": 1,
-        "situacao_prazo": "dentro_do_prazo_simulado",
+        "data_base_prazo": null,
+        "origem_data_base_prazo": null,
+        "dias_desde_atendimento_ou_emissao": null,
+        "situacao_prazo": "nao_aplicavel_pedido_localizado",
         "situacao_pedido": "localizado",
         "periodo_dos_datasets_cobre_data_base": true,
         "campos_incompletos": [],

@@ -9,7 +9,8 @@
         "consultar_status",
         "confirmar_pagamento",
         "verificar_prazo",
-        "revisar_completude"
+        "revisar_completude",
+        "categoria_nao_mapeada"
       ]
     },
     "note_reference": {

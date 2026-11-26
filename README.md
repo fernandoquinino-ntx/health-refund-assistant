@@ -8,7 +8,8 @@ concierge e os pedidos são atualizados posteriormente no portal.
 
 1. Converse com o assistente em linguagem natural.
 2. O agente interpreta a tarefa e solicita somente os anexos faltantes.
-3. Envie uma nota PDF/imagem e, quando necessário, uma exportação JSON do plano.
+3. Envie uma nota fiscal ou recibo em PDF editável, PDF escaneado, JPG ou PNG.
+   Quando necessário, envie a exportação JSON atual do plano.
 4. GPT-6 Luna interpreta o pedido e sintetiza a resposta.
 5. O modelo visual local ou remoto extrai campos estruturados da imagem.
 6. Código determinístico concilia o documento, identifica campos e calcula prazo.
@@ -56,14 +57,26 @@ diretório correspondente em `json/` e um modelo gerado a partir dele. Na extra�
 nas tarefas do chat, o schema também é enviado no `response_format`, quando
 suportado; a resposta é validada localmente. Exemplos do modelo não são dados reais.
 
+Exemplos sintéticos de interação:
+
+| Tipo de interação | Entrada | Saída típica |
+|---|---|---|
+| Consultar status | Nota fiscal + exportação JSON | Status registrado e próximos dados solicitados |
+| Confirmar pagamento | Número da nota + exportação JSON | Valor/status somente se houver registro |
+| Verificar prazo | Nota ou data + referência | Prazo simulado ou indeterminado, com aviso |
+| Revisar completude | JPG/PNG/PDF | Lista de campos ausentes ou ilegíveis |
+| Tarefa desconhecida | Texto fora do catálogo | Pedido de esclarecimento e opções válidas |
+
+Os detalhes completos ficam no [contrato central das tarefas](json/config/agent_tasks.json).
+
 Falha de API ou saída inválida interrompe a resposta do chat; não é apresentada
 como sucesso. Processamentos em lote e avaliações registram o estado por arquivo
 ou caso. Uma conversa salva antes da revisão por IA precisa de novo PDF.
 
 ## Executar localmente ou em Codespaces
 
-O projeto requer Python 3.10 ou superior. No Codespaces, o dev container instala as
-dependências e encaminha a porta 8501. Para instalação local:
+O projeto requer Python 3.10 ou superior. No Codespaces, o dev container executa
+`make setup-codespace` na criação e `make run` ao iniciar. Para instalação local:
 
 ```bash
 python3 -m venv .venv
@@ -80,8 +93,10 @@ ao mesmo identificador pela API.
 make run
 ```
 
-Abra a porta 8501 no navegador. Converse normalmente e anexe uma nota PDF/imagem
-e, quando necessário, uma exportação JSON do plano.
+Abra a porta `8501` no navegador. Ela é a porta HTTP local do Streamlit: a UI
+carrega em `http://127.0.0.1:8501` localmente ou é encaminhada pelo Codespaces.
+Converse normalmente e anexe uma nota PDF/imagem e, quando necessário, uma
+exportação JSON do plano.
 
 Comandos resumidos:
 
@@ -106,13 +121,24 @@ centraliza ambientes, testes, OCR, Label Studio, treinamento, conversão e build
 
 ## Memória e privacidade
 
-A memória persistente é **somente para um usuário em ambiente privado**. Não há
-autenticação ou isolamento multiusuário: não compartilhe a aplicação ou a porta
-do Codespace para dados de saúde. A conversa e as últimas evidências são gravadas
-em `json/documents/state/conversa_local.json`, ignorado pelo Git; não há criptografia
-da memória. O botão **Apagar conversa local** remove esse arquivo, mas não remove
-as exportações importadas nem dados enviados ao provedor da API. O PDF não é salvo
-na memória; campos extraídos, perguntas e respostas podem conter dados sensíveis.
+A aplicação possui autenticação local para testes, baseada em usuário e PIN com
+hash PBKDF2. O arquivo `json/config/usuarios_locais.json` e as memórias em
+`json/documents/state/usuarios/` são ignorados pelo Git. Cada usuário autenticado
+recebe seu próprio arquivo de conversa e trilha de eventos. A autenticação local
+não substitui identidade segura ou controle de produção.
+
+O PDF não é salvo na memória; campos extraídos, perguntas e respostas podem conter
+dados sensíveis. O botão **Apagar conversa local** remove somente o arquivo do
+usuário autenticado, mas não remove exportações importadas nem dados enviados ao
+provedor da API. Não compartilhe a porta do Codespace com dados reais.
+
+## Rastreamento local
+
+Cada interação registrada gera um evento em
+`json/documents/state/traces/<usuario>/eventos.jsonl`. O evento inclui tarefa,
+status, versões dos prompts, hashes de entrada/anexos, hash da saída, duração e
+erro. PIN e texto bruto não são gravados. A aba **Auditoria local** mostra os
+eventos recentes na interface. O JSONL é privado e ignorado pelo Git.
 
 ## Testes
 

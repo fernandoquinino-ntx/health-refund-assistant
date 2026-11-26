@@ -119,6 +119,16 @@ class AgentTaskTests(unittest.TestCase):
             )
         self.assertEqual(result["answer"], "O pedido está localizado.")
 
+    def test_tarefa_fora_do_catalogo_pede_esclarecimento(self):
+        result = handle_agent_turn(
+            "Conte uma piada sobre qualquer assunto",
+            None,
+            None,
+        )
+        self.assertEqual(result["state"]["task"], "categoria_nao_mapeada")
+        self.assertEqual(result["state"]["status"], "aguardando_confirmacao")
+        self.assertIn("tarefa", result["answer"].lower())
+
 
 if __name__ == "__main__":
     unittest.main()

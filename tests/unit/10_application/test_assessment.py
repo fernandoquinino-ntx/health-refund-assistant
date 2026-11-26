@@ -5,13 +5,18 @@ Processamento: exercita avaliação, correspondência e regras de prazo.
 Saídas: asserções de sucesso ou falha para o runner de testes.
 """
 import unittest
+import json
+import tempfile
 from datetime import date
+from pathlib import Path
+from unittest.mock import patch
 
 from health_refund_assistant.plan.assessment import (
     ExportPeriodError,
     avaliar_documento,
     validar_periodo_exportacao,
 )
+from health_refund_assistant.plan import assessment as assessment_module
 from health_refund_assistant.plan.reconciliation import DEFAULT_MAPPING, load_json
 
 
@@ -190,6 +195,28 @@ class AssessmentTests(unittest.TestCase):
         self.assertEqual(result["ids_com_registros_conflitantes"], ["SIN-SINT-001"])
         identical = avaliar_documento(self.document, [earlier, earlier], self.mapping, date(2026, 3, 20))
         self.assertEqual(len(identical["candidatos"]), 1)
+
+    def test_confirmed_d2_and_365_rules_are_opt_in(self):
+        with tempfile.TemporaryDirectory() as directory:
+            config_path = Path(directory) / "prazos_reembolso.json"
+            config_path.write_text(json.dumps({
+                "schema_version": 1,
+                "regras_confirmadas": True,
+                "d2": {"ativo": True, "dias": 2},
+                "365": {"ativo": True, "dias": 365},
+            }), encoding="utf-8")
+            with patch.object(assessment_module, "PRAZO_CONFIG_PATH", config_path):
+                result = avaliar_documento(
+                    self.document,
+                    [self.export],
+                    self.mapping,
+                    date(2026, 4, 1),
+                )
+            self.assertTrue(result["regras_prazo_confirmadas"])
+            self.assertTrue(result["corte_d2"]["ativo"])
+            self.assertEqual(result["corte_d2"]["corte_exportacao"], "2026-03-29")
+            self.assertTrue(result["prazo_365"]["ativo"])
+            self.assertEqual(result["prazo_365"]["situacao"], "dentro_do_prazo_confirmado")
 
 
 if __name__ == "__main__":

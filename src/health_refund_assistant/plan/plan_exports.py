@@ -60,3 +60,31 @@ def load_selected_exports(paths: List[Path]) -> List[Dict[str, Any]]:
 def available_plan_exports() -> List[Path]:
     PLAN_EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
     return sorted(PLAN_EXPORTS_DIR.glob("*.json"), reverse=True)
+
+
+def export_assessment_json(evidence: Dict[str, Any]) -> bytes:
+    """Serializa uma análise individual para um arquivo JSON seguro de reimportar."""
+    if not isinstance(evidence, dict):
+        raise ValueError("A análise deve ser um objeto JSON.")
+    if not isinstance(evidence.get("documento"), dict):
+        raise ValueError("A exportação não contém os dados documentais esperados.")
+    if not isinstance(evidence.get("conciliacao"), dict):
+        raise ValueError("A exportação não contém a conciliação esperada.")
+    return (json.dumps(evidence, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def import_assessment_json(content: bytes) -> Dict[str, Any]:
+    """Valida e reimporta uma análise individual exportada pelo assistente."""
+    try:
+        evidence = json.loads(content)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError("A análise não contém JSON válido.") from error
+    if not isinstance(evidence, dict):
+        raise ValueError("A análise exportada deve ser um objeto JSON.")
+    if not isinstance(evidence.get("documento"), dict):
+        raise ValueError("A análise exportada não contém documento.")
+    if not isinstance(evidence.get("conciliacao"), dict):
+        raise ValueError("A análise exportada não contém conciliação.")
+    if "revisao_ia" in evidence and not isinstance(evidence["revisao_ia"], dict):
+        raise ValueError("A revisão IA da análise exportada é inválida.")
+    return evidence

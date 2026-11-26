@@ -57,6 +57,22 @@ class PlanExportsTests(unittest.TestCase):
 
             self.assertEqual(list(target.iterdir()), [])
 
+    def test_assessment_round_trip_preserves_document_and_reconciliation(self):
+        evidence = {
+            "documento": {"numero_documento": "1049"},
+            "conciliacao": {"situacao_pedido": "localizado"},
+            "revisao_ia": {"situacao_documental": "revisao_necessaria"},
+        }
+        content = plan_exports.export_assessment_json(evidence)
+        imported = plan_exports.import_assessment_json(content)
+        self.assertEqual(imported, evidence)
+
+    def test_assessment_round_trip_rejects_missing_sections(self):
+        with self.assertRaisesRegex(ValueError, "dados documentais"):
+            plan_exports.export_assessment_json({"conciliacao": {}})
+        with self.assertRaisesRegex(ValueError, "documento"):
+            plan_exports.import_assessment_json(b'{"conciliacao": {}}')
+
 
 if __name__ == "__main__":
     unittest.main()

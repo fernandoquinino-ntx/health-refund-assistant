@@ -19,14 +19,15 @@ Atualizado em 26/11/2026.
 
 ## Limitações e pendências
 
-- Não há autenticação, isolamento multiusuário, criptografia da memória ou garantia
-  contra prompt injection. Use somente ambiente privado e dados sintéticos para testes.
+- Há autenticação local por usuário/PIN com hash para testes e memória separada
+  por usuário. Não há criptografia forte nem segurança adequada para produção;
+  não há garantia contra prompt injection. Use ambiente privado e dados sintéticos.
 - Visão local usa llama.cpp e GGUF no Codespaces. O servidor só inicia quando
   `modelo_aprovado.json` está aprovado e os arquivos GGUF/mmproj existem.
 - Nenhum adaptador treinado foi aprovado atualmente. Os testes anteriores não
   comprovaram melhoria suficiente e mostraram risco de alucinação.
-- A aplicação usa 30 dias como prazo **simulado**. As regras D-2 e 365 dias citadas
-  em documentos anteriores não estão implementadas no fluxo atual. A elegibilidade
+- A aplicação usa 30 dias como prazo **simulado**. D-2 e 365 dias são campos
+  opcionais ativados somente por configuração com regras confirmadas. A elegibilidade
   contratual é indeterminada, pois as regras do plano não foram verificadas.
 - A disponibilidade de `gpt-6-luna` pela API e a execução real no Codespaces
   precisam ser verificadas com o provedor e o ambiente do grupo.

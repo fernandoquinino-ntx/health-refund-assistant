@@ -17,6 +17,17 @@ from streamlit.testing.v1 import AppTest
 
 
 class WebAppTests(unittest.TestCase):
+    def setUp(self):
+        self.auth_patcher = patch.object(
+            web_app,
+            "local_user_login",
+            return_value="usuario_teste",
+        )
+        self.auth_patcher.start()
+
+    def tearDown(self):
+        self.auth_patcher.stop()
+
     def test_prompt_selector_discovers_versions_in_numerical_order(self):
         extraction_versions = web_app.prompt_versions(
             web_app.PROMPTS_DIR / "vlm_extractor"
@@ -62,8 +73,7 @@ class WebAppTests(unittest.TestCase):
             path = Path(directory) / "conversa.json"
             upload = SimpleNamespace(name="nota.pdf", getvalue=lambda: b"%PDF-test")
             with (
-                patch.object(web_app, "load_conversation", side_effect=lambda: load_conversation(path)),
-                patch.object(web_app, "save_conversation", side_effect=lambda m, e, *args, **kwargs: save_conversation(m, e, path, **kwargs)),
+                patch.object(web_app, "conversation_path_for_user", return_value=path),
                 patch.object(web_app.st, "file_uploader", return_value=[upload]),
                 patch.object(web_app, "handle_agent_turn", return_value={
                     "answer": "Não localizado.",
@@ -118,8 +128,7 @@ class WebAppTests(unittest.TestCase):
                 path,
             )
             with (
-                patch.object(web_app, "load_conversation", side_effect=lambda: load_conversation(path)),
-                patch.object(web_app, "save_conversation", side_effect=lambda m, e, *args, **kwargs: save_conversation(m, e, path, **kwargs)),
+                patch.object(web_app, "conversation_path_for_user", return_value=path),
                 patch("health_refund_assistant.conversation.agent.create_assistant_answer", return_value="Ainda não localizado.") as answer,
             ):
                 app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / "app.py"))
@@ -133,6 +142,11 @@ class WebAppTests(unittest.TestCase):
 
     def test_new_conversation_requires_document(self):
         with (
+            patch.object(
+                web_app,
+                "conversation_path_for_user",
+                return_value=Path("/tmp/conversa_teste.json"),
+            ),
             patch.object(web_app, "load_conversation", return_value={"messages": [], "evidence": None}),
             patch("health_refund_assistant.conversation.agent.create_assistant_answer") as answer,
         ):
@@ -177,8 +191,7 @@ class WebAppTests(unittest.TestCase):
             path = Path(directory) / "conversa.json"
             save_conversation([], {"documento": {}, "conciliacao": assessment, "revisao_ia": review}, path)
             with (
-                patch.object(web_app, "load_conversation", side_effect=lambda: load_conversation(path)),
-                patch.object(web_app, "save_conversation", side_effect=lambda m, e, *args, **kwargs: save_conversation(m, e, path, **kwargs)),
+                patch.object(web_app, "conversation_path_for_user", return_value=path),
                 patch("health_refund_assistant.conversation.estimativa_pagamento.request_structured_json", return_value=estimate),
                 patch("health_refund_assistant.conversation.agent.create_assistant_answer", return_value="Estimativa.") as answer,
             ):
@@ -208,6 +221,11 @@ class WebAppTests(unittest.TestCase):
             "candidatos": [],
         }
         with (
+            patch.object(
+                web_app,
+                "conversation_path_for_user",
+                return_value=Path("/tmp/conversa_teste_old.json"),
+            ),
             patch.object(web_app, "load_conversation", return_value={
                 "messages": [], "evidence": {"documento": {}, "conciliacao": assessment}
             }),

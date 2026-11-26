@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "regras_confirmadas": false,
+  "d2": {
+    "ativo": false,
+    "dias": 2
+  },
+  "365": {
+    "ativo": false,
+    "dias": 365
+  }
+}

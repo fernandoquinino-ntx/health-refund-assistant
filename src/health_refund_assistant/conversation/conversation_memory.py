@@ -11,11 +11,19 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from ..core.paths import CONVERSATION_STATE_PATH
+from ..core.paths import CONVERSATION_STATE_PATH, STATE_DIR
 from ..core.json_contracts import validar_contrato_json
 
 
 MAX_MESSAGES = 50
+
+
+def conversation_path_for_user(user_id: str) -> Path:
+    """Retorna o arquivo privado da conversa de um usuário validado."""
+    from ..auth.local_auth import _normalize_user_id
+
+    normalized = _normalize_user_id(user_id)
+    return STATE_DIR / "usuarios" / normalized / "conversa_local.json"
 
 
 def load_conversation(path: Path = CONVERSATION_STATE_PATH) -> dict[str, Any]:

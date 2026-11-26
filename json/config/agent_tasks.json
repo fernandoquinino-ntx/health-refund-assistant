@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "tarefas": {
+    "analisar_documento": {
+      "aliases": ["analisar", "nota", "documento", "recibo"],
+      "minimum_inputs": ["documento"],
+      "missing_input": "documento",
+      "prompt": "reembolso_assistente/v1.2",
+      "schema": "assistant_answer.schema.json",
+      "deterministic_tools": ["extrair_e_conciliar"],
+      "allowed_outputs": ["concluido", "aguardando_exportacao", "aguardando_revisao"]
+    },
+    "consultar_status": {
+      "aliases": ["status", "pedido", "solicitado", "já enviaram"],
+      "minimum_inputs": ["documento", "exportacao_do_plano"],
+      "missing_input": "exportacao_do_plano",
+      "prompt": "reembolso_assistente/v1.2",
+      "schema": "assistant_answer.schema.json",
+      "deterministic_tools": ["consultar_exportacao"],
+      "allowed_outputs": ["concluido", "aguardando_exportacao", "aguardando_documento"]
+    },
+    "confirmar_pagamento": {
+      "aliases": ["pago", "pagamento", "recebi", "reembolso"],
+      "minimum_inputs": ["numero_nota", "exportacao_do_plano"],
+      "missing_input": "numero_nota",
+      "prompt": "reembolso_assistente/v1.2",
+      "schema": "assistant_answer.schema.json",
+      "deterministic_tools": ["consultar_exportacao"],
+      "allowed_outputs": ["concluido", "aguardando_exportacao", "aguardando_documento"]
+    },
+    "verificar_prazo": {
+      "aliases": ["prazo", "vencido", "dentro do prazo", "365", "D-2"],
+      "minimum_inputs": ["documento", "data_referencia"],
+      "missing_input": "documento",
+      "prompt": "reembolso_assistente/v1.2",
+      "schema": "assistant_answer.schema.json",
+      "deterministic_tools": ["avaliar_documento"],
+      "allowed_outputs": ["dentro_do_prazo", "fora_do_prazo", "nao_e_possivel_avaliar"]
+    },
+    "revisar_completude": {
+      "aliases": ["faltando", "completo", "incompleto", "campos"],
+      "minimum_inputs": ["documento"],
+      "missing_input": "documento",
+      "prompt": "reembolso_assistente/v1.2",
+      "schema": "assistant_answer.schema.json",
+      "deterministic_tools": ["avaliar_documento"],
+      "allowed_outputs": ["concluido", "aguardando_documento", "aguardando_revisao"]
+    },
+    "categoria_nao_mapeada": {
+      "aliases": [],
+      "minimum_inputs": [],
+      "missing_input": null,
+      "prompt": "reembolso_assistente/v1.2",
+      "schema": "assistant_answer.schema.json",
+      "deterministic_tools": [],
+      "allowed_outputs": ["pedido_esclarecimento", "categoria_nao_mapeada"]
+    }
+  }
+}

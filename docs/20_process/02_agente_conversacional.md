@@ -26,6 +26,7 @@ resultado em linguagem simples. Os campos JSON e prompts ficam internos.
 | `confirmar_pagamento` | “Já recebi o reembolso da nota 1049” | Número da nota ou documento + exportação |
 | `verificar_prazo` | “Ainda posso pedir o reembolso?” | Documento ou datas + referência atual |
 | `revisar_completude` | “Quais dados estão faltando?” | PDF/imagem |
+| `categoria_nao_mapeada` | Texto fora do domínio | Confirmação do usuário |
 
 ## Fluxo de conversa
 

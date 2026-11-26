@@ -1,5 +1,8 @@
 # Referência rápida
 
+Este arquivo contém somente decisões rápidas e comandos. Para instrução
+sequencial, consulte o [começo aqui](01_comece_aqui.md).
+
 - Instalação, token e interface: [início rápido](01_comece_aqui.md).
 - Fluxo, privacidade e regras atuais: [README](../../README.md).
 - Testes e avaliação sintética: [roteiro de avaliação](../70_documentation/08_roteiro_avaliacao.md).

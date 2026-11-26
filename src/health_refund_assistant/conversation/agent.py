@@ -14,6 +14,7 @@ from .assistant import AssistantRequest, handle_request, atualizar_estimativa
 from .resposta_assistente import create_assistant_answer
 from .structured_ai import request_structured_json
 from ..core.prompt_library import carregar_prompt
+from .task_registry import get_task_definition
 
 
 TASK_STATES = {
@@ -70,15 +71,21 @@ def executar_ferramenta(nome: str, **kwargs: Any) -> Any:
 
 def identificar_tarefa(texto: str) -> str:
     texto = texto.lower()
-    if re.search(r"\b(recebi|já recebi|foi pago|já foi pago|pagamento)\b", texto):
-        return "confirmar_pagamento"
-    if re.search(r"\b(solicitad|já envi|já foi enviado|status|pedido)\b", texto):
-        return "consultar_status"
-    if re.search(r"\b(prazo|dentro do prazo|vencido|atrasado)\b", texto):
+    if re.search(r"\b(ignore|reveal|revele|prompt|outro usuário|outros usuários|guardrails|sistema)\b", texto):
+        return "categoria_nao_mapeada"
+    if re.search(r"\b(prazo|dentro do prazo|vencido|venceu|atrasado|corte|quanto tempo)\b", texto):
         return "verificar_prazo"
-    if re.search(r"\b(faltando|faltam|completo|incomplet|campos|registro|crm)\b", texto):
+    if re.search(r"\b(recebi|já recebi|foi pago|já foi pago|pagamento|pagaram|valor recebido)\b", texto):
+        return "confirmar_pagamento"
+    if re.search(r"\bstatus\b|\bpedido\b|\bandamento\b|solicit", texto):
+        return "consultar_status"
+    if re.search(r"\b(faltando|faltam|completo|completa|incomplet|campos|registro|crm)\b|não foi identificado", texto):
         return "revisar_completude"
-    return "analisar_documento"
+    if re.search(r"\b(analis|nota|recibo|documento|pdf|imagem)\b", texto):
+        return "analisar_documento"
+    if not texto.strip():
+        return "categoria_nao_mapeada"
+    return "categoria_nao_mapeada"
 
 
 def extrair_referencia_nota(texto: str) -> str | None:
@@ -179,6 +186,7 @@ def interpretar_pedido(
             "confirmar_pagamento",
             "verificar_prazo",
             "revisar_completude",
+            "categoria_nao_mapeada",
         }:
             return interpretacao
     except (OSError, ValueError, RuntimeError):
@@ -304,6 +312,24 @@ def handle_agent_turn(
         state["status"] = "concluido"
         state["missing"] = []
         return {"answer": answer, "evidence": evidence, "state": state}
+
+    if task == "categoria_nao_mapeada":
+        estado = get_task_definition(task)
+        state["status"] = "aguardando_confirmacao"
+        state["missing"] = ["confirmacao_usuario"]
+        state["pending_question"] = (
+            "Escolha uma das tarefas: analisar documento, consultar status, "
+            "confirmar pagamento, verificar prazo ou revisar completude."
+        )
+        return {
+            "answer": (
+                "Não encontrei uma tarefa mapeada para essa mensagem. "
+                "Posso analisar documento, consultar status, confirmar pagamento, "
+                "verificar prazo ou revisar completude. Qual destas você deseja?"
+            ),
+            "evidence": None,
+            "state": state,
+        }
 
     if task == "confirmar_pagamento":
         state["status"] = "aguardando_documento"

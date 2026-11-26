@@ -20,6 +20,10 @@ STATE_DIR = JSON_ROOT / "documents" / "state"
 RECONCILIATION_REPORTS_DIR = JSON_ROOT / "reconciliation" / "reports"
 NOTES_STATE_PATH = STATE_DIR / "notas_extraidas.json"
 CONVERSATION_STATE_PATH = STATE_DIR / "conversa_local.json"
+USER_AUTH_PATH = CONFIG_DIR / "usuarios_locais.json"
+USERS_STATE_DIR = STATE_DIR / "usuarios"
+TRACE_LOG_DIR = STATE_DIR / "traces"
+PRAZO_CONFIG_PATH = CONFIG_DIR / "prazos_reembolso.json"
 MAPPING_CONFIG_PATH = CONFIG_DIR / "mapeamento_reembolsos.json"
 PROMPTS_DIR = PROJECT_ROOT / "prompts"
 
@@ -35,6 +39,7 @@ SCHEMA_LOCATIONS = {
     "document_review.schema.json": JSON_ROOT / "reconciliation" / "schemas" / "document_review.schema.json",
     "assistant_answer.schema.json": JSON_ROOT / "documents" / "schemas" / "assistant_answer.schema.json",
     "payment_estimate.schema.json": JSON_ROOT / "plan" / "schemas" / "payment_estimate.schema.json",
+    "agent_turn.schema.json": JSON_ROOT / "documents" / "schemas" / "agent_turn.schema.json",
 }
 
 

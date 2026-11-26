@@ -66,3 +66,6 @@ json/evaluation/reports/*.log
 json/reconciliation/reports/*.json
 json/reconciliation/reports/*.json.tmp
 json/config/*.proposta.json.vscode/
+json/config/usuarios_locais.json
+json/documents/state/usuarios/
+json/documents/state/traces/

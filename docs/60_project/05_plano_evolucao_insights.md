@@ -2,6 +2,13 @@
 
 Atualizado em 26/11/2026.
 
+## Status da implementação
+
+Os itens deste plano foram implementados na versão `0.4.0`, salvo a confirmação
+exterior da Care Plus e a ativação real das regras D-2/365 no arquivo
+`json/config/prazos_reembolso.json`. Os recursos de segurança locais são
+apropriados para testes, não para produção.
+
 ## Objetivo
 
 Fechar os comportamentos do assistente de modo simples e auditável, sem tratar

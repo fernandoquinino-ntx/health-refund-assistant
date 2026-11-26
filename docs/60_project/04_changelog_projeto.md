@@ -7,11 +7,15 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.4.0**: implementação da evolução registrada nos insights do projeto.
+  Inclui contrato central das tarefas, categoria não mapeada, autenticação local
+  por usuário/PIN, memória e trilha JSONL por usuário, rastreamento na UI,
+  regras D-2/365 opt-in, exportação/reimportação individual e testes sintéticos
+  por grupo. Os recursos locais não substituem segurança de produção.
+
 - **0.3.7**: consolidação do plano de evolução baseado nos insights do projeto.
-  Os itens foram confirmados ou identificados como pendentes; este registro não
-  afirma implementação de autenticação, rastreamento, D-2/365, isolamento ou
-  exportação de dados. Os critérios de aceite e os grupos mínimos de testes ficam
-  em `docs/60_project/05_plano_evolucao_insights.md`.
+  Os itens foram confirmados e transformados em critérios de implementação no
+  plano `docs/60_project/05_plano_evolucao_insights.md`.
 
 - **0.3.6**: correções finais de distribuição e observabilidade. O workflow de
   extensão passa a observar os caminhos Python atuais, o Label Studio usa
@@ -47,6 +51,17 @@ detalhes de cada commit.
   pipelines de extensão/treinamento visual.
 
 ### Adicionado
+
+- Contrato central em `json/config/agent_tasks.json`, tarefa
+  `categoria_nao_mapeada`, autenticação local com PIN hash, memória por usuário,
+  trilha JSONL privada e painel local de auditoria na interface.
+
+- Exportação de análise individual em JSON e reimportação validada pelo
+  assistente, além de regras D-2 e 365 ativáveis somente por configuração
+  confirmada.
+
+- Matriz sintética com cinco casos por grupo funcional e guardrails críticos
+  para classificação desconhecida, prompt injection e acesso entre usuários.
 
 - Plano de evolução consolidado em
   `docs/60_project/05_plano_evolucao_insights.md`, com confirmações do estado
@@ -156,7 +171,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.3.7` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.4.0` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

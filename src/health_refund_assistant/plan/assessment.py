@@ -5,11 +5,13 @@ Processamento: verifica campos, cobertura, candidatos e prazo simulado.
 Saídas: evidências estruturadas; não determina elegibilidade contratual.
 """
 
-from datetime import date
+from datetime import date, timedelta
+import json
 from pathlib import Path
 from typing import Any, Dict, Iterable, Tuple
 
 from ..core.json_contracts import validar_contrato_json
+from ..core.paths import PRAZO_CONFIG_PATH
 from .reconciliation import load_claims, parse_date, reconcile
 
 
@@ -27,6 +29,35 @@ COMPLETENESS_FIELDS = {
 
 class ExportPeriodError(ValueError):
     """Raised when an export cannot establish which dates it covers."""
+
+
+def carregar_regras_prazo_confirmadas() -> Dict[str, Any]:
+    """Carrega regras contratuais opcionais; sem confirmação todas ficam desativadas."""
+    if not PRAZO_CONFIG_PATH.exists():
+        return {
+            "regras_confirmadas": False,
+            "d2": {"ativo": False, "dias": 2},
+            "365": {"ativo": False, "dias": 365},
+        }
+    try:
+        config = json.loads(PRAZO_CONFIG_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("O arquivo de regras de prazo é inválido.") from error
+    if not isinstance(config, dict):
+        raise ValueError("O arquivo de regras de prazo deve ser um objeto JSON.")
+    if config.get("regras_confirmadas") is not True:
+        return {
+            "regras_confirmadas": False,
+            "d2": {"ativo": False, "dias": 2},
+            "365": {"ativo": False, "dias": 365},
+        }
+    d2 = config.get("d2") if isinstance(config.get("d2"), dict) else {}
+    prazo_365 = config.get("365") if isinstance(config.get("365"), dict) else {}
+    return {
+        "regras_confirmadas": True,
+        "d2": {"ativo": d2.get("ativo") is True, "dias": d2.get("dias", 2)},
+        "365": {"ativo": prazo_365.get("ativo") is True, "dias": prazo_365.get("dias", 365)},
+    }
 
 
 def validar_periodo_exportacao(
@@ -183,8 +214,62 @@ def avaliar_documento(
             else:
                 situacao_prazo = "dentro_do_prazo_simulado"
 
+    regras_prazo = carregar_regras_prazo_confirmadas()
+    d2 = {
+        "ativo": False,
+        "situacao": "desativado",
+        "aviso": "A regra D-2 não está confirmada; não use esta informação como regra do plano.",
+    }
+    if (
+        regras_prazo["regras_confirmadas"]
+        and regras_prazo["d2"]["ativo"]
+        and periodos
+    ):
+        dias_d2 = int(regras_prazo["d2"]["dias"])
+        corte_d2 = max(fim for _, fim in periodos) - timedelta(days=dias_d2)
+        d2 = {
+            "ativo": True,
+            "dias": dias_d2,
+            "corte_exportacao": corte_d2.isoformat(),
+            "situacao": (
+                "dentro_do_corte_confirmado"
+                if data_referencia <= corte_d2
+                else "apos_o_corte_confirmado"
+            ),
+            "aviso": "Data de corte D-2 baseada na configuração contratual confirmada.",
+        }
+
+    prazo_365 = {
+        "ativo": False,
+        "situacao": "desativado",
+        "aviso": "A regra de 365 dias não está confirmada; não use esta informação como elegibilidade.",
+    }
+    if (
+        regras_prazo["regras_confirmadas"]
+        and regras_prazo["365"]["ativo"]
+        and data_prazo is not None
+    ):
+        dias_365 = int(regras_prazo["365"]["dias"])
+        prazo_final = data_prazo + timedelta(days=dias_365)
+        dias_restantes = (prazo_final - data_referencia).days
+        prazo_365 = {
+            "ativo": True,
+            "dias": dias_365,
+            "prazo_final": prazo_final.isoformat(),
+            "dias_restantes": max(dias_restantes, 0),
+            "situacao": (
+                "dentro_do_prazo_confirmado"
+                if dias_restantes >= 0
+                else "fora_do_prazo_confirmado"
+            ),
+            "aviso": "Prazo de 365 dias baseado na configuração contratual confirmada.",
+        }
+
     return {
         "data_referencia": data_referencia.isoformat(),
+        "regras_prazo_confirmadas": regras_prazo["regras_confirmadas"],
+        "corte_d2": d2,
+        "prazo_365": prazo_365,
         "prazo_simulado_dias": dias_prazo if not candidatos else None,
         "data_base_prazo": data_prazo.isoformat() if data_prazo else None,
         "origem_data_base_prazo": origem_data_prazo,

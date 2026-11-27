@@ -2,7 +2,8 @@
 
 > Esta é a única fonte da extensão Chrome. Use `manifest.json` para carregá-la
 > diretamente ou execute `make build-extension`
-> para gerar `build/extension/`.
+> para gerar `build/extension/` e o pacote Chrome
+> `build/care-plus-reembolsos-<versão>.zip`.
 
 **Chrome Extension Manifest V3** para coletar automaticamente dados de sinistros/reembolsos do portal Care Plus e exportar em JSON.
 

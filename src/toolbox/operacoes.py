@@ -6,10 +6,12 @@ Saídas: processos iniciados, diretórios criados e mensagens simples.
 """
 
 import json
+import hashlib
 import shutil
 import subprocess
 import sys
 import os
+import zipfile
 import signal
 import time
 from pathlib import Path
@@ -105,7 +107,16 @@ def setup_codespace() -> int:
 def build_extension() -> int:
     source = ROOT / "src" / "extension"
     output = ROOT / "build" / "extension"
-    executar([sys.executable, "-m", "json.tool", str(source / "manifest.json")], verificar=True)
+    manifest_path = source / "manifest.json"
+    if not manifest_path.is_file():
+        raise RuntimeError("Manifest da extensão não encontrado.")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("manifest_version") != 3:
+        raise RuntimeError("A extensão deve usar Manifest V3.")
+    version = str(manifest.get("version", "")).strip()
+    if not version:
+        raise RuntimeError("A versão da extensão não está definida no manifest.")
+
     shutil.rmtree(output, ignore_errors=True)
     output.mkdir(parents=True)
     arquivos = {
@@ -118,8 +129,28 @@ def build_extension() -> int:
         "60_schemas/export.schema.json": "export.schema.json",
     }
     for origem, destino in arquivos.items():
-        shutil.copy2(source / origem, output / destino)
+        source_file = source / origem
+        if not source_file.is_file():
+            raise RuntimeError(f"Arquivo obrigatório da extensão ausente: {origem}")
+        destination_file = output / destino
+        destination_file.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_file, destination_file)
+
+    package = ROOT / "build" / f"care-plus-reembolsos-{version}.zip"
+    package.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(package, "w", zipfile.ZIP_DEFLATED) as archive:
+        for file in sorted(output.rglob("*")):
+            if file.is_file():
+                archive.write(file, file.relative_to(output).as_posix())
+
+    digest = hashlib.sha256(package.read_bytes()).hexdigest()
+    (ROOT / "build" / f"care-plus-reembolsos-{version}.sha256").write_text(
+        f"{digest}  {package.name}\n",
+        encoding="utf-8",
+    )
     print(f"Extensão construída em: {output}")
+    print(f"Pacote Chrome compatível: {package}")
+    print(f"SHA-256: {digest}")
     return 0
 
 

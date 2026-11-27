@@ -11,6 +11,11 @@ A coleta depende do portal e precisa ser validada no navegador; o arquivo
 exportado pode conter dados de saúde.
 
 O código é organizado em `10_popup/`, `20_background/`, `30_content/`,
-`40_collector/`, `50_docs/` e `60_schemas/`. O script
-`make build-extension` gera uma cópia plana em
-`build/extension/` sem manter uma segunda implementação fonte.
+`40_collector/`, `50_docs/` e `60_schemas/`. O comando `make build-extension` gera:
+
+- `build/extension/`: pasta para carregar no Chrome em modo desenvolvedor;
+- `build/care-plus-reembolsos-<versão>.zip`: pacote Chrome compatível para
+  distribuição ou upload à Chrome Web Store;
+- `.sha256`: checksum do ZIP.
+
+Em cada tag `v*.*.*`, o workflow anexa ZIP e checksum à release no GitHub.

@@ -2,6 +2,8 @@ name: Validar extensão Chrome
 
 on:
   push:
+    tags:
+      - "v*.*.*"
     paths:
       - "src/extension/**"
       - "src/toolbox/operacoes.py"
@@ -10,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-extension:
@@ -23,4 +25,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: care_plus_extension
-          path: build/extension
+          path: |
+            build/extension
+            build/care-plus-reembolsos-*.zip
+            build/care-plus-reembolsos-*.sha256
+      - name: Anexar ZIP à release da tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          package=$(ls build/care-plus-reembolsos-*.zip)
+          checksum=$(ls build/care-plus-reembolsos-*.sha256)
+          gh release upload "${GITHUB_REF_NAME}" "$package" "$checksum" --clobber

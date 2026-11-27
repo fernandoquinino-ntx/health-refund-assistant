@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
@@ -20,6 +21,42 @@ from toolbox.test_tracker import main
 
 
 class ToolboxTrackerTests(unittest.TestCase):
+    def test_build_extension_creates_chrome_zip_and_sha256(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "src" / "extension"
+            source.mkdir(parents=True)
+            (source / "manifest.json").write_text(
+                json.dumps({
+                    "manifest_version": 3,
+                    "name": "Teste",
+                    "version": "1.2.3",
+                }),
+                encoding="utf-8",
+            )
+            for origem in (
+                "10_popup/popup.html",
+                "10_popup/popup.js",
+                "20_background/background.js",
+                "30_content/bridge.js",
+                "40_collector/collector.js",
+                "60_schemas/export.schema.json",
+            ):
+                destination = source / origem
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_text("teste", encoding="utf-8")
+            with patch("toolbox.operacoes.ROOT", root):
+                from toolbox.operacoes import build_extension
+                self.assertEqual(build_extension(), 0)
+            package = root / "build" / "care-plus-reembolsos-1.2.3.zip"
+            checksum = root / "build" / "care-plus-reembolsos-1.2.3.sha256"
+            self.assertTrue(package.is_file())
+            self.assertTrue(checksum.is_file())
+            with zipfile.ZipFile(package) as archive:
+                names = set(archive.namelist())
+            self.assertIn("manifest.json", names)
+            self.assertIn("collector.js", names)
+
     def test_toolbox_restart_assistant_calls_restart_operation(self):
         with (
             patch("sys.argv", ["toolbox", "restart_assistant"]),

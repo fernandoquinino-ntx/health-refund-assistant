@@ -15,7 +15,7 @@ Acelera a coleta de dados de reembolsos do portal Care Plus, transformando um pr
 
 | Aspecto | Descrição |
 |--------|-----------|
-| **Versão** | 1.1.0 |
+| **Versão** | 1.1.1 |
 | **Plataforma** | Chrome / Chromium (MV3) |
 | **Função** | Coletar reembolsos de `https://*.careplus.com.br` |
 | **Saída** | JSON estruturado (`careplus-reembolsos-AAAAMMDD-HHMM.json`) |

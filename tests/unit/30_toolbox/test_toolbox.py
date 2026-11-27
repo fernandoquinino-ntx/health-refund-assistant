@@ -31,6 +31,9 @@ class ToolboxTrackerTests(unittest.TestCase):
                     "manifest_version": 3,
                     "name": "Teste",
                     "version": "1.2.3",
+                    "background": {"service_worker": "20_background/background.js"},
+                    "action": {"default_popup": "10_popup/popup.html"},
+                    "content_scripts": [{"js": ["30_content/bridge.js"]}],
                 }),
                 encoding="utf-8",
             )
@@ -55,7 +58,9 @@ class ToolboxTrackerTests(unittest.TestCase):
             with zipfile.ZipFile(package) as archive:
                 names = set(archive.namelist())
             self.assertIn("manifest.json", names)
-            self.assertIn("collector.js", names)
+            self.assertIn("20_background/background.js", names)
+            self.assertIn("30_content/bridge.js", names)
+            self.assertIn("40_collector/collector.js", names)
 
     def test_toolbox_restart_assistant_calls_restart_operation(self):
         with (

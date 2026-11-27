@@ -120,21 +120,35 @@ def build_extension() -> int:
     shutil.rmtree(output, ignore_errors=True)
     output.mkdir(parents=True)
     arquivos = {
-        "manifest.json": "manifest.json",
-        "10_popup/popup.html": "popup.html",
-        "10_popup/popup.js": "popup.js",
-        "20_background/background.js": "background.js",
-        "30_content/bridge.js": "bridge.js",
-        "40_collector/collector.js": "collector.js",
-        "60_schemas/export.schema.json": "export.schema.json",
+        "manifest.json",
+        "10_popup/popup.html",
+        "10_popup/popup.js",
+        "20_background/background.js",
+        "30_content/bridge.js",
+        "40_collector/collector.js",
+        "60_schemas/export.schema.json",
     }
-    for origem, destino in arquivos.items():
+    for origem in arquivos:
         source_file = source / origem
         if not source_file.is_file():
             raise RuntimeError(f"Arquivo obrigatório da extensão ausente: {origem}")
-        destination_file = output / destino
+        destination_file = output / origem
         destination_file.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_file, destination_file)
+
+    built_manifest = json.loads(
+        (output / "manifest.json").read_text(encoding="utf-8")
+    )
+    referenced_files = [
+        built_manifest["background"]["service_worker"],
+        built_manifest["action"]["default_popup"],
+        *(script for item in built_manifest["content_scripts"] for script in item["js"]),
+    ]
+    missing = [path for path in referenced_files if not (output / path).is_file()]
+    if missing:
+        raise RuntimeError(
+            "Manifest referencia arquivos ausentes no pacote: " + ", ".join(missing)
+        )
 
     package = ROOT / "build" / f"care-plus-reembolsos-{version}.zip"
     package.parent.mkdir(parents=True, exist_ok=True)

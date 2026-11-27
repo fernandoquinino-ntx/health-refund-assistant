@@ -91,7 +91,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       await chrome.storage.local.set({ cpCfg: cfg });
       await setState({ running: true, done: 0, text: "Abrindo Consultar Reembolsos…", error: null, result: null });
       const tabId = await openConsulta(msg.tabId);
-      await chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", files: ["collector.js"] });
+      await chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", files: ["40_collector/collector.js"] });
       await chrome.scripting.executeScript({
         target: { tabId }, world: "MAIN",
         func: (c) => window.__cpCollector.start(c), args: [cfg],

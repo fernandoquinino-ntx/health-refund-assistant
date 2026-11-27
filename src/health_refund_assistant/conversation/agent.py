@@ -13,7 +13,7 @@ from ..plan.plan_exports import load_selected_exports
 from .assistant import AssistantRequest, handle_request, atualizar_estimativa
 from .resposta_assistente import create_assistant_answer
 from .structured_ai import request_structured_json
-from ..core.prompt_library import carregar_prompt
+from ..core.prompt_library import carregar_prompt, carregar_respostas_agente
 from .task_registry import get_task_definition
 
 
@@ -48,6 +48,18 @@ TASK_DEFINITIONS = {
         "resultado": "campos_faltantes",
     },
 }
+
+
+def mensagem_agente(chave: str, **valores: Any) -> str:
+    """Resolve uma resposta de chat pelo prompt versionado do agente."""
+    respostas = carregar_respostas_agente("v1.1")
+    modelo = respostas.get(chave)
+    if not isinstance(modelo, str) or not modelo.strip():
+        raise ValueError(f"Resposta não definida no prompt do agente: {chave}")
+    try:
+        return modelo.format(**valores)
+    except (KeyError, ValueError) as error:
+        raise ValueError("Resposta do agente usa variável não fornecida.") from error
 
 
 def executar_ferramenta(nome: str, **kwargs: Any) -> Any:
@@ -169,7 +181,7 @@ def interpretar_pedido(
 ) -> dict[str, Any]:
     """Usa GPT-6 Luna para interpretar intenção e entradas faltantes."""
     try:
-        prompt, _ = carregar_prompt("agente_conversacional", "v1.0")
+        prompt, _ = carregar_prompt("agente_conversacional", "v1.1")
         interpretacao = request_structured_json(
             prompt,
             {
@@ -226,13 +238,37 @@ def handle_agent_turn(
     )
     state["note_reference"] = note_reference
 
+    if (
+        not pdf_bytes
+        and not image_bytes
+        and not export_paths
+        and not evidence
+        and task in {
+            "analisar_documento",
+            "consultar_status",
+            "confirmar_pagamento",
+        }
+    ):
+        state["status"] = "aguardando_exportacao"
+        state["missing"] = ["exportacao_do_plano"]
+        state["pending_question"] = "Envie ou importe a exportação atual do plano em JSON."
+        return {
+            "answer": mensagem_agente(
+                "aguardando_exportacao_pagamento"
+                if task == "confirmar_pagamento"
+                else "aguardando_exportacao_geral"
+            ),
+            "evidence": evidence,
+            "state": state,
+        }
+
     if pdf_bytes or image_bytes:
         if not export_paths:
             state["status"] = "aguardando_exportacao"
             state["missing"] = ["exportacao_do_plano"]
             state["pending_question"] = "Envie a exportação atual do plano em JSON."
             return {
-                "answer": "Recebi o documento. Agora envie a exportação atual do plano em JSON para eu conferir o pedido.",
+                "answer": mensagem_agente("documento_aguardando_exportacao"),
                 "evidence": evidence,
                 "state": state,
             }
@@ -274,14 +310,19 @@ def handle_agent_turn(
                 state["status"] = "concluido"
                 state["missing"] = []
                 return {
-                    "answer": f"Na exportação consultada, a nota {note_reference} foi localizada com status: {status}.{valor}",
+                    "answer": mensagem_agente(
+                        "pagamento_localizado",
+                        note_reference=note_reference,
+                        status=status,
+                        valor=valor,
+                    ),
                     "evidence": evidence,
                     "state": state,
                 }
         state["status"] = "aguardando_documento"
         state["missing"] = ["documento"]
         return {
-            "answer": "Recebi a exportação do plano. Agora envie a nota fiscal, recibo ou imagem que deseja consultar.",
+            "answer": mensagem_agente("exportacao_aguardando_documento"),
             "evidence": evidence,
             "state": state,
         }
@@ -290,7 +331,7 @@ def handle_agent_turn(
         if "revisao_ia" not in evidence:
             state["status"] = "aguardando_revisao"
             return {
-                "answer": "A análise anterior não tem revisão por IA. Envie novamente o PDF para iniciar uma análise completa.",
+                "answer": mensagem_agente("revisao_antiga"),
                 "evidence": evidence,
                 "state": state,
             }
@@ -314,19 +355,11 @@ def handle_agent_turn(
         return {"answer": answer, "evidence": evidence, "state": state}
 
     if task == "categoria_nao_mapeada":
-        estado = get_task_definition(task)
         state["status"] = "aguardando_confirmacao"
         state["missing"] = ["confirmacao_usuario"]
-        state["pending_question"] = (
-            "Escolha uma das tarefas: analisar documento, consultar status, "
-            "confirmar pagamento, verificar prazo ou revisar completude."
-        )
+        state["pending_question"] = mensagem_agente("categoria_nao_mapeada")
         return {
-            "answer": (
-                "Não encontrei uma tarefa mapeada para essa mensagem. "
-                "Posso analisar documento, consultar status, confirmar pagamento, "
-                "verificar prazo ou revisar completude. Qual destas você deseja?"
-            ),
+            "answer": mensagem_agente("categoria_nao_mapeada"),
             "evidence": None,
             "state": state,
         }
@@ -335,7 +368,7 @@ def handle_agent_turn(
         state["status"] = "aguardando_documento"
         state["missing"] = ["documento", "exportacao_do_plano"]
         return {
-            "answer": "Posso confirmar o pagamento da nota. Envie a nota ou informe o número da nota e anexe a exportação atual do plano.",
+            "answer": mensagem_agente("confirmar_pagamento_sem_dados"),
             "evidence": None,
             "state": state,
         }
@@ -343,7 +376,7 @@ def handle_agent_turn(
         state["status"] = "aguardando_documento"
         state["missing"] = ["documento", "exportacao_do_plano"]
         return {
-            "answer": "Vou consultar o status do pedido. Envie a nota fiscal/recibo e a exportação atual do plano.",
+            "answer": mensagem_agente("consultar_status_sem_dados"),
             "evidence": None,
             "state": state,
         }
@@ -351,7 +384,7 @@ def handle_agent_turn(
         state["status"] = "aguardando_documento"
         state["missing"] = ["documento"]
         return {
-            "answer": "Para verificar o prazo, envie a nota ou informe a data de atendimento/emissão.",
+            "answer": mensagem_agente("verificar_prazo_sem_dados"),
             "evidence": None,
             "state": state,
         }
@@ -359,7 +392,7 @@ def handle_agent_turn(
         state["status"] = "aguardando_documento"
         state["missing"] = ["documento"]
         return {
-            "answer": "Vou verificar os campos da nota. Envie o PDF ou a imagem do documento.",
+            "answer": mensagem_agente("revisar_completude_sem_dados"),
             "evidence": None,
             "state": state,
         }
@@ -367,7 +400,7 @@ def handle_agent_turn(
     state["status"] = "aguardando_documento"
     state["missing"] = ["documento"]
     return {
-        "answer": "Posso analisar uma nota fiscal, recibo ou exportação do plano. Envie o documento ou a exportação em JSON.",
+        "answer": mensagem_agente("fallback_analise"),
         "evidence": None,
         "state": state,
     }

@@ -7,6 +7,12 @@ detalhes de cada commit.
 
 ### Versão declarada
 
+- **0.4.5**: interface principal convertida para chat único. Importação de
+  exportação e envio de PDF aparecem somente quando o agente solicita. Respostas
+  neutras de encaminhamento foram movidas para `agente_conversacional/v1.1`;
+  a classificação continua usando GPT-6 Luna com fallback determinístico.
+  142 testes locais passaram.
+
 - **0.4.4**: correção de reinício seguro no Codespaces. O startup agora encerra
   somente processos Streamlit desta aplicação na porta 8501 e inicia o código
   mais recente do checkout. Inclui `make restart`, execução automática no
@@ -192,7 +198,7 @@ não há release ou tag de versão registrada neste changelog.
 ## Política de versões
 
 - A aplicação usa `MAJOR.MINOR.PATCH` (SemVer). A versão atualmente declarada é
-  `0.4.4` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
+  `0.4.5` em `pyproject.toml` e `src/health_refund_assistant/__init__.py`.
 - Antes de `1.0.0`, `0.MINOR.0` pode incluir alterações incompatíveis ou novas
   funcionalidades; `0.MINOR.PATCH` registra correções compatíveis.
 - A partir de `1.0.0`, incremente `MAJOR` para quebra de compatibilidade, `MINOR`

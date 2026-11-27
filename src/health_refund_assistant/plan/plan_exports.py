@@ -73,6 +73,40 @@ def available_plan_exports() -> List[Path]:
     return sorted(PLAN_EXPORTS_DIR.glob("*.json"), reverse=True)
 
 
+def latest_export_status(reference_date: datetime) -> dict[str, Any]:
+    """Verifica presença e atualização de exportações locais sem selecionar dados."""
+    paths = available_plan_exports()
+    if not paths:
+        return {
+            "disponivel": False,
+            "atualizada": False,
+            "caminho": None,
+            "importado_em": None,
+        }
+    latest = paths[0]
+    try:
+        data = json.loads(latest.read_text(encoding="utf-8"))
+        imported = datetime.fromisoformat(data["importado_em"]) if data.get("importado_em") else None
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+        imported = None
+    if imported is None:
+        match = re.match(r"^(\d{4})(\d{2})(\d{2})-", latest.name)
+        if match:
+            imported = datetime(
+                int(match.group(1)),
+                int(match.group(2)),
+                int(match.group(3)),
+            )
+    imported_date = imported.date() if imported is not None else None
+    reference = reference_date.date()
+    return {
+        "disponivel": True,
+        "atualizada": imported_date is not None and imported_date >= reference,
+        "caminho": str(latest),
+        "importado_em": imported_date.isoformat() if imported_date else None,
+    }
+
+
 def export_assessment_json(evidence: Dict[str, Any]) -> bytes:
     """Serializa uma análise individual para um arquivo JSON seguro de reimportar."""
     if not isinstance(evidence, dict):

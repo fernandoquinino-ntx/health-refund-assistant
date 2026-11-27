@@ -42,6 +42,7 @@ from ..plan.plan_exports import (
     export_assessment_json,
     import_assessment_json,
     import_plan_export,
+    latest_export_status,
 )
 
 
@@ -211,16 +212,7 @@ def main() -> None:
     st.set_page_config(
         page_title="Assistente de reembolsos",
         page_icon="🩺",
-        layout="wide",
-    )
-    st.title("Assistente de reembolsos de saúde")
-    st.caption(
-        "Converse sobre uma nota e anexe um PDF quando precisar de uma nova análise. "
-        "Prazos são estimativas ou simulações, não garantias."
-    )
-    st.warning(
-        "Uso em ambiente privado: a identidade local separa conversas em teste, "
-        "mas não substitui autenticação segura para produção."
+        layout="centered",
     )
     authenticated_user = local_user_login()
     conversation_path = conversation_path_for_user(authenticated_user)
@@ -260,18 +252,6 @@ def main() -> None:
             st.session_state.pop("authenticated_user", None)
             st.session_state.pop("conversation", None)
             st.rerun()
-        with st.expander("Configurações avançadas"):
-            reference_date = st.date_input(
-                "Data de referência",
-                value=reference_date,
-                help="Usada para repetir cenários e estimar prazos.",
-            )
-            deadline_days = st.number_input(
-                "Prazo simulado (dias)",
-                min_value=0,
-                value=DEADLINE_DAYS,
-                step=1,
-            )
         with st.expander("Auditoria local"):
             eventos = load_trace_events(authenticated_user)
             if eventos:
@@ -279,88 +259,82 @@ def main() -> None:
             else:
                 st.caption("Nenhuma interação registrada ainda.")
 
-    st.subheader("Conversa")
     conversation = st.session_state["conversation"]
+    if not conversation["messages"]:
+        with st.chat_message("assistant"):
+            st.write(
+                "Olá! Posso consultar status, pagamento, prazo ou verificar uma "
+                "nota. Quando precisar de dados do plano ou de um documento, "
+                "vou pedir apenas o arquivo necessário."
+            )
     for message in conversation["messages"]:
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
     evidence = conversation["evidence"]
     if evidence:
-        with st.expander("Ver evidências da análise"):
-            st.json(evidence["documento"])
-            _show_assessment(evidence["conciliacao"])
-            if evidence.get("revisao_ia"):
-                st.subheader("Revisão documental")
-                st.json(evidence["revisao_ia"])
-            st.download_button(
-                "Exportar análise individual",
-                data=export_assessment_json(evidence),
-                file_name="analise_reembolso.json",
-                mime="application/json",
-            )
+        with st.expander("Ver detalhes da análise"):
+            st.json(evidence)
 
-    attachments = st.file_uploader(
-        "Anexar documento ou exportação",
-        type=["pdf", "png", "jpg", "jpeg", "json"],
-        accept_multiple_files=True,
-        key=f"agent_attachments_{st.session_state.get('upload_version', 0)}",
-    )
+    state = conversation.get("agent") or {}
+    if state.get("status") == "aguardando_exportacao":
+        export_upload = st.file_uploader(
+            "Envie a exportação atual do plano em JSON",
+            type=["json"],
+            accept_multiple_files=False,
+            key=f"export_upload_{st.session_state.get('upload_version', 0)}",
+        )
+        if export_upload is not None:
+            try:
+                path = import_plan_export(export_upload.name, export_upload.getvalue())
+                st.session_state["pending_export_paths"] = [str(path)]
+                st.success("Exportação importada. Continue no chat.")
+                st.session_state["upload_version"] = (
+                    st.session_state.get("upload_version", 0) + 1
+                )
+                st.rerun()
+            except (ExportPeriodError, OSError, ValueError) as error:
+                st.error(str(error))
+    elif state.get("status") in {"aguardando_documento", "aguardando_revisao"}:
+        document_upload = st.file_uploader(
+            "Envie a nota fiscal ou o recibo",
+            type=["pdf", "png", "jpg", "jpeg"],
+            accept_multiple_files=False,
+            key=f"document_upload_{st.session_state.get('upload_version', 0)}",
+        )
+        if document_upload is not None:
+            suffix = Path(document_upload.name).suffix.lower()
+            content = document_upload.getvalue()
+            if suffix == ".pdf":
+                st.session_state["pending_pdf"] = content
+            else:
+                st.session_state["pending_image"] = content
+            st.success("Documento recebido. Continue no chat.")
+            st.session_state["upload_version"] = (
+                st.session_state.get("upload_version", 0) + 1
+            )
+            st.rerun()
 
     question = st.chat_input("Fale com o assistente sobre seu reembolso")
     if question is not None:
-        if not question.strip() and not attachments:
-            st.error("Escreva uma pergunta ou anexe um documento.")
-        else:
+        if question.strip():
             try:
                 history = conversation["messages"]
-                pdf_bytes = None
-                image_bytes = None
-                import_paths = []
-                imported_assessment = None
-
-                if isinstance(attachments, (list, tuple)):
-                    attachment_items = attachments
-                else:
-                    attachment_items = [attachments] if attachments is not None else []
-
-                for attachment in attachment_items:
-                    suffix = Path(attachment.name).suffix.lower()
-                    content = attachment.getvalue()
-                    if suffix == ".pdf":
-                        pdf_bytes = content
-                    elif suffix in (".png", ".jpg", ".jpeg"):
-                        image_bytes = content
-                    elif suffix == ".json":
-                        try:
-                            import_paths.append(
-                                import_plan_export(attachment.name, content)
-                            )
-                        except ExportPeriodError:
-                            imported_assessment = import_assessment_json(content)
-
-                evidence_for_turn = imported_assessment or evidence
-
+                pdf_bytes = st.session_state.pop("pending_pdf", None)
+                image_bytes = st.session_state.pop("pending_image", None)
+                pending_exports = st.session_state.pop("pending_export_paths", [])
+                import_paths = [
+                    Path(path) for path in pending_exports
+                    if Path(path).is_file()
+                ]
                 if not import_paths:
-                    pending_exports = st.session_state.pop(
-                        "pending_export_paths",
-                        [],
+                    export_status = latest_export_status(
+                        datetime.now(ZoneInfo("America/Sao_Paulo"))
                     )
-                    import_paths = [
-                        Path(path)
-                        for path in pending_exports
-                        if Path(path).is_file()
-                    ]
-                else:
-                    st.session_state["pending_export_paths"] = [
-                        str(path) for path in import_paths
-                    ]
-
-                if pdf_bytes is None and image_bytes is None:
-                    pending_pdf = st.session_state.pop("pending_pdf", None)
-                    pending_image = st.session_state.pop("pending_image", None)
-                    pdf_bytes = pending_pdf
-                    image_bytes = pending_image
+                    if export_status["atualizada"]:
+                        import_paths = [Path(export_status["caminho"])]
+                attachment_items = []
+                evidence_for_turn = evidence
 
                 with st.spinner("O agente está verificando a solicitação…"):
                     started_at = time.monotonic()

@@ -5,7 +5,7 @@ Processamento: exercita envio, conversa e apresentação na interface.
 Saídas: asserções de sucesso ou falha para o runner de testes.
 """
 import unittest
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -28,6 +28,27 @@ class WebAppTests(unittest.TestCase):
     def tearDown(self):
         self.auth_patcher.stop()
 
+    def test_chat_starts_sem_uploader_permanente(self):
+        with (
+            patch.object(
+                web_app,
+                "conversation_path_for_user",
+                return_value=Path("/tmp/conversa_chat.json"),
+            ),
+            patch.object(
+                web_app,
+                "load_conversation",
+                return_value={"messages": [], "evidence": None},
+            ),
+            patch.object(web_app.st, "file_uploader", return_value=None) as uploader,
+        ):
+            app = AppTest.from_file(
+                str(Path(__file__).resolve().parents[2] / "app.py"),
+            )
+            app.run()
+            self.assertFalse(app.exception)
+            self.assertFalse(uploader.called)
+
     def test_prompt_selector_discovers_versions_in_numerical_order(self):
         extraction_versions = web_app.prompt_versions(
             web_app.PROMPTS_DIR / "vlm_extractor"
@@ -42,7 +63,7 @@ class WebAppTests(unittest.TestCase):
         )
         self.assertEqual(assistant_versions, ["v1.0", "v1.1", "v1.2"])
 
-    def test_chat_submits_uploaded_pdf_and_saves_analysis(self):
+    def test_chat_saves_analysis_from_agent_result(self):
         response = SimpleNamespace(
             document_fields={
                 "valor_total": 100,
@@ -71,10 +92,8 @@ class WebAppTests(unittest.TestCase):
         )
         with TemporaryDirectory() as directory:
             path = Path(directory) / "conversa.json"
-            upload = SimpleNamespace(name="nota.pdf", getvalue=lambda: b"%PDF-test")
             with (
                 patch.object(web_app, "conversation_path_for_user", return_value=path),
-                patch.object(web_app.st, "file_uploader", return_value=[upload]),
                 patch.object(web_app, "handle_agent_turn", return_value={
                     "answer": "Não localizado.",
                     "evidence": {
@@ -89,7 +108,6 @@ class WebAppTests(unittest.TestCase):
                 app.run()
                 app.chat_input[0].set_value("Este pedido foi pago?").run()
                 self.assertFalse(app.exception)
-                self.assertEqual(handler.call_args.kwargs["pdf_bytes"], b"%PDF-test")
                 self.assertEqual(load_conversation(path)["evidence"]["documento"]["valor_total"], 100)
                 self.assertEqual(
                     load_conversation(path)["evidence"]["documento"]["evidencias_literais"]["valor_total"],
@@ -157,6 +175,11 @@ class WebAppTests(unittest.TestCase):
             answer.assert_not_called()
 
     def test_follow_up_recalculates_estimate_with_selected_reference_date(self):
+        class FixedDateTime(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                value = cls(2026, 3, 30)
+                return value if tz is None else value.replace(tzinfo=tz)
         assessment = {
             "situacao_pedido": "localizado",
             "situacao_prazo": "fora_do_prazo_simulado",
@@ -192,12 +215,12 @@ class WebAppTests(unittest.TestCase):
             save_conversation([], {"documento": {}, "conciliacao": assessment, "revisao_ia": review}, path)
             with (
                 patch.object(web_app, "conversation_path_for_user", return_value=path),
+                patch.object(web_app, "datetime", FixedDateTime),
                 patch("health_refund_assistant.conversation.estimativa_pagamento.request_structured_json", return_value=estimate),
                 patch("health_refund_assistant.conversation.agent.create_assistant_answer", return_value="Estimativa.") as answer,
             ):
                 app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / "app.py"), default_timeout=30)
                 app.run()
-                app.date_input[0].set_value(date(2026, 3, 30))
                 app.chat_input[0].set_value("Quanto tempo falta?").run()
                 self.assertFalse(app.exception)
                 saved = load_conversation(path)["evidence"]["conciliacao"]

@@ -6,6 +6,7 @@ Saídas: versões disponíveis, conteúdo selecionado ou erro de localização.
 """
 
 import re
+import json
 from pathlib import Path
 
 from .paths import PROMPTS_DIR
@@ -39,6 +40,7 @@ def carregar_prompt(component: str, versao: str | None = None) -> tuple[str, str
     texto = path.read_text(encoding="utf-8").strip()
     componentes_estruturados = {
         ("agente_conversacional", "v1.0"),
+        ("agente_conversacional", "v1.1"),
         ("reembolso_assistente", "v1.2"),
         ("reembolso_status", "v1.2"),
         ("revisao_documental", "v1.1"),
@@ -91,3 +93,15 @@ def validar_prompt_padrao(texto: str) -> bool:
         "Saída esperada",
         "Guardrails",
     ))
+
+
+def carregar_respostas_agente(versao: str = "v1.1") -> dict[str, str]:
+    """Carrega respostas versionadas embutidas no prompt do agente."""
+    prompt, _ = carregar_prompt("agente_conversacional", versao)
+    matches = re.findall(r"```json\s*(\{.*?\})\s*```", prompt, flags=re.DOTALL)
+    if not matches:
+        raise ValueError("O prompt do agente não contém o catálogo JSON de respostas.")
+    respostas = json.loads(matches[-1])
+    if not isinstance(respostas, dict) or not respostas:
+        raise ValueError("O catálogo de respostas do agente é inválido.")
+    return respostas

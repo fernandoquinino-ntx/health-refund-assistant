@@ -18,11 +18,17 @@ from health_refund_assistant.conversation.agent import (
 from health_refund_assistant.web.web_app import reset_agent_session
 from health_refund_assistant.core.prompt_library import (
     analisar_secoes_prompt,
+    carregar_respostas_agente,
     validar_prompt_padrao,
 )
 
 
 class AgentTaskTests(unittest.TestCase):
+    def test_respostas_de_encaminhamento_vem_do_prompt_versionado(self):
+        respostas = carregar_respostas_agente("v1.1")
+        self.assertIn("aguardando_exportacao_pagamento", respostas)
+        self.assertIn("categoria_nao_mapeada", respostas)
+
     def test_prompt_ativo_tem_entrada_tarefa_saida_guardrails(self):
         from pathlib import Path
         texto = (
@@ -63,8 +69,8 @@ class AgentTaskTests(unittest.TestCase):
             None,
             None,
         )
-        self.assertEqual(result["state"]["status"], "aguardando_documento")
-        self.assertIn("nota", result["answer"].lower())
+        self.assertEqual(result["state"]["status"], "aguardando_exportacao")
+        self.assertIn("exportação", result["answer"].lower())
 
     def test_documento_sem_exportacao_solicita_exportacao(self):
         result = handle_agent_turn(
